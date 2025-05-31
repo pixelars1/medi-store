@@ -6,6 +6,7 @@ import Footer from "./components/Footer.jsx";
 import Nav from "./components/nav.jsx";
 import ProductDetails from "./Pages/ProductDetails.jsx";
 import { AppContext } from "./Context/AppContext.jsx";
+import Auth from "./Pages/Auth.jsx";
 
 function App() {
   const { darkMode, setDarkMode } = useContext(AppContext)
@@ -58,6 +59,7 @@ function App() {
         />
         {/* Add more routes as needed */}
         <Route path="/product-details" element={<ProductDetails/>} />
+        <Route path="/auth" element={<Auth/>} />
       </Routes>
       <Footer />
     </div>
