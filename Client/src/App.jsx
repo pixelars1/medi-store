@@ -4,6 +4,7 @@ import Home from "./Pages/Home.jsx";
 import { Moon, Sun } from "lucide-react";
 import Footer from "./components/Footer.jsx";
 import Nav from "./components/nav.jsx";
+import ProductDetails from "./Pages/ProductDetails.jsx";
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -54,6 +55,7 @@ function App() {
           }
         />
         {/* Add more routes as needed */}
+        <Route path="/product-details" element={<ProductDetails/>} />
       </Routes>
       <Footer />
     </div>
