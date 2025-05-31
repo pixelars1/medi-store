@@ -82,7 +82,7 @@ const Auth = () => {
             <h1 className="text-2xl font-semibold mb-2">MediCare</h1>
             <p className="text-sm max-w-md">
               Discover the power of personalized health insights and seamless
-              tracking with MediTrack.
+              tracking with MediCare.
             </p>
           </div>
         </div>
