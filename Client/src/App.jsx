@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { Route, Routes } from "react-router-dom";
 import Home from "./Pages/Home.jsx";
 import { Moon, Sun } from "lucide-react";
@@ -15,13 +15,6 @@ function App() {
     localStorage.setItem("theme", newMode ? "dark" : "light");
   };
 
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, [darkMode]);
   return (
     <div
       className={`min-h-screen w-full relative transition-colors duration-300 ${
