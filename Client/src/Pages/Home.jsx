@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import {
   Heart,
   Shield,
@@ -19,39 +18,15 @@ import {
   Sun,
 } from "lucide-react";
 
-export default function Home() {
-  const [darkMode, setDarkMode] = useState(false);
-
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-  };
-
+export default function Home({ darkMode }) {
   return (
     <div
-      className={`min-h-screen transition-colors duration-300 ${
+      className={`transition-colors duration-300 ${
         darkMode
           ? "dark bg-gray-900"
           : "bg-gradient-to-br from-green-50 via-white to-emerald-50"
       }`}
     >
-      {/* Dark Mode Toggle */}
-      <div className="fixed top-4 right-4 z-50">
-        <button
-          onClick={toggleDarkMode}
-          className={`p-3 rounded-full shadow-lg transition-all duration-300 ${
-            darkMode
-              ? "bg-gray-800 text-yellow-400 hover:bg-gray-700"
-              : "bg-white text-gray-700 hover:bg-gray-100"
-          }`}
-        >
-          {darkMode ? (
-            <Sun className="w-5 h-5" />
-          ) : (
-            <Moon className="w-5 h-5" />
-          )}
-        </button>
-      </div>
-
       {/* Hero Section */}
       <section
         className={`relative px-4 py-16 sm:px-6 lg:px-8 lg:py-24 ${
