@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Star } from "lucide-react";
+import { AppContext } from "../Context/AppContext";
 
 const ProductDetails = () => {
   const [quantity, setQuantity] = useState(1);
-  const [darkMode, setDarkMode] = useState(false);
+  const {darkMode} = useContext(AppContext)
 
-  const toggleTheme = () => setDarkMode(!darkMode);
 
   const product = {
     name: "Digital Thermometer Pro",
@@ -65,23 +65,12 @@ const ProductDetails = () => {
   return (
     <div
       className={`min-h-screen px-4 py-6 transition-colors duration-300 ${
-        darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"
+        darkMode ? "bg-gray-900 text-white" : "bg-gradient-to-br from-green-50 via-white to-emerald-50 text-gray-900"
       }`}
     >
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4">
         <h1 className="text-2xl font-bold">Product Details</h1>
-        <button
-          onClick={toggleTheme}
-          className={`px-4 py-2 rounded transition ${
-            darkMode
-              ? "bg-gray-200 text-black hover:bg-gray-300"
-              : "bg-gray-800 text-white hover:bg-gray-700"
-          }`}
-          aria-label="Toggle dark mode"
-        >
-          Toggle {darkMode ? "Light" : "Dark"} Mode
-        </button>
       </div>
 
       {/* Product info */}
