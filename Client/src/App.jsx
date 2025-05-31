@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import Home from "./Pages/Home.jsx";
-import Nav from "./components/Nav.jsx";
 import { Moon, Sun } from "lucide-react";
 import Footer from "./components/Footer.jsx";
+import Nav from "./components/nav.jsx";
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
