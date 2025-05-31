@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import Home from "./Pages/Home.jsx";
-import Nav from "./components/nav.jsx";
+import Nav from "./components/Nav.jsx";
 import { Moon, Sun } from "lucide-react";
+import Footer from "./components/Footer.jsx";
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -54,6 +55,7 @@ function App() {
         />
         {/* Add more routes as needed */}
       </Routes>
+      <Footer />
     </div>
   );
 }
