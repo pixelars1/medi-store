@@ -17,8 +17,12 @@ import {
   Moon,
   Sun,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export default function Home({ darkMode }) {
+
+  const navigate = useNavigate()
+
   return (
     <div
       className={`transition-colors duration-300 ${
@@ -396,6 +400,7 @@ export default function Home({ darkMode }) {
               },
             ].map((product, index) => (
               <div
+                onClick={() => navigate('/product-details')}
                 key={index}
                 className={`rounded-2xl p-6 hover:shadow-xl transition-all duration-300 group cursor-pointer ${
                   darkMode
