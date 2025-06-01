@@ -35,13 +35,9 @@ export default function Home({ darkMode }) {
     >
       {/* Hero Section */}
       <section
-        className={`relative min-h-screen flex items-center justify-center px-4 py-20 ${
-          darkMode
-            ? "bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900"
-            : "bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700"
-        }`}
+        className={`relative min-h-screen flex items-center justify-center px-4 py-20 bg-[url(public/banner-bg.jpg)]`}
       >
-        <div className="absolute inset-0 bg-[url(public/banner-bg.jpg)] bg-opacity-20"></div>
+        <div className="absolute inset-0 bg-opacity-20"></div>
         <div className="relative z-10 text-center max-w-6xl mx-auto">
           <div className="mb-8">
             <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">

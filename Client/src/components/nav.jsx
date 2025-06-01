@@ -1,82 +1,95 @@
-import React, { useState } from "react";
-import { Search, Menu, X, Heart } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Menu, X, Heart } from "lucide-react";
 
 const Nav = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeItem, setActiveItem] = useState("Home");
-  const navigate = useNavigate();
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
+  const [scrolled, setScrolled] = useState(false);
+
+  const handleAuthClick = (mode) => {
+    console.log(`Navigate to auth with mode: ${mode}`);
   };
 
-  const handleNavClick = (item) => {
-    setActiveItem(item);
-    setIsMenuOpen(false); // Close mobile menu when nav item is clicked
-  };
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const navItems = ["Home", "Products", "Categories", "About", "Contact"];
 
   return (
-    <nav className="fixed w-full top-3 z-50 transition-colors duration-300">
+    <nav
+      className={`fixed top-2 w-full z-50 transition-all duration-300 ${
+        scrolled ? "bg-white dark:bg-gray-900 shadow-lg" : "bg-transparent"
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* Logo/Brand */}
-          <div className="flex items-center space-x-3">
-            <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg shadow-md">
-              <Heart className="w-6 h-6 text-white" />
+          {/* Logo */}
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 flex items-center justify-center rounded-lg bg-gradient-to-br from-green-500 to-emerald-600 shadow">
+              <Heart className="text-white w-6 h-6" />
             </div>
-            <div className="flex flex-col">
-              <span className="text-xl font-bold text-gray-900 dark:text-white">
+            <div>
+              <span
+                className={`text-xl font-bold ${
+                  scrolled ? "text-gray-900 dark:text-white" : "text-white"
+                }`}
+              >
                 MediCare
               </span>
-              <span className="text-xs text-green-600 dark:text-green-400 font-medium">
+              <div className="text-xs text-green-600 dark:text-green-400 font-medium">
                 Health Solutions
-              </span>
+              </div>
             </div>
           </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          {/* Desktop Nav */}
+          <div className="hidden md:flex items-center space-x-6">
             {navItems.map((item) => (
               <button
                 key={item}
-                onClick={() => handleNavClick(item)}
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:scale-105 ${
+                onClick={() => setActiveItem(item)}
+                className={`px-3 py-2 rounded-md text-sm font-medium transition duration-200 ${
                   activeItem === item
-                    ? "text-white bg-green-500 shadow-md"
-                    : "text-white hover:text-green-600 hover:bg-green-50 dark:hover:bg-gray-800"
+                    ? "bg-green-500 text-white shadow"
+                    : scrolled
+                    ? "text-gray-700 dark:text-gray-300 hover:text-green-600"
+                    : "text-white hover:text-green-400"
                 }`}
-                aria-current={activeItem === item ? "page" : undefined}
               >
                 {item}
               </button>
             ))}
           </div>
 
-          {/* Search Bar & Controls */}
-          <div className="flex items-center space-x-4">
-            <div className="hidden sm:flex items-center space-x-2">
+          {/* Auth + Menu */}
+          <div className="flex items-center gap-2">
+            {/* Auth Buttons */}
+            <div className="hidden sm:flex items-center gap-2">
               <button
-                onClick={() => navigate("/auth?mode=signin")}
-                className="px-4 py-2 cursor-pointer rounded-md text-sm font-semibold bg-white dark:bg-gray-800 border border-green-600 text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-gray-700 transition"
+                onClick={() => handleAuthClick("signin")}
+                className="px-4 py-2 text-sm font-semibold border border-green-600 text-green-600 dark:text-green-400 bg-white dark:bg-gray-800 rounded-md hover:bg-green-50 dark:hover:bg-gray-700 transition"
               >
                 Sign In
               </button>
               <button
-                onClick={() => navigate("/auth?mode=signup")}
-                className="px-4 py-2 cursor-pointer rounded-md text-sm font-semibold bg-green-600 text-white hover:bg-green-700 transition"
+                onClick={() => handleAuthClick("signup")}
+                className="px-4 py-2 text-sm font-semibold bg-green-600 text-white rounded-md hover:bg-green-700 transition"
               >
                 Sign Up
               </button>
             </div>
 
-            {/* Mobile Menu Button */}
+            {/* Mobile Toggle */}
             <button
-              onClick={toggleMenu}
-              className="md:hidden p-2 text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-gray-800 rounded-lg transition-all duration-200"
-              aria-label="Toggle menu"
-              aria-expanded={isMenuOpen}
+              className={`md:hidden p-2 rounded-lg transition ${
+                scrolled ? "text-gray-600 dark:text-gray-300" : "text-white"
+              } hover:bg-green-50 dark:hover:bg-gray-800`}
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               {isMenuOpen ? (
                 <X className="w-6 h-6" />
@@ -88,43 +101,52 @@ const Nav = () => {
         </div>
       </div>
 
-      {/* Mobile Menu Overlay */}
+      {/* Mobile Menu */}
       <div
-        className={`md:hidden transition-all duration-300 ease-in-out ${
-          isMenuOpen
-            ? "max-h-96 opacity-100"
-            : "max-h-0 opacity-0 overflow-hidden"
+        className={`md:hidden transition-all duration-300 overflow-hidden ${
+          isMenuOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
         }`}
       >
-        <div className="bg-white dark:bg-gray-900 border-t border-green-100 dark:border-gray-700 shadow-lg">
-          {/* Mobile Search */}
-          <div className="px-4 py-3 border-b border-green-100 dark:border-gray-700">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search medical products..."
-                className="w-full pl-10 pr-4 py-3 bg-green-50 dark:bg-gray-800 border border-green-200 dark:border-gray-600 rounded-lg text-sm text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
-              />
-            </div>
-          </div>
-
-          {/* Mobile Navigation Links */}
-          <div className="px-4 py-2 space-y-1">
+        <div className="mx-4 mt-2 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-green-100 dark:border-gray-700">
+          <div className="p-4 space-y-3">
             {navItems.map((item) => (
               <button
                 key={item}
-                onClick={() => handleNavClick(item)}
-                className={`w-full text-left px-4 py-3 rounded-lg text-base font-medium transition-all duration-200 ${
+                onClick={() => {
+                  setActiveItem(item);
+                  setIsMenuOpen(false);
+                }}
+                className={`w-full text-left px-4 py-2 rounded-md text-base font-medium transition ${
                   activeItem === item
-                    ? "text-white bg-green-600 shadow-md"
+                    ? "bg-green-600 text-white shadow"
                     : "text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-gray-800"
                 }`}
-                aria-current={activeItem === item ? "page" : undefined}
               >
                 {item}
               </button>
             ))}
+
+            {/* Mobile Auth */}
+            <div className="pt-4 border-t border-green-100 dark:border-gray-700 space-y-2">
+              <button
+                onClick={() => {
+                  handleAuthClick("signin");
+                  setIsMenuOpen(false);
+                }}
+                className="w-full px-4 py-2 text-base font-semibold border border-green-600 text-green-600 dark:text-green-400 bg-white dark:bg-gray-800 rounded-md hover:bg-green-50 dark:hover:bg-gray-700 transition"
+              >
+                Sign In
+              </button>
+              <button
+                onClick={() => {
+                  handleAuthClick("signup");
+                  setIsMenuOpen(false);
+                }}
+                className="w-full px-4 py-2 text-base font-semibold bg-green-600 text-white rounded-md hover:bg-green-700 transition"
+              >
+                Sign Up
+              </button>
+            </div>
           </div>
         </div>
       </div>
