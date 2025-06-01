@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Search, Menu, X, Sun, Moon, Heart } from "lucide-react";
+import { Search, Menu, X, Heart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const Nav = () => {
@@ -18,7 +18,7 @@ const Nav = () => {
   const navItems = ["Home", "Products", "Categories", "About", "Contact"];
 
   return (
-    <nav className="sticky top-0 z-50 bg-white dark:bg-gray-900 shadow-lg border-b border-green-100 dark:border-gray-700 transition-colors duration-300">
+    <nav className="fixed w-full top-3 z-50 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo/Brand */}
@@ -44,8 +44,8 @@ const Nav = () => {
                 onClick={() => handleNavClick(item)}
                 className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 hover:scale-105 ${
                   activeItem === item
-                    ? "text-white bg-green-600 shadow-md"
-                    : "text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-gray-800"
+                    ? "text-white bg-green-500 shadow-md"
+                    : "text-white hover:text-green-600 hover:bg-green-50 dark:hover:bg-gray-800"
                 }`}
                 aria-current={activeItem === item ? "page" : undefined}
               >
@@ -56,23 +56,6 @@ const Nav = () => {
 
           {/* Search Bar & Controls */}
           <div className="flex items-center space-x-4">
-            {/* Search Bar - Desktop */}
-            <div className="hidden sm:flex items-center relative">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Search medical products..."
-                  className="w-64 pl-10 pr-4 py-2 bg-green-50 dark:bg-gray-800 border border-green-200 dark:border-gray-600 rounded-full text-sm text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
-                />
-              </div>
-            </div>
-
-            {/* Search Icon - Mobile */}
-            <button className="sm:hidden p-2 text-gray-600 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-gray-800 rounded-full transition-all duration-200">
-              <Search className="w-5 h-5" />
-            </button>
-
             <div className="hidden sm:flex items-center space-x-2">
               <button
                 onClick={() => navigate("/auth?mode=signin")}

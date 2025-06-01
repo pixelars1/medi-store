@@ -1,6 +1,7 @@
 import {
   Heart,
   Shield,
+  Search,
   Clock,
   Users,
   Star,
@@ -12,244 +13,115 @@ import {
   Stethoscope,
   Thermometer,
   Syringe,
-  Bandage,
   Eye,
   Moon,
   Sun,
+  Truck,
+  Award,
+  CheckCircle,
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 export default function Home({ darkMode }) {
-
-  const navigate = useNavigate()
+  const [searchQuery, setSearchQuery] = useState("");
 
   return (
     <div
       className={`transition-colors duration-300 ${
         darkMode
           ? "dark bg-gray-900"
-          : "bg-gradient-to-br from-green-50 via-white to-emerald-50"
+          : "bg-gradient-to-br from-blue-50 via-white to-indigo-50"
       }`}
     >
       {/* Hero Section */}
       <section
-        className={`relative px-4 py-16 sm:px-6 lg:px-8 lg:py-24 ${
-          darkMode ? "dark:bg-gray-900" : ""
+        className={`relative min-h-screen flex items-center justify-center px-4 py-20 ${
+          darkMode
+            ? "bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900"
+            : "bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700"
         }`}
       >
-        <div className="mx-auto max-w-7xl">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Left Content */}
-            <div className="space-y-8">
-              <div className="space-y-4">
-                <div
-                  className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-medium ${
-                    darkMode
-                      ? "bg-green-900 text-green-200"
-                      : "bg-green-100 text-green-800"
-                  }`}
-                >
-                  <Heart className="w-4 h-4 mr-2" />
-                  Trusted Healthcare Since 1985
-                </div>
-                <h1
-                  className={`text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight ${
-                    darkMode ? "text-white" : "text-gray-900"
-                  }`}
-                >
-                  Your Health,{" "}
-                  <span
-                    className={`text-transparent bg-clip-text ${
-                      darkMode
-                        ? "bg-gradient-to-r from-green-400 to-emerald-400"
-                        : "bg-gradient-to-r from-green-600 to-emerald-600"
-                    }`}
-                  >
-                    Our Priority
-                  </span>
-                </h1>
-                <p
-                  className={`text-xl leading-relaxed ${
-                    darkMode ? "text-gray-300" : "text-gray-600"
-                  }`}
-                >
-                  Experience world-class medical care with our comprehensive
-                  range of healthcare products, expert physicians, and
-                  state-of-the-art facilities designed for your unique needs.
-                </p>
-              </div>
+        <div className="absolute inset-0 bg-[url(public/banner-bg.jpg)] bg-opacity-20"></div>
+        <div className="relative z-10 text-center max-w-6xl mx-auto">
+          <div className="mb-8">
+            <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
+              Your Trusted{" "}
+              <span className="text-orange-200">Online Pharmacy</span>
+            </h1>
+            <p className="text-xl md:text-2xl text-blue-100 mb-4 max-w-4xl mx-auto leading-relaxed">
+              Fast, Safe, Affordable - Get your medications delivered to your
+              doorstep in no time!
+            </p>
+            <p className="text-lg text-blue-200 mb-12 max-w-3xl mx-auto">
+              Licensed pharmacists • FDA-approved medications • Secure delivery
+              • Insurance accepted
+            </p>
+          </div>
 
-              <div className="flex flex-col sm:flex-row gap-4">
-                <button
-                  className={`px-8 py-4 rounded-xl font-semibold text-lg hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 flex items-center justify-center ${
-                    darkMode
-                      ? "bg-gradient-to-r from-green-600 to-emerald-600 text-white"
-                      : "bg-gradient-to-r from-green-600 to-emerald-600 text-white"
-                  }`}
-                >
-                  Browse Products
-                  <ChevronRight className="ml-2 w-5 h-5" />
-                </button>
-                <button
-                  className={`px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 ${
-                    darkMode
-                      ? "border-2 border-gray-600 text-gray-300 hover:border-green-500 hover:text-green-400"
-                      : "border-2 border-gray-300 text-gray-700 hover:border-green-500 hover:text-green-600"
-                  }`}
-                >
-                  Learn More
-                </button>
-              </div>
-
-              {/* Stats */}
-              <div
-                className={`grid grid-cols-3 gap-8 pt-8 border-t ${
-                  darkMode ? "border-gray-700" : "border-gray-200"
-                }`}
-              >
-                <div className="text-center">
-                  <div
-                    className={`text-3xl font-bold ${
-                      darkMode ? "text-green-400" : "text-green-600"
-                    }`}
-                  >
-                    50K+
-                  </div>
-                  <div className={darkMode ? "text-gray-400" : "text-gray-600"}>
-                    Patients Served
-                  </div>
-                </div>
-                <div className="text-center">
-                  <div
-                    className={`text-3xl font-bold ${
-                      darkMode ? "text-green-400" : "text-green-600"
-                    }`}
-                  >
-                    95%
-                  </div>
-                  <div className={darkMode ? "text-gray-400" : "text-gray-600"}>
-                    Success Rate
-                  </div>
-                </div>
-                <div className="text-center">
-                  <div
-                    className={`text-3xl font-bold ${
-                      darkMode ? "text-green-400" : "text-green-600"
-                    }`}
-                  >
-                    24/7
-                  </div>
-                  <div className={darkMode ? "text-gray-400" : "text-gray-600"}>
-                    Care Available
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Right Content - Image */}
+          {/* Search Bar */}
+          <div className="max-w-2xl mx-auto mb-12">
             <div className="relative">
-              <div
-                className={`rounded-3xl p-8 shadow-2xl ${
-                  darkMode
-                    ? "bg-gradient-to-br from-green-700 to-emerald-800"
-                    : "bg-gradient-to-br from-green-400 to-emerald-500"
-                }`}
-              >
-                <div
-                  className={`rounded-2xl p-8 h-96 flex items-center justify-center ${
-                    darkMode ? "bg-gray-800" : "bg-white"
-                  }`}
-                >
-                  <div className="text-center space-y-4">
-                    <div
-                      className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto ${
-                        darkMode
-                          ? "bg-gradient-to-br from-green-800 to-emerald-900"
-                          : "bg-gradient-to-br from-green-100 to-emerald-100"
-                      }`}
-                    >
-                      <Heart
-                        className={`w-10 h-10 ${
-                          darkMode ? "text-green-400" : "text-green-600"
-                        }`}
-                      />
-                    </div>
-                    <h3
-                      className={`text-2xl font-bold ${
-                        darkMode ? "text-white" : "text-gray-800"
-                      }`}
-                    >
-                      Expert Medical Care
-                    </h3>
-                    <p className={darkMode ? "text-gray-300" : "text-gray-600"}>
-                      Compassionate healthcare professionals dedicated to your
-                      wellbeing
-                    </p>
-                  </div>
-                </div>
+              <div className="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none">
+                <Search className="h-6 w-6 text-gray-400" />
               </div>
-
-              {/* Floating Cards */}
-              <div
-                className={`absolute -top-4 -left-4 p-4 rounded-xl shadow-lg ${
-                  darkMode ? "bg-gray-800" : "bg-white"
-                }`}
-              >
-                <div className="flex items-center space-x-2">
-                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                  <span
-                    className={`text-sm font-medium ${
-                      darkMode ? "text-gray-300" : "text-gray-700"
-                    }`}
-                  >
-                    Online 24/7
-                  </span>
+              <input
+                type="text"
+                placeholder="Search for medications, brands, or conditions..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-14 pr-6 py-5 text-lg bg-white rounded-2xl shadow-2xl focus:outline-none focus:ring-4 focus:ring-blue-300 border-0"
+              />
+              <button className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                <div className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-semibold transition-colors duration-200">
+                  Search
                 </div>
-              </div>
-
-              <div
-                className={`absolute -bottom-4 -right-4 p-4 rounded-xl shadow-lg ${
-                  darkMode ? "bg-gray-800" : "bg-white"
-                }`}
-              >
-                <div className="flex items-center space-x-2">
-                  <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                  <span
-                    className={`text-sm font-medium ${
-                      darkMode ? "text-gray-300" : "text-gray-700"
-                    }`}
-                  >
-                    4.9/5 Rating
-                  </span>
-                </div>
-              </div>
+              </button>
             </div>
+          </div>
+
+          {/* Quick Stats */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+            {[
+              { number: "50K+", label: "Happy Patients" },
+              { number: "5000+", label: "Medications" },
+              { number: "24/7", label: "Support" },
+              { number: "Same Day", label: "Delivery" },
+            ].map((stat, index) => (
+              <div key={index} className="text-center">
+                <div className="text-3xl md:text-4xl font-bold text-white mb-2">
+                  {stat.number}
+                </div>
+                <div className="text-blue-200 text-sm md:text-base">
+                  {stat.label}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Categories Section */}
       <section
-        className={`px-4 py-16 sm:px-6 lg:px-8 ${
+        className={`px-4 py-20 sm:px-6 lg:px-8 ${
           darkMode ? "bg-gray-800" : "bg-white"
         }`}
       >
         <div className="mx-auto max-w-7xl">
           <div className="text-center space-y-4 mb-16">
             <h2
-              className={`text-4xl font-bold ${
+              className={`text-4xl md:text-5xl font-bold ${
                 darkMode ? "text-white" : "text-gray-900"
               }`}
             >
-              Product Categories
+              Medicine Categories
             </h2>
             <p
               className={`text-xl max-w-3xl mx-auto ${
                 darkMode ? "text-gray-300" : "text-gray-600"
               }`}
             >
-              Explore our comprehensive range of medical products and healthcare
-              solutions
+              Browse our comprehensive range of prescription and
+              over-the-counter medications
             </p>
           </div>
 
@@ -257,64 +129,67 @@ export default function Home({ darkMode }) {
             {[
               {
                 icon: Pill,
-                title: "Medications",
-                description: "Prescription and over-the-counter medicines",
-                count: "500+ Products",
-              },
-              {
-                icon: Stethoscope,
-                title: "Medical Devices",
-                description: "Professional diagnostic and monitoring equipment",
-                count: "200+ Items",
-              },
-              {
-                icon: Bandage,
-                title: "First Aid",
+                title: "Prescription Drugs",
                 description:
-                  "Essential supplies for wound care and emergency treatment",
-                count: "150+ Supplies",
+                  "FDA-approved prescription medications from licensed manufacturers",
+                count: "2000+ Medicines",
+                color: "from-blue-500 to-indigo-600",
               },
               {
-                icon: Eye,
-                title: "Vision Care",
-                description: "Eye care products and optical solutions",
-                count: "100+ Options",
+                icon: Heart,
+                title: "Chronic Care",
+                description:
+                  "Medications for diabetes, hypertension, and heart conditions",
+                count: "800+ Options",
+                color: "from-red-500 to-pink-600",
+              },
+              {
+                icon: Shield,
+                title: "OTC Medicines",
+                description:
+                  "Over-the-counter treatments for common health issues",
+                count: "1200+ Products",
+                color: "from-green-500 to-emerald-600",
+              },
+              {
+                icon: Syringe,
+                title: "Specialized Care",
+                description:
+                  "Oncology, rare diseases, and specialty medications",
+                count: "500+ Treatments",
+                color: "from-purple-500 to-violet-600",
               },
             ].map((category, index) => (
               <div
                 key={index}
-                className={`group p-6 rounded-2xl hover:shadow-xl transition-all duration-300 border cursor-pointer ${
+                className={`group p-8 rounded-3xl hover:shadow-2xl transition-all duration-300 border cursor-pointer transform hover:-translate-y-2 ${
                   darkMode
-                    ? "bg-gradient-to-br from-gray-700 to-gray-800 border-gray-600 hover:border-green-500"
-                    : "bg-gradient-to-br from-gray-50 to-white border-gray-100 hover:border-green-200"
+                    ? "bg-gradient-to-br from-gray-700 to-gray-800 border-gray-600 hover:border-blue-500"
+                    : "bg-white border-gray-100 hover:border-blue-200 shadow-lg"
                 }`}
               >
                 <div
-                  className={`w-14 h-14 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 ${
-                    darkMode
-                      ? "bg-gradient-to-r from-green-600 to-emerald-700"
-                      : "bg-gradient-to-r from-green-500 to-emerald-500"
-                  }`}
+                  className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 bg-gradient-to-r ${category.color}`}
                 >
-                  <category.icon className="w-7 h-7 text-white" />
+                  <category.icon className="w-8 h-8 text-white" />
                 </div>
                 <h3
-                  className={`text-xl font-semibold mb-2 ${
+                  className={`text-xl font-bold mb-3 ${
                     darkMode ? "text-white" : "text-gray-900"
                   }`}
                 >
                   {category.title}
                 </h3>
                 <p
-                  className={`leading-relaxed mb-3 ${
+                  className={`leading-relaxed mb-4 ${
                     darkMode ? "text-gray-300" : "text-gray-600"
                   }`}
                 >
                   {category.description}
                 </p>
                 <div
-                  className={`text-sm font-medium ${
-                    darkMode ? "text-green-400" : "text-green-600"
+                  className={`text-sm font-semibold ${
+                    darkMode ? "text-blue-400" : "text-blue-600"
                   }`}
                 >
                   {category.count}
@@ -325,141 +200,206 @@ export default function Home({ darkMode }) {
         </div>
       </section>
 
-      {/* Featured Products Section */}
+      {/* Featured Medicines Section */}
       <section
-        className={`px-4 py-16 sm:px-6 lg:px-8 ${
-          darkMode ? "bg-gray-900" : "bg-green-50"
+        className={`px-4 py-20 sm:px-6 lg:px-8 ${
+          darkMode ? "bg-gray-900" : "bg-gray-50"
         }`}
       >
         <div className="mx-auto max-w-7xl">
           <div className="text-center space-y-4 mb-16">
             <h2
-              className={`text-4xl font-bold ${
+              className={`text-4xl md:text-5xl font-bold ${
                 darkMode ? "text-white" : "text-gray-900"
               }`}
             >
-              Featured Products
+              Popular Medications
             </h2>
             <p
               className={`text-xl max-w-3xl mx-auto ${
                 darkMode ? "text-gray-300" : "text-gray-600"
               }`}
             >
-              Top-quality medical products trusted by healthcare professionals
+              Trusted medications prescribed by healthcare professionals
+              worldwide
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
               {
-                name: "Digital Thermometer Pro",
-                price: "$29.99",
+                name: "Lisinopril 10mg",
+                genericName: "ACE Inhibitor",
+                price: "$12.99",
+                originalPrice: "$18.99",
                 rating: 4.8,
-                image: "🌡️",
+                reviews: 1247,
                 description:
-                  "Fast, accurate temperature readings with memory function",
+                  "For high blood pressure and heart failure treatment",
+                inStock: true,
               },
               {
-                name: "Blood Pressure Monitor",
-                price: "$89.99",
+                name: "Metformin 500mg",
+                genericName: "Diabetes Medication",
+                price: "$8.99",
+                originalPrice: "$15.99",
                 rating: 4.9,
-                image: "🩺",
+                reviews: 2156,
                 description:
-                  "Professional-grade BP monitor with smartphone connectivity",
+                  "Type 2 diabetes management and blood sugar control",
+                inStock: true,
               },
               {
-                name: "First Aid Kit Premium",
-                price: "$45.99",
+                name: "Ibuprofen 200mg",
+                genericName: "Pain Reliever",
+                price: "$6.99",
+                originalPrice: "$9.99",
                 rating: 4.7,
-                image: "🏥",
-                description:
-                  "Comprehensive emergency kit for home and office use",
+                reviews: 891,
+                description: "Anti-inflammatory pain relief and fever reducer",
+                inStock: true,
               },
               {
-                name: "Pulse Oximeter",
-                price: "$39.99",
+                name: "Omeprazole 20mg",
+                genericName: "Proton Pump Inhibitor",
+                price: "$14.99",
+                originalPrice: "$22.99",
                 rating: 4.8,
-                image: "📊",
+                reviews: 756,
                 description:
-                  "Accurate oxygen saturation and pulse rate monitoring",
+                  "Gastric acid reduction for GERD and ulcer treatment",
+                inStock: true,
               },
               {
-                name: "Smart Glucometer",
-                price: "$69.99",
+                name: "Atorvastatin 20mg",
+                genericName: "Statin",
+                price: "$16.99",
+                originalPrice: "$28.99",
                 rating: 4.9,
-                image: "💉",
+                reviews: 1834,
                 description:
-                  "Bluetooth-enabled glucose meter with app integration",
+                  "Cholesterol management and cardiovascular protection",
+                inStock: true,
               },
               {
-                name: "N95 Respirator Masks",
-                price: "$24.99",
+                name: "Cetirizine 10mg",
+                genericName: "Antihistamine",
+                price: "$9.99",
+                originalPrice: "$13.99",
                 rating: 4.6,
-                image: "😷",
-                description: "Medical-grade protection masks (Pack of 20)",
+                reviews: 634,
+                description:
+                  "Allergy relief for seasonal and year-round symptoms",
+                inStock: true,
               },
-            ].map((product, index) => (
+            ].map((medicine, index) => (
               <div
-                onClick={() => navigate('/product-details')}
                 key={index}
-                className={`rounded-2xl p-6 hover:shadow-xl transition-all duration-300 group cursor-pointer ${
+                className={`rounded-3xl p-6 hover:shadow-2xl transition-all duration-300 group cursor-pointer border transform hover:-translate-y-1 ${
                   darkMode
-                    ? "bg-gray-800 border border-gray-700"
-                    : "bg-white border border-gray-100"
+                    ? "bg-gray-800 border-gray-700 hover:border-blue-500"
+                    : "bg-white border-gray-100 hover:border-blue-200"
                 }`}
               >
-                <div className="text-center mb-4">
-                  <div className="text-6xl mb-4">{product.image}</div>
-                  <h3
-                    className={`text-xl font-semibold mb-2 ${
-                      darkMode ? "text-white" : "text-gray-900"
-                    }`}
-                  >
-                    {product.name}
-                  </h3>
-                  <p
-                    className={`text-sm mb-3 ${
-                      darkMode ? "text-gray-300" : "text-gray-600"
-                    }`}
-                  >
-                    {product.description}
-                  </p>
-                  <div className="flex items-center justify-center mb-3">
-                    {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className={`w-4 h-4 ${
-                          i < Math.floor(product.rating)
-                            ? "text-yellow-400 fill-current"
-                            : "text-gray-300"
-                        }`}
-                      />
-                    ))}
-                    <span
-                      className={`ml-2 text-sm ${
-                        darkMode ? "text-gray-400" : "text-gray-500"
-                      }`}
-                    >
-                      ({product.rating})
-                    </span>
-                  </div>
+                <div className="flex justify-between items-start mb-4">
                   <div
-                    className={`text-2xl font-bold mb-4 ${
+                    className={`flex items-center text-xs ${
                       darkMode ? "text-green-400" : "text-green-600"
                     }`}
                   >
-                    {product.price}
+                    <CheckCircle className="w-4 h-4 mr-1" />
+                    In Stock
                   </div>
-                  <button
-                    className={`w-full py-3 rounded-xl font-semibold transition-all duration-300 ${
-                      darkMode
-                        ? "bg-green-600 text-white hover:bg-green-700"
-                        : "bg-green-600 text-white hover:bg-green-700"
+                </div>
+
+                <div className="mb-4">
+                  <h3
+                    className={`text-xl font-bold mb-1 ${
+                      darkMode ? "text-white" : "text-gray-900"
                     }`}
                   >
-                    Add to Cart
-                  </button>
+                    {medicine.name}
+                  </h3>
+                  <p
+                    className={`text-sm font-medium mb-2 ${
+                      darkMode ? "text-blue-400" : "text-blue-600"
+                    }`}
+                  >
+                    {medicine.genericName}
+                  </p>
+                  <p
+                    className={`text-sm leading-relaxed ${
+                      darkMode ? "text-gray-300" : "text-gray-600"
+                    }`}
+                  >
+                    {medicine.description}
+                  </p>
                 </div>
+
+                <div className="flex items-center mb-3">
+                  {[...Array(5)].map((_, i) => (
+                    <Star
+                      key={i}
+                      className={`w-4 h-4 ${
+                        i < Math.floor(medicine.rating)
+                          ? "text-yellow-400 fill-current"
+                          : "text-gray-300"
+                      }`}
+                    />
+                  ))}
+                  <span
+                    className={`ml-2 text-sm ${
+                      darkMode ? "text-gray-400" : "text-gray-500"
+                    }`}
+                  >
+                    {medicine.rating} ({medicine.reviews} reviews)
+                  </span>
+                </div>
+
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <span
+                      className={`text-2xl font-bold ${
+                        darkMode ? "text-blue-400" : "text-blue-600"
+                      }`}
+                    >
+                      {medicine.price}
+                    </span>
+                    <span
+                      className={`ml-2 text-sm line-through ${
+                        darkMode ? "text-gray-500" : "text-gray-400"
+                      }`}
+                    >
+                      {medicine.originalPrice}
+                    </span>
+                  </div>
+                  <div
+                    className={`text-sm font-semibold px-2 py-1 rounded ${
+                      darkMode
+                        ? "bg-green-900 text-green-200"
+                        : "bg-green-100 text-green-800"
+                    }`}
+                  >
+                    Save{" "}
+                    {Math.round(
+                      ((parseFloat(medicine.originalPrice.slice(1)) -
+                        parseFloat(medicine.price.slice(1))) /
+                        parseFloat(medicine.originalPrice.slice(1))) *
+                        100
+                    )}
+                    %
+                  </div>
+                </div>
+
+                <button
+                  className={`w-full py-3 rounded-xl font-semibold transition-all duration-300  ${
+                    darkMode
+                      ? "bg-blue-600 text-white hover:bg-blue-700"
+                      : "bg-blue-600 text-white hover:bg-blue-700"
+                  }`}
+                >
+                  Add to Cart
+                </button>
               </div>
             ))}
           </div>
@@ -468,14 +408,14 @@ export default function Home({ darkMode }) {
 
       {/* Testimonials Section */}
       <section
-        className={`px-4 py-16 sm:px-6 lg:px-8 ${
+        className={`px-4 py-20 sm:px-6 lg:px-8 ${
           darkMode ? "bg-gray-800" : "bg-white"
         }`}
       >
         <div className="mx-auto max-w-7xl">
           <div className="text-center space-y-4 mb-16">
             <h2
-              className={`text-4xl font-bold ${
+              className={`text-4xl md:text-5xl font-bold ${
                 darkMode ? "text-white" : "text-gray-900"
               }`}
             >
@@ -486,76 +426,95 @@ export default function Home({ darkMode }) {
                 darkMode ? "text-gray-300" : "text-gray-600"
               }`}
             >
-              Real experiences from people who trust us with their healthcare
+              Real experiences from people who trust us with their medication
+              needs
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
               {
-                name: "Sarah Johnson",
-                role: "Patient",
+                name: "Sarah Martinez",
+                condition: "Diabetes Patient",
                 content:
-                  "The quality of products and service is exceptional. I've been ordering my medical supplies here for over 2 years and never been disappointed.",
+                  "Getting my diabetes medication has never been easier. Same-day delivery and competitive prices make managing my condition stress-free.",
                 rating: 5,
                 avatar: "👩‍💼",
+                verified: true,
               },
               {
                 name: "Dr. Michael Chen",
-                role: "Family Physician",
+                condition: "Family Physician",
                 content:
-                  "As a healthcare provider, I recommend this platform to my patients. Their products are reliable, and delivery is always on time.",
+                  "I recommend this pharmacy to my patients. They maintain high standards for medication quality and patient safety protocols.",
                 rating: 5,
                 avatar: "👨‍⚕️",
+                verified: true,
               },
               {
                 name: "Emily Rodriguez",
-                role: "Nurse",
+                condition: "Heart Patient",
                 content:
-                  "Great selection of medical equipment at competitive prices. The customer support team is knowledgeable and very helpful.",
+                  "My heart medications arrive on time every month. The automatic refill service is a lifesaver for managing my treatment schedule.",
                 rating: 5,
                 avatar: "👩‍⚕️",
+                verified: true,
               },
               {
                 name: "James Wilson",
-                role: "Patient",
+                condition: "Senior Patient",
                 content:
-                  "Fast shipping and excellent packaging. My glucose monitoring supplies arrive fresh and well-protected every month.",
+                  "Excellent service for seniors. The large-print labels and easy-to-open containers make taking my medications much simpler.",
                 rating: 5,
-                avatar: "👨‍💼",
+                avatar: "👨‍🦳",
+                verified: true,
               },
               {
                 name: "Lisa Thompson",
-                role: "Pharmacy Manager",
+                condition: "Cancer Survivor",
                 content:
-                  "Professional service and authentic products. We've established a great partnership for our clinic's supply needs.",
+                  "During my treatment, they ensured I never ran out of critical medications. The pharmacist consultations were incredibly helpful.",
                 rating: 5,
                 avatar: "👩‍🔬",
+                verified: true,
               },
               {
                 name: "Robert Davis",
-                role: "Patient",
+                condition: "Chronic Pain Patient",
                 content:
-                  "The mobile app makes reordering so convenient. Product information is detailed and helps me make informed choices.",
+                  "Reliable service for my pain management medications. The secure delivery and prescription tracking give me peace of mind.",
                 rating: 5,
-                avatar: "👨‍🦳",
+                avatar: "👨‍💼",
+                verified: true,
               },
             ].map((testimonial, index) => (
               <div
                 key={index}
-                className={`p-6 rounded-2xl border transition-all duration-300 ${
+                className={`p-6 rounded-3xl border transition-all duration-300 hover:shadow-xl ${
                   darkMode
                     ? "bg-gray-700 border-gray-600"
                     : "bg-gray-50 border-gray-100"
                 }`}
               >
-                <div className="flex items-center mb-4">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className="w-5 h-5 text-yellow-400 fill-current"
-                    />
-                  ))}
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <Star
+                        key={i}
+                        className="w-5 h-5 text-yellow-400 fill-current"
+                      />
+                    ))}
+                  </div>
+                  {testimonial.verified && (
+                    <div
+                      className={`flex items-center text-xs ${
+                        darkMode ? "text-blue-400" : "text-blue-600"
+                      }`}
+                    >
+                      <CheckCircle className="w-4 h-4 mr-1" />
+                      Verified
+                    </div>
+                  )}
                 </div>
                 <p
                   className={`mb-6 leading-relaxed ${
@@ -579,7 +538,7 @@ export default function Home({ darkMode }) {
                         darkMode ? "text-gray-400" : "text-gray-500"
                       }`}
                     >
-                      {testimonial.role}
+                      {testimonial.condition}
                     </div>
                   </div>
                 </div>
@@ -591,177 +550,68 @@ export default function Home({ darkMode }) {
 
       {/* Why Choose Us Section */}
       <section
-        className={`px-4 py-16 sm:px-6 lg:px-8 ${
+        className={`px-4 py-20 sm:px-6 lg:px-8 ${
           darkMode
-            ? "bg-gradient-to-r from-green-800 to-emerald-900"
-            : "bg-gradient-to-r from-green-600 to-emerald-600"
+            ? "bg-gradient-to-r from-green-600 to-green-700"
+            : "bg-[#1DA678]"
         }`}
       >
         <div className="mx-auto max-w-7xl">
           <div className="text-center space-y-4 mb-16">
-            <h2 className="text-4xl font-bold text-white">Why Choose Us</h2>
-            <p
-              className={`text-xl max-w-3xl mx-auto ${
-                darkMode ? "text-green-100" : "text-green-100"
-              }`}
-            >
-              Experience the difference that quality healthcare makes
+            <h2 className="text-4xl md:text-5xl font-bold text-white">
+              Why Choose Our Pharmacy
+            </h2>
+            <p className="text-xl max-w-3xl mx-auto text-blue-100">
+              Your health and safety are our top priorities
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               {
-                title: "Quality Products",
+                icon: Shield,
+                title: "FDA Approved",
                 description:
-                  "FDA-approved and certified medical products from trusted manufacturers",
+                  "All medications sourced from licensed manufacturers with FDA approval",
                 stat: "100%",
               },
               {
+                icon: Truck,
                 title: "Fast Delivery",
                 description:
-                  "Quick and secure shipping with real-time tracking",
+                  "Same-day and next-day delivery options with temperature-controlled shipping",
                 stat: "24-48h",
               },
               {
-                title: "Customer Satisfaction",
+                icon: Award,
+                title: "Licensed Pharmacists",
                 description:
-                  "Consistently high ratings from our valued customers",
-                stat: "98%",
+                  "Board-certified pharmacists available for consultations and drug interactions",
+                stat: "24/7",
               },
               {
-                title: "Years of Service",
+                icon: Heart,
+                title: "Patient Satisfaction",
                 description:
-                  "Decades of trusted healthcare solutions in our community",
-                stat: "35+",
+                  "Consistently high ratings from patients who trust us with their medications",
+                stat: "98.5%",
               },
             ].map((feature, index) => (
               <div key={index} className="text-center space-y-4">
+                <div className="w-16 h-16 bg-white bg-opacity-20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <feature.icon className="w-8 h-8 text-white" />
+                </div>
                 <div className="text-4xl font-bold text-white">
                   {feature.stat}
                 </div>
                 <h3 className="text-xl font-semibold text-white">
                   {feature.title}
                 </h3>
-                <p
-                  className={`leading-relaxed ${
-                    darkMode ? "text-green-100" : "text-green-100"
-                  }`}
-                >
+                <p className="leading-relaxed text-blue-100 text-sm">
                   {feature.description}
                 </p>
               </div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Contact Section */}
-      <section
-        className={`px-4 py-16 sm:px-6 lg:px-8 ${
-          darkMode ? "bg-gray-900" : "bg-gray-50"
-        }`}
-      >
-        <div className="mx-auto max-w-7xl">
-          <div
-            className={`rounded-3xl shadow-xl overflow-hidden ${
-              darkMode ? "bg-gray-800" : "bg-white"
-            }`}
-          >
-            <div className="grid lg:grid-cols-2">
-              {/* Left Side */}
-              <div className="p-8 lg:p-12 space-y-8">
-                <div>
-                  <h2
-                    className={`text-3xl font-bold mb-4 ${
-                      darkMode ? "text-white" : "text-gray-900"
-                    }`}
-                  >
-                    Need Help with Your Order?
-                  </h2>
-                  <p
-                    className={`text-lg ${
-                      darkMode ? "text-gray-300" : "text-gray-600"
-                    }`}
-                  >
-                    Our healthcare specialists are here to help you find the
-                    right products and answer any questions about your medical
-                    needs.
-                  </p>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-3">
-                    <Phone
-                      className={darkMode ? "text-green-400" : "text-green-600"}
-                      size={20}
-                    />
-                    <span
-                      className={darkMode ? "text-gray-300" : "text-gray-700"}
-                    >
-                      +1 (555) 123-4567
-                    </span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <Mail
-                      className={darkMode ? "text-green-400" : "text-green-600"}
-                      size={20}
-                    />
-                    <span
-                      className={darkMode ? "text-gray-300" : "text-gray-700"}
-                    >
-                      support@medicalstore.com
-                    </span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <MapPin
-                      className={darkMode ? "text-green-400" : "text-green-600"}
-                      size={20}
-                    />
-                    <span
-                      className={darkMode ? "text-gray-300" : "text-gray-700"}
-                    >
-                      123 Healthcare Plaza, Medical District
-                    </span>
-                  </div>
-                </div>
-
-                <button
-                  className={`px-8 py-4 rounded-xl font-semibold text-lg hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 flex items-center ${
-                    darkMode
-                      ? "bg-gradient-to-r from-green-600 to-emerald-600 text-white"
-                      : "bg-gradient-to-r from-green-600 to-emerald-600 text-white"
-                  }`}
-                >
-                  Contact Support
-                  <ChevronRight className="ml-2 w-5 h-5" />
-                </button>
-              </div>
-
-              {/* Right Side */}
-              <div
-                className={`p-8 lg:p-12 flex items-center justify-center ${
-                  darkMode
-                    ? "bg-gradient-to-br from-green-800 to-emerald-900"
-                    : "bg-gradient-to-br from-green-500 to-emerald-600"
-                }`}
-              >
-                <div className="text-center text-white space-y-6">
-                  <div className="w-24 h-24 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto">
-                    <Shield className="w-12 h-12 text-white" />
-                  </div>
-                  <h3 className="text-2xl font-bold">Secure & Reliable</h3>
-                  <p
-                    className={`${
-                      darkMode ? "text-green-100" : "text-green-100"
-                    }`}
-                  >
-                    Your health information is protected with enterprise-grade
-                    security and HIPAA compliance.
-                  </p>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </section>
