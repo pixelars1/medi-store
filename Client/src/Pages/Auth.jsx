@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { AppContext } from "../Context/AppContext";
 
@@ -7,7 +7,9 @@ const Auth = () => {
   const mode = searchParams.get("mode"); // 'signin' or 'signup'
   const { darkMode } = useContext(AppContext);
   const [isSignup, setIsSignup] = useState(mode === "signup");
-
+  useEffect(()=>{
+    window.scrollTo(0, 0);
+  })
   return (
     <div
       className={`min-h-screen flex items-center justify-center transition-colors ${
