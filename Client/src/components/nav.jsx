@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Menu, X, Heart } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Nav = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeItem, setActiveItem] = useState("Home");
   const [scrolled, setScrolled] = useState(false);
+  const navigate = useNavigate();
 
   const handleAuthClick = (mode) => {
-    console.log(`Navigate to auth with mode: ${mode}`);
+    navigate(`/auth?mode=${mode}`);
   };
 
   useEffect(() => {
@@ -52,8 +54,11 @@ const Nav = () => {
             {navItems.map((item) => (
               <button
                 key={item}
-                onClick={() => setActiveItem(item)}
-                className={`px-3 py-2 rounded-md text-sm font-medium transition duration-200 ${
+                onClick={() => {
+                  setActiveItem(item);
+                  navigate(`/${item.toLowerCase() === "home" ? "" : item.toLowerCase()}`);
+                }}
+                className={`px-3 py-2 cursor-pointer rounded-md text-sm font-medium transition duration-200 ${
                   activeItem === item
                     ? "bg-green-500 text-white shadow"
                     : scrolled
@@ -72,13 +77,13 @@ const Nav = () => {
             <div className="hidden sm:flex items-center gap-2">
               <button
                 onClick={() => handleAuthClick("signin")}
-                className="px-4 py-2 text-sm font-semibold border border-green-600 text-green-600 dark:text-green-400 bg-white dark:bg-gray-800 rounded-md hover:bg-green-50 dark:hover:bg-gray-700 transition"
+                className="px-4 cursor-pointer py-2 text-sm font-semibold border border-green-600 text-green-600 dark:text-green-400 bg-white dark:bg-gray-800 rounded-md hover:bg-green-50 dark:hover:bg-gray-700 transition"
               >
                 Sign In
               </button>
               <button
                 onClick={() => handleAuthClick("signup")}
-                className="px-4 py-2 text-sm font-semibold bg-green-600 text-white rounded-md hover:bg-green-700 transition"
+                className="px-4 cursor-pointer py-2 text-sm font-semibold bg-green-600 text-white rounded-md hover:bg-green-700 transition"
               >
                 Sign Up
               </button>
@@ -115,8 +120,9 @@ const Nav = () => {
                 onClick={() => {
                   setActiveItem(item);
                   setIsMenuOpen(false);
+                  navigate(`/${item.toLowerCase() === "home" ? "" : item.toLowerCase()}`);
                 }}
-                className={`w-full text-left px-4 py-2 rounded-md text-base font-medium transition ${
+                className={`w-full cursor-pointer text-left px-4 py-2 rounded-md text-base font-medium transition ${
                   activeItem === item
                     ? "bg-green-600 text-white shadow"
                     : "text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-gray-800"
@@ -133,7 +139,7 @@ const Nav = () => {
                   handleAuthClick("signin");
                   setIsMenuOpen(false);
                 }}
-                className="w-full px-4 py-2 text-base font-semibold border border-green-600 text-green-600 dark:text-green-400 bg-white dark:bg-gray-800 rounded-md hover:bg-green-50 dark:hover:bg-gray-700 transition"
+                className="w-full px-4 py-2 text-base cursor-pointer font-semibold border border-green-600 text-green-600 dark:text-green-400 bg-white dark:bg-gray-800 rounded-md hover:bg-green-50 dark:hover:bg-gray-700 transition"
               >
                 Sign In
               </button>
@@ -142,7 +148,7 @@ const Nav = () => {
                   handleAuthClick("signup");
                   setIsMenuOpen(false);
                 }}
-                className="w-full px-4 py-2 text-base font-semibold bg-green-600 text-white rounded-md hover:bg-green-700 transition"
+                className="w-full px-4 py-2 text-base cursor-pointer font-semibold bg-green-600 text-white rounded-md hover:bg-green-700 transition"
               >
                 Sign Up
               </button>
