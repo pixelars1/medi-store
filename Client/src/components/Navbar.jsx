@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Menu, X, Heart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-const Nav = () => {
+const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeItem, setActiveItem] = useState("Home");
   const [scrolled, setScrolled] = useState(false);
@@ -155,4 +155,4 @@ const Nav = () => {
   );
 };
 
-export default Nav;
+export default Navbar;
