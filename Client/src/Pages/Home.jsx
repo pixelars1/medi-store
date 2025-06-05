@@ -573,7 +573,7 @@ export default function Home({ darkMode }) {
             ].map((feature, index) => (
               <div key={index} className="text-center space-y-4">
                 <div className="w-16 h-16 bg-opacity-20 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <feature.icon className="w-12 h-12 text-white" />
+                  <feature.icon className="w-14 h-14 text-white" />
                 </div>
                 <div className="text-4xl font-bold text-white">
                   {feature.stat}
