@@ -3,7 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import Home from "./Pages/Home.jsx";
 import { Moon, Sun } from "lucide-react";
 import Footer from "./components/Footer.jsx";
-import Nav from "./components/Nav.jsx";
+import Nav from "./components/nav.jsx";
 import ProductDetails from "./Pages/ProductDetails.jsx";
 import { AppContext } from "./Context/AppContext.jsx";
 import Auth from "./Pages/Auth.jsx";
