@@ -2,22 +2,10 @@ import {
   Heart,
   Shield,
   Search,
-  Clock,
-  Users,
   Star,
-  ChevronRight,
-  Phone,
-  Mail,
-  MapPin,
   Pill,
-  Stethoscope,
-  Thermometer,
   Syringe,
-  Eye,
-  Moon,
-  Sun,
   Truck,
-  Award,
   CheckCircle,
 } from "lucide-react";
 import { useState } from "react";
@@ -40,15 +28,17 @@ export default function Home({ darkMode }) {
         <div className="absolute inset-0 bg-opacity-20"></div>
         <div className="relative z-10 text-center max-w-6xl mx-auto">
           <div className="mb-8">
-            <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
+            <h1 className="text-4xl md:text-7xl font-bold text-white mb-6 leading-tight">
               Your Trusted{" "}
-              <span className="text-orange-200">Online Pharmacy</span>
+              <span className="text-lime-200 block md:inline">
+                Online Pharmacy
+              </span>
             </h1>
             <p className="text-xl md:text-2xl text-blue-100 mb-4 max-w-4xl mx-auto leading-relaxed">
               Fast, Safe, Affordable - Get your medications delivered to your
               doorstep in no time!
             </p>
-            <p className="text-lg text-blue-200 mb-12 max-w-3xl mx-auto">
+            <p className="text-md text-blue-200 mb-12 max-w-3xl mx-auto">
               Licensed pharmacists • FDA-approved medications • Secure delivery
               • Insurance accepted
             </p>
@@ -57,20 +47,15 @@ export default function Home({ darkMode }) {
           {/* Search Bar */}
           <div className="max-w-2xl mx-auto mb-12">
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none">
-                <Search className="h-6 w-6 text-gray-400" />
-              </div>
               <input
                 type="text"
-                placeholder="Search for medications, brands, or conditions..."
+                placeholder="Search for medications"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-14 pr-6 py-5 text-lg bg-white rounded-2xl shadow-2xl focus:outline-none focus:ring-4 focus:ring-blue-300 border-0"
+                className="w-full pl-4 pr-6 py-5 text-lg bg-white rounded-2xl shadow-2xl focus:outline-none focus:ring-4 focus:ring-blue-300 border-0"
               />
-              <button className="absolute inset-y-0 right-0 pr-3 flex items-center">
-                <div className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-semibold transition-colors duration-200">
-                  Search
-                </div>
+              <button className="absolute inset-y-0 cursor-pointer right-0 pr-6 flex items-center">
+                <Search className="h-6 w-6 text-gray-400" />
               </button>
             </div>
           </div>
@@ -81,7 +66,7 @@ export default function Home({ darkMode }) {
               { number: "50K+", label: "Happy Patients" },
               { number: "5000+", label: "Medications" },
               { number: "24/7", label: "Support" },
-              { number: "Same Day", label: "Delivery" },
+              { number: "Fast", label: "Delivery" },
             ].map((stat, index) => (
               <div key={index} className="text-center">
                 <div className="text-3xl md:text-4xl font-bold text-white mb-2">
@@ -562,7 +547,7 @@ export default function Home({ darkMode }) {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
               {
                 icon: Shield,
@@ -575,15 +560,8 @@ export default function Home({ darkMode }) {
                 icon: Truck,
                 title: "Fast Delivery",
                 description:
-                  "Same-day and next-day delivery options with temperature-controlled shipping",
-                stat: "24-48h",
-              },
-              {
-                icon: Award,
-                title: "Licensed Pharmacists",
-                description:
-                  "Board-certified pharmacists available for consultations and drug interactions",
-                stat: "24/7",
+                  "Fast delivery options with temperature-controlled shipping",
+                stat: "Delivery",
               },
               {
                 icon: Heart,
@@ -594,8 +572,8 @@ export default function Home({ darkMode }) {
               },
             ].map((feature, index) => (
               <div key={index} className="text-center space-y-4">
-                <div className="w-16 h-16 bg-white bg-opacity-20 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <feature.icon className="w-8 h-8 text-white" />
+                <div className="w-16 h-16 bg-opacity-20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <feature.icon className="w-12 h-12 text-white" />
                 </div>
                 <div className="text-4xl font-bold text-white">
                   {feature.stat}
@@ -603,7 +581,7 @@ export default function Home({ darkMode }) {
                 <h3 className="text-xl font-semibold text-white">
                   {feature.title}
                 </h3>
-                <p className="leading-relaxed text-blue-100 text-sm">
+                <p className="leading-relaxed w-80 mx-auto text-blue-100 text-md">
                   {feature.description}
                 </p>
               </div>
