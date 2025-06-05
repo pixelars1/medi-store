@@ -24,7 +24,9 @@ const Nav = () => {
 
   return (
     <nav
-      className={`fixed top-2 w-full z-50 transition-all duration-300 ${
+      className={`fixed ${
+        isMenuOpen ? "pb-8" : "pb-0"
+      } pb-2 pt-1 w-full z-50 transition-all duration-300 ${
         scrolled ? "bg-white dark:bg-gray-900 shadow-lg" : "bg-transparent"
       }`}
     >
@@ -56,7 +58,11 @@ const Nav = () => {
                 key={item}
                 onClick={() => {
                   setActiveItem(item);
-                  navigate(`/${item.toLowerCase() === "home" ? "" : item.toLowerCase()}`);
+                  navigate(
+                    `/${
+                      item.toLowerCase() === "home" ? "" : item.toLowerCase()
+                    }`
+                  );
                 }}
                 className={`px-3 py-2 cursor-pointer rounded-md text-sm font-medium transition duration-200 ${
                   activeItem === item
@@ -77,15 +83,9 @@ const Nav = () => {
             <div className="hidden sm:flex items-center gap-2">
               <button
                 onClick={() => handleAuthClick("signin")}
-                className="px-4 cursor-pointer py-2 text-sm font-semibold border border-green-600 text-green-600 dark:text-green-400 bg-white dark:bg-gray-800 rounded-md hover:bg-green-50 dark:hover:bg-gray-700 transition"
+                className="px-4 cursor-pointer py-2 text-sm font-semibold border border-green-600 text-green-600 dark:text-green-400 bg-white dark:bg-gray-800 rounded-4xl hover:bg-green-50 dark:hover:bg-gray-700 transition"
               >
-                Sign In
-              </button>
-              <button
-                onClick={() => handleAuthClick("signup")}
-                className="px-4 cursor-pointer py-2 text-sm font-semibold bg-green-600 text-white rounded-md hover:bg-green-700 transition"
-              >
-                Sign Up
+                Login / Register
               </button>
             </div>
 
@@ -120,7 +120,11 @@ const Nav = () => {
                 onClick={() => {
                   setActiveItem(item);
                   setIsMenuOpen(false);
-                  navigate(`/${item.toLowerCase() === "home" ? "" : item.toLowerCase()}`);
+                  navigate(
+                    `/${
+                      item.toLowerCase() === "home" ? "" : item.toLowerCase()
+                    }`
+                  );
                 }}
                 className={`w-full cursor-pointer text-left px-4 py-2 rounded-md text-base font-medium transition ${
                   activeItem === item
@@ -141,16 +145,7 @@ const Nav = () => {
                 }}
                 className="w-full px-4 py-2 text-base cursor-pointer font-semibold border border-green-600 text-green-600 dark:text-green-400 bg-white dark:bg-gray-800 rounded-md hover:bg-green-50 dark:hover:bg-gray-700 transition"
               >
-                Sign In
-              </button>
-              <button
-                onClick={() => {
-                  handleAuthClick("signup");
-                  setIsMenuOpen(false);
-                }}
-                className="w-full px-4 py-2 text-base cursor-pointer font-semibold bg-green-600 text-white rounded-md hover:bg-green-700 transition"
-              >
-                Sign Up
+                Login / Register
               </button>
             </div>
           </div>
