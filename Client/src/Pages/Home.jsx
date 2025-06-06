@@ -210,65 +210,71 @@ export default function Home({ darkMode }) {
             {[
               {
                 name: "Lisinopril 10mg",
+                image:
+                  "https://media.gettyimages.com/id/1778918997/photo/background-of-a-large-group-of-assorted-capsules-pills-and-blisters.jpg?s=612x612&w=gi&k=20&c=hRn3MwcMQfMkbtHTzR-j0-pzxC6U3gAlvNW5GEUQQig=",
                 genericName: "ACE Inhibitor",
                 price: "$12.99",
                 originalPrice: "$18.99",
                 rating: 4.8,
-                reviews: 1247,
                 description:
                   "For high blood pressure and heart failure treatment",
                 inStock: true,
               },
               {
                 name: "Metformin 500mg",
+                image:
+                  "https://media.gettyimages.com/id/1778918997/photo/background-of-a-large-group-of-assorted-capsules-pills-and-blisters.jpg?s=612x612&w=gi&k=20&c=hRn3MwcMQfMkbtHTzR-j0-pzxC6U3gAlvNW5GEUQQig=",
                 genericName: "Diabetes Medication",
                 price: "$8.99",
                 originalPrice: "$15.99",
                 rating: 4.9,
-                reviews: 2156,
                 description:
                   "Type 2 diabetes management and blood sugar control",
                 inStock: true,
               },
               {
                 name: "Ibuprofen 200mg",
+                image:
+                  "https://media.gettyimages.com/id/1778918997/photo/background-of-a-large-group-of-assorted-capsules-pills-and-blisters.jpg?s=612x612&w=gi&k=20&c=hRn3MwcMQfMkbtHTzR-j0-pzxC6U3gAlvNW5GEUQQig=",
                 genericName: "Pain Reliever",
                 price: "$6.99",
                 originalPrice: "$9.99",
                 rating: 4.7,
-                reviews: 891,
                 description: "Anti-inflammatory pain relief and fever reducer",
                 inStock: true,
               },
               {
                 name: "Omeprazole 20mg",
+                image:
+                  "https://media.gettyimages.com/id/1778918997/photo/background-of-a-large-group-of-assorted-capsules-pills-and-blisters.jpg?s=612x612&w=gi&k=20&c=hRn3MwcMQfMkbtHTzR-j0-pzxC6U3gAlvNW5GEUQQig=",
                 genericName: "Proton Pump Inhibitor",
                 price: "$14.99",
                 originalPrice: "$22.99",
                 rating: 4.8,
-                reviews: 756,
                 description:
                   "Gastric acid reduction for GERD and ulcer treatment",
                 inStock: true,
               },
               {
                 name: "Atorvastatin 20mg",
+                image:
+                  "https://media.gettyimages.com/id/1778918997/photo/background-of-a-large-group-of-assorted-capsules-pills-and-blisters.jpg?s=612x612&w=gi&k=20&c=hRn3MwcMQfMkbtHTzR-j0-pzxC6U3gAlvNW5GEUQQig=",
                 genericName: "Statin",
                 price: "$16.99",
                 originalPrice: "$28.99",
                 rating: 4.9,
-                reviews: 1834,
                 description:
                   "Cholesterol management and cardiovascular protection",
                 inStock: true,
               },
               {
                 name: "Cetirizine 10mg",
+                image:
+                  "https://media.gettyimages.com/id/1778918997/photo/background-of-a-large-group-of-assorted-capsules-pills-and-blisters.jpg?s=612x612&w=gi&k=20&c=hRn3MwcMQfMkbtHTzR-j0-pzxC6U3gAlvNW5GEUQQig=",
                 genericName: "Antihistamine",
                 price: "$9.99",
                 originalPrice: "$13.99",
                 rating: 4.6,
-                reviews: 634,
                 description:
                   "Allergy relief for seasonal and year-round symptoms",
                 inStock: true,
@@ -276,12 +282,19 @@ export default function Home({ darkMode }) {
             ].map((medicine, index) => (
               <div
                 key={index}
-                className={`rounded-3xl p-6 hover:shadow-2xl transition-all duration-300 group cursor-pointer border transform hover:-translate-y-1 ${
+                className={`rounded-3xl p-4 hover:shadow-2xl transition-all duration-300 group cursor-pointer border transform hover:-translate-y-1 ${
                   darkMode
                     ? "bg-gray-800 border-gray-700 hover:border-blue-500"
                     : "bg-white border-gray-100 hover:border-blue-200"
                 }`}
               >
+                <div className="w-full h-60 mb-4 rounded-t-lg bg-red-400 overflow-hidden">
+                  <img
+                    src={medicine.image}
+                    alt={medicine.title}
+                    className="h-full w-full "
+                  />
+                </div>
                 <div className="flex justify-between items-start mb-4">
                   <div
                     className={`flex items-center text-xs ${
@@ -316,27 +329,6 @@ export default function Home({ darkMode }) {
                     {medicine.description}
                   </p>
                 </div>
-
-                <div className="flex items-center mb-3">
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className={`w-4 h-4 ${
-                        i < Math.floor(medicine.rating)
-                          ? "text-yellow-400 fill-current"
-                          : "text-gray-300"
-                      }`}
-                    />
-                  ))}
-                  <span
-                    className={`ml-2 text-sm ${
-                      darkMode ? "text-gray-400" : "text-gray-500"
-                    }`}
-                  >
-                    {medicine.rating} ({medicine.reviews} reviews)
-                  </span>
-                </div>
-
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <span
