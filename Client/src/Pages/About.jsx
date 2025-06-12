@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import Testimonials from "../Components/Testimonials";
+import Testimonials from "../Components/Testimonials.jsx";
 
 const whyUsData = [
   {
