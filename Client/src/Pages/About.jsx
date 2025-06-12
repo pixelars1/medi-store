@@ -217,9 +217,6 @@ const AboutPage = () => {
         </div>
       </section>
 
-      {/* Section 4 - Customer Reviews */}
-      <Testimonials />
-
       {/* Section 5 - FAQ */}
       <section className="bg-gradient-to-b from-indigo-50 to-white dark:from-gray-900 dark:to-gray-800 py-16 px-4">
         <div className="text-center md:text-left mb-8">
