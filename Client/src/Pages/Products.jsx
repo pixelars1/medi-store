@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { CheckCircle } from "lucide-react";
+import { CheckCircle, Search } from "lucide-react";
 import {
   FaSearch,
   FaChevronLeft,
   FaChevronRight,
   FaFilter,
 } from "react-icons/fa";
+import ProductCard from "../components/ProductCard";
 
 const categories = [
   "All",
@@ -81,112 +82,8 @@ const products = [
   },
 ];
 
-const ProductCard = ({ darkMode, product, index }) => (
-  <div
-    key={index}
-    className={`rounded-3xl h-[28rem] w-[22rem] p-4 hover:shadow-2xl transition-all duration-300 group cursor-pointer border transform hover:-translate-y-1 ${
-      darkMode
-        ? "bg-gray-800 border-gray-700 hover:border-blue-500"
-        : "bg-white border-gray-100 hover:border-blue-200"
-    }`}
-  >
-    <div className="relative w-full h-[45%] mb-4 rounded-t-lg overflow-hidden">
-      <img
-        src={product.image}
-        alt={product.name}
-        className="h-full w-full object-contain"
-      />
-      <div className="absolute top-2 mb-4">
-        <div
-          className={`flex items-center text-xs ${
-            darkMode ? "text-green-400" : "text-green-600"
-          }`}
-        >
-          <CheckCircle className="w-4 h-4 mr-1" />
-          In Stock
-        </div>
-      </div>
-    </div>
-
-    <div className="mb-4">
-      <h3
-        className={`text-xl font-bold mb-1 ${
-          darkMode ? "text-white" : "text-gray-900"
-        }`}
-      >
-        {product.name}
-      </h3>
-      <p
-        className={`text-sm font-medium mb-2 ${
-          darkMode ? "text-blue-400" : "text-blue-600"
-        }`}
-      >
-        {product.category}
-      </p>
-      <p
-        className={`text-sm leading-relaxed h-12 ${
-          darkMode ? "text-gray-300" : "text-gray-600"
-        }`}
-      >
-        {product.description}
-      </p>
-    </div>
-    <div className="flex items-center justify-between mb-4">
-      <div>
-        <span
-          className={`text-2xl font-bold ${
-            darkMode ? "text-blue-400" : "text-blue-600"
-          }`}
-        >
-          {product.price}
-        </span>
-        <span
-          className={`ml-2 text-sm line-through ${
-            darkMode ? "text-gray-500" : "text-gray-400"
-          }`}
-        >
-          {product.originalPrice}
-        </span>
-      </div>
-      <div
-        className={`text-sm font-semibold px-2 py-1 rounded ${
-          darkMode
-            ? "bg-green-900 text-green-200"
-            : "bg-green-100 text-green-800"
-        }`}
-      >
-        Save{" "}
-        {Math.round(
-          ((parseFloat(product.originalPrice.slice(1)) -
-            parseFloat(product.price.slice(1))) /
-            parseFloat(product.originalPrice.slice(1))) *
-            100
-        )}
-        %
-      </div>
-    </div>
-
-    <button
-      className={`w-full py-3 rounded-xl font-semibold transition-all duration-300  ${
-        darkMode
-          ? "bg-blue-600 text-white hover:bg-blue-700"
-          : "bg-blue-600 text-white hover:bg-blue-700"
-      }`}
-    >
-      Add to Cart
-    </button>
-  </div>
-);
-
-const Products = () => {
+const Products = ({ darkMode }) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All");
-
-  const filteredProducts = products.filter(
-    (product) =>
-      (selectedCategory === "All" || product.category === selectedCategory) &&
-      product.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
   const containerRef = useRef(null);
   const [scrollX, setScrollX] = useState(0);
@@ -212,85 +109,136 @@ const Products = () => {
   }, []);
 
   return (
-    <div className="p-10 pt-20 bg-gradient-to-br from-[#1DA678] to-[#18a375] min-h-screen">
-      <h1 className="text-5xl font-extrabold text-center text-blue-900 mb-10">
-        Explore Medicines
-      </h1>
+    <div className="p-10 pt-20 bg-amber-50 dark:bg-[#101828] min-h-screen">
+      <div className="w-full">
+        <h1
+          className={`text-5xl mt-8 font-extrabold text-center text-amber-50 mb-10`}
+        >
+          Explore Medicines
+        </h1>
 
-      {/* Search and Filters */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-10">
-        {/* Search Bar */}
-        <div className="flex items-center w-full max-w-md bg-white border border-blue-300 rounded-full shadow-sm px-4 py-2 focus-within:ring-2 focus-within:ring-blue-500 transition">
-          <input
-            type="text"
-            placeholder="Search medicines..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="flex-grow outline-none text-sm text-zinc-700 placeholder:text-zinc-400 bg-transparent"
-          />
-          <button className="text-blue-600 hover:text-blue-800 transition">
-            <FaSearch size={18} />
-          </button>
-        </div>
-
-        {/* Category Filter - responsive & Scrollable */}
-        <div className="w-full flex items-center gap-2">
-          {/* Category Scroll Container */}
-          <div className="w-full">
-            <div className="flex items-center gap-3">
-              {/* Static Filter Label */}
-              <div className="flex-shrink-0 flex items-center gap-2 text-blue-900 font-medium text-sm whitespace-nowrap">
-                <FaFilter />
-                <span>Filter by Category:</span>
-              </div>
-              {/* Left Scroll Button */}
-              <button
-                onClick={() => scroll(-200)}
-                className="text-blue-900 text-lg w-10 h-10 rounded-full flex items-center justify-center shadow-[0_0_12px_rgba(0,0,0,0.2)] cursor-pointer hover:shadow-[0_0_25px_rgba(0,0,0,0.4)]"
-              >
-                <FaChevronLeft
-                  className={`${scrollX > 0 && `opacity-[0.5]`}`}
-                />
+        {/* Search and Filters */}
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-2">
+          {/* Search Bar */}
+          <div className="w-[100%] md:w-[70%] mx-auto mb-12">
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search for medications"
+                className="w-full pl-4 pr-6 py-5 text-lg bg-white rounded-2xl shadow-2xl focus:outline-none focus:ring-4 focus:ring-blue-300 border-0"
+              />
+              <button className="absolute inset-y-0 cursor-pointer right-0 pr-6 flex items-center">
+                <Search className="h-6 w-6 text-gray-400" />
               </button>
-              {/* Scrollable Category Buttons */}
-              <div
-                className="flex-1 overflow-x-auto scrollbar-hide"
-                ref={containerRef}
-              >
-                <div className="flex gap-3 w-max lg:max-w-[400px]">
-                  {categories.map((cat) => (
-                    <button
-                      key={cat}
-                      onClick={() => setSelectedCategory(cat)}
-                      className={`flex items-center gap-2 text-xs md:text-sm px-4 py-2 rounded-full border transition-all duration-200 whitespace-nowrap ${
-                        selectedCategory === cat
-                          ? "bg-blue-600 text-white border-blue-600 shadow-sm"
-                          : "bg-white text-blue-700 border-blue-300 hover:bg-blue-50"
-                      }`}
-                    >
-                      <span className="capitalize">{cat}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
             </div>
           </div>
-
-          {/* Right Scroll Button */}
-          <button
-            onClick={() => scroll(200)}
-            className="text-blue-900 text-lg w-10 h-10 rounded-full flex items-center justify-center shadow-[0_0_12px_rgba(0,0,0,0.2)] cursor-pointer hover:shadow-[0_0_25px_rgba(0,0,0,0.4)]"
-          >
-            {<FaChevronRight className={`${scrollEnd && `opacity-[0.5]`}`} />}
-          </button>
         </div>
       </div>
+      <div className="w-full mx-auto md:flex">
+        {/* filters */}
+        <div className="w-[30%] border-r-2 border-r-amber-100 md:block hidden"></div>
+        {/* Product Cards Grid */}
+        <div className="grid mx-0 md:mx-auto md:px-18 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {products.map((medicine, index) => (
+            <div
+              key={index}
+              className={`rounded-3xl p-3 h-[22rem] w-[17rem] hover:shadow-2xl transition-all duration-300 group cursor-pointer border transform hover:-translate-y-1 flex flex-col ${
+                darkMode
+                  ? "bg-gray-800 border-gray-700 hover:border-blue-500"
+                  : "bg-white border-gray-100 hover:border-blue-200"
+              }`}
+            >
+              {/* Image Section - Reduced height */}
+              <div className="w-full h-42 mb-3 rounded-xl overflow-hidden flex-shrink-0">
+                <img
+                  src={medicine.image}
+                  alt={medicine.title}
+                  className="h-full w-full object-cover"
+                />
+              </div>
 
-      {/* Product Cards Grid */}
-      <div className="grid md:px-18 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {filteredProducts.map((product, index) => (
-          <ProductCard product={product} key={index} />
-        ))}
+              {/* Content Section - Flexible */}
+              <div className="flex-1 flex flex-col">
+                {/* Stock Status */}
+                <div className="flex justify-between items-start mb-2">
+                  <div
+                    className={`flex items-center text-xs ${
+                      darkMode ? "text-green-400" : "text-green-600"
+                    }`}
+                  >
+                    <CheckCircle className="w-3 h-3 mr-1" />
+                    In Stock
+                  </div>
+                </div>
+
+                {/* Medicine Info */}
+                <div className="mb-3 flex-1">
+                  <h3
+                    className={`text-lg font-bold mb-1 leading-tight ${
+                      darkMode ? "text-white" : "text-gray-900"
+                    }`}
+                  >
+                    {medicine.name}
+                  </h3>
+                  <p
+                    className={`text-xs font-medium mb-2 ${
+                      darkMode ? "text-blue-400" : "text-blue-600"
+                    }`}
+                  >
+                    {medicine.genericName}
+                  </p>
+                </div>
+
+                {/* Price Section */}
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-baseline">
+                    <span
+                      className={`text-lg font-bold ${
+                        darkMode ? "text-blue-400" : "text-blue-600"
+                      }`}
+                    >
+                      {medicine.price}
+                    </span>
+                    <span
+                      className={`ml-1 text-xs line-through ${
+                        darkMode ? "text-gray-500" : "text-gray-400"
+                      }`}
+                    >
+                      {medicine.originalPrice}
+                    </span>
+                  </div>
+                  <div
+                    className={`text-xs font-semibold px-2 py-1 rounded ${
+                      darkMode
+                        ? "bg-green-900 text-green-200"
+                        : "bg-green-100 text-green-800"
+                    }`}
+                  >
+                    Save{" "}
+                    {Math.round(
+                      ((parseFloat(medicine.originalPrice.slice(1)) -
+                        parseFloat(medicine.price.slice(1))) /
+                        parseFloat(medicine.originalPrice.slice(1))) *
+                        100
+                    )}
+                    %
+                  </div>
+                </div>
+
+                {/* Button - Fixed at bottom */}
+                <button
+                  className={`w-full py-2.5 rounded-xl font-semibold transition-all duration-300 text-sm ${
+                    darkMode
+                      ? "bg-blue-600 text-white hover:bg-blue-700"
+                      : "bg-blue-600 text-white hover:bg-blue-700"
+                  }`}
+                >
+                  Add to Cart
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
