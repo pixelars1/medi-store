@@ -113,7 +113,7 @@ const Navbar = () => {
         }`}
       >
         <div className="mx-4 mt-2 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-green-100 dark:border-gray-700">
-          <div className="p-4 space-y-3">
+          <div className="p-4 space-y-4">
             {navItems.map((item) => (
               <button
                 key={item}
