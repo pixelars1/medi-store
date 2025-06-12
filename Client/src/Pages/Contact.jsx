@@ -54,7 +54,7 @@ const Contact = () => {
       } px-4 py-16 transition-all duration-500`}
     >
       <div className="max-w-7xl pt-8 mx-auto">
-        <h2 className="text-4xl  font-bold text-center text-teal-700 dark:text-teal-400 mb-4">
+        <h2 className="text-4xl font-bold text-center text-green-700 dark:text-green-400 mb-4">
           Contact Us
         </h2>
         <p className="text-center text-gray-600 dark:text-gray-300 mb-10">
@@ -71,7 +71,7 @@ const Contact = () => {
               {/* Name */}
               <div>
                 <label className="block font-medium mb-1">Full Name *</label>
-                <div className="flex items-center gap-3 border border-gray-300 dark:border-gray-600 bg-transparent p-3 rounded-xl focus-within:ring-2 focus-within:ring-teal-500">
+                <div className="flex items-center gap-3 border border-gray-300 dark:border-gray-600 p-3 rounded-xl focus-within:ring-2 focus-within:ring-green-500">
                   <User size={18} />
                   <input
                     type="text"
@@ -88,7 +88,7 @@ const Contact = () => {
               {/* Email */}
               <div>
                 <label className="block font-medium mb-1">Email *</label>
-                <div className="flex items-center gap-3 border border-gray-300 dark:border-gray-600 bg-transparent p-3 rounded-xl focus-within:ring-2 focus-within:ring-teal-500">
+                <div className="flex items-center gap-3 border border-gray-300 dark:border-gray-600 p-3 rounded-xl focus-within:ring-2 focus-within:ring-green-500">
                   <Mail size={18} />
                   <input
                     type="email"
@@ -105,7 +105,7 @@ const Contact = () => {
               {/* Phone */}
               <div>
                 <label className="block font-medium mb-1">Phone</label>
-                <div className="flex items-center gap-3 border border-gray-300 dark:border-gray-600 bg-transparent p-3 rounded-xl focus-within:ring-2 focus-within:ring-teal-500">
+                <div className="flex items-center gap-3 border border-gray-300 dark:border-gray-600 p-3 rounded-xl focus-within:ring-2 focus-within:ring-green-500">
                   <Phone size={18} />
                   <input
                     type="tel"
@@ -121,7 +121,7 @@ const Contact = () => {
               {/* Message */}
               <div>
                 <label className="block font-medium mb-1">Message *</label>
-                <div className="flex items-start gap-3 border border-gray-300 dark:border-gray-600 bg-transparent p-3 rounded-xl focus-within:ring-2 focus-within:ring-teal-500">
+                <div className="flex items-start gap-3 border border-gray-300 dark:border-gray-600 p-3 rounded-xl focus-within:ring-2 focus-within:ring-green-500">
                   <MessageCircle size={18} className="mt-1" />
                   <textarea
                     name="message"
@@ -138,7 +138,7 @@ const Contact = () => {
 
             <button
               type="submit"
-              className="mt-6 w-full bg-teal-600 hover:bg-teal-700 text-white py-3 px-6 rounded-xl font-semibold transition duration-300"
+              className="mt-6 w-full bg-green-600 hover:bg-green-700 text-white py-3 px-6 rounded-xl font-semibold transition duration-300"
             >
               Send Message
             </button>
@@ -146,12 +146,12 @@ const Contact = () => {
 
           {/* Address Section */}
           <div className="shadow-xl rounded-2xl p-6 bg-white dark:bg-gray-800">
-            <h3 className="text-xl font-semibold text-teal-700 dark:text-teal-300 mb-4">Our Office</h3>
+            <h3 className="text-xl font-semibold text-green-700 dark:text-green-400 mb-4">Our Office</h3>
             <p className="mb-2"><strong>Address:</strong> 123 Health Street, Lucknow, UP</p>
             <p className="mb-2"><strong>Phone:</strong> +91 12345 67890</p>
             <p className="mb-4"><strong>Email:</strong> contact@healthcareexample.com</p>
             <h4 className="text-md font-semibold mb-2">Connect with us</h4>
-            <div className="flex gap-4 text-teal-600 dark:text-teal-300">
+            <div className="flex gap-4 text-green-600 dark:text-green-400">
               <a href="https://linkedin.com" target="_blank" className="hover:scale-110 transition-transform"><Linkedin /></a>
               <a href="https://twitter.com" target="_blank" className="hover:scale-110 transition-transform"><Twitter /></a>
               <a href="https://instagram.com" target="_blank" className="hover:scale-110 transition-transform"><Instagram /></a>
