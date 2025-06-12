@@ -64,7 +64,7 @@ function App() {
         {/* Add more routes as needed */}
         <Route path="/product-details" element={<ProductDetails />} />
         <Route path="/auth" element={<Auth />} />
-        <Route path="/products" element={<Products />} />
+        <Route path="/products" darkMode={darkMode} element={<Products />} />
         <Route path="/categories" element={<Categories />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />

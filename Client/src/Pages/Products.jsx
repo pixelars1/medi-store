@@ -1,14 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
-// eslint-disable-next-line no-unused-vars
-import { motion } from "framer-motion";
-
+import { useEffect, useRef, useState } from "react";
+import { CheckCircle } from "lucide-react";
 import {
   FaSearch,
   FaChevronLeft,
   FaChevronRight,
   FaFilter,
-  FaShoppingCart,
-  FaStar,
 } from "react-icons/fa";
 
 const categories = [
@@ -32,7 +28,7 @@ const products = [
     description:
       "Effective for fever and mild pain relief. Suitable for adults and children.",
     price: "$4.99",
-    rating: 4.5,
+    originalPrice: "$7.99",
   },
   {
     name: "Amoxicillin 250mg",
@@ -42,7 +38,7 @@ const products = [
     description:
       "A broad-spectrum antibiotic used to treat various bacterial infections.",
     price: "$6.50",
-    rating: 4.8,
+    originalPrice: "$8.99",
   },
   {
     name: "Cetirizine Hydrochloride",
@@ -51,7 +47,7 @@ const products = [
       "https://images.unsplash.com/photo-1748385367968-6fd2af37aafb?q=80&w=1984&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     description: "Antihistamine used to treat hay fever, allergies, and hives.",
     price: "$3.25",
-    rating: 4.4,
+    originalPrice: "$5.75",
   },
   {
     name: "Metformin 500mg",
@@ -61,7 +57,7 @@ const products = [
     description:
       "Used to control high blood sugar in people with type 2 diabetes.",
     price: "$7.00",
-    rating: 4.7,
+    originalPrice: "$11.25",
   },
   {
     name: "Ibuprofen 400mg",
@@ -71,7 +67,7 @@ const products = [
     description:
       "Non-steroidal anti-inflammatory drug (NSAID) for pain and inflammation.",
     price: "$4.20",
-    rating: 4.6,
+    originalPrice: "$7.75",
   },
   {
     name: "Omeprazole 20mg",
@@ -81,41 +77,105 @@ const products = [
     description:
       "Reduces stomach acid; used for GERD and ulcers. the Digestive Health",
     price: "$5.10",
-    rating: 4.3,
+    originalPrice: "$8.99",
   },
 ];
 
-const ProductCard = ({ product }) => (
-  <motion.div
-    whileHover={{ scale: 1.03 }}
-    className="bg-white rounded-2xl shadow-md overflow-hidden transition-all duration-300 w-[280px] sm:w-[300px] md:w-[350px] border border-gray-200 hover:shadow-lg"
+const ProductCard = ({ darkMode, product, index }) => (
+  <div
+    key={index}
+    className={`rounded-3xl h-[28rem] w-[22rem] p-4 hover:shadow-2xl transition-all duration-300 group cursor-pointer border transform hover:-translate-y-1 ${
+      darkMode
+        ? "bg-gray-800 border-gray-700 hover:border-blue-500"
+        : "bg-white border-gray-100 hover:border-blue-200"
+    }`}
   >
-    <img
-      src={product.image}
-      alt={product.name}
-      className="h-[180px] w-full object-cover rounded-t-2xl"
-    />
-    <div className="p-4 space-y-2">
-      <h2 className="text-lg font-semibold text-blue-900 line-clamp-1">
+    <div className="relative w-full h-[45%] mb-4 rounded-t-lg overflow-hidden">
+      <img
+        src={product.image}
+        alt={product.name}
+        className="h-full w-full object-contain"
+      />
+      <div className="absolute top-2 mb-4">
+        <div
+          className={`flex items-center text-xs ${
+            darkMode ? "text-green-400" : "text-green-600"
+          }`}
+        >
+          <CheckCircle className="w-4 h-4 mr-1" />
+          In Stock
+        </div>
+      </div>
+    </div>
+
+    <div className="mb-4">
+      <h3
+        className={`text-xl font-bold mb-1 ${
+          darkMode ? "text-white" : "text-gray-900"
+        }`}
+      >
         {product.name}
-      </h2>
-      <p className="text-sm text-blue-600 font-medium">{product.category}</p>
-      <p className="text-sm text-gray-600 line-clamp-2">
+      </h3>
+      <p
+        className={`text-sm font-medium mb-2 ${
+          darkMode ? "text-blue-400" : "text-blue-600"
+        }`}
+      >
+        {product.category}
+      </p>
+      <p
+        className={`text-sm leading-relaxed h-12 ${
+          darkMode ? "text-gray-300" : "text-gray-600"
+        }`}
+      >
         {product.description}
       </p>
-      <div className="flex justify-between items-center pt-1">
-        <span className="text-base font-bold text-green-700">
+    </div>
+    <div className="flex items-center justify-between mb-4">
+      <div>
+        <span
+          className={`text-2xl font-bold ${
+            darkMode ? "text-blue-400" : "text-blue-600"
+          }`}
+        >
           {product.price}
         </span>
-        <span className="flex items-center text-yellow-500 text-sm">
-          <FaStar className="mr-1" /> {product.rating}
+        <span
+          className={`ml-2 text-sm line-through ${
+            darkMode ? "text-gray-500" : "text-gray-400"
+          }`}
+        >
+          {product.originalPrice}
         </span>
       </div>
-      <button className="w-full mt-2 py-2 cursor-pointer text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex justify-center items-center gap-2">
-        <FaShoppingCart /> Add to Cart
-      </button>
+      <div
+        className={`text-sm font-semibold px-2 py-1 rounded ${
+          darkMode
+            ? "bg-green-900 text-green-200"
+            : "bg-green-100 text-green-800"
+        }`}
+      >
+        Save{" "}
+        {Math.round(
+          ((parseFloat(product.originalPrice.slice(1)) -
+            parseFloat(product.price.slice(1))) /
+            parseFloat(product.originalPrice.slice(1))) *
+            100
+        )}
+        %
+      </div>
     </div>
-  </motion.div>
+
+    <button
+      className={`w-full py-3 rounded-xl font-semibold transition-all duration-300  ${
+        darkMode
+          ? "bg-blue-600 text-white hover:bg-blue-700"
+          : "bg-blue-600 text-white hover:bg-blue-700"
+      }`}
+    >
+      Add to Cart
+    </button>
+  </div>
 );
 
 const Products = () => {
@@ -175,7 +235,6 @@ const Products = () => {
 
         {/* Category Filter - responsive & Scrollable */}
         <div className="w-full flex items-center gap-2">
-
           {/* Category Scroll Container */}
           <div className="w-full">
             <div className="flex items-center gap-3">
@@ -189,8 +248,10 @@ const Products = () => {
                 onClick={() => scroll(-200)}
                 className="text-blue-900 text-lg w-10 h-10 rounded-full flex items-center justify-center shadow-[0_0_12px_rgba(0,0,0,0.2)] cursor-pointer hover:shadow-[0_0_25px_rgba(0,0,0,0.4)]"
               >
-                <FaChevronLeft className={`${scrollX > 0 && `opacity-[0.5]`}`} />
-              </button> 
+                <FaChevronLeft
+                  className={`${scrollX > 0 && `opacity-[0.5]`}`}
+                />
+              </button>
               {/* Scrollable Category Buttons */}
               <div
                 className="flex-1 overflow-x-auto scrollbar-hide"
@@ -226,7 +287,7 @@ const Products = () => {
       </div>
 
       {/* Product Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 md:px-4 xl:grid-cols-4 gap-12 justify-items-center">
+      <div className="grid md:px-18 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {filteredProducts.map((product, index) => (
           <ProductCard product={product} key={index} />
         ))}

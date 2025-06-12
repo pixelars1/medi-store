@@ -36,7 +36,9 @@ const StarRating = ({ rating }) => (
     {[...Array(5)].map((_, i) => (
       <svg
         key={i}
-        className={`w-5 h-5 ${i < rating ? "fill-current" : "text-gray-300 dark:text-gray-600"}`}
+        className={`w-5 h-5 ${
+          i < rating ? "fill-current" : "text-gray-300 dark:text-gray-600"
+        }`}
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 20 20"
         fill="currentColor"
@@ -51,10 +53,15 @@ const Testimonials = () => {
   return (
     <section className="py-20 bg-gradient-to-br from-blue-50 to-teal-100 dark:from-gray-900 dark:to-gray-800 transition-colors duration-500">
       <div className="max-w-7xl mx-auto px-4 text-center">
-        <p className="text-sm uppercase text-blue-600 dark:text-blue-400 mb-2 tracking-wider">Testimonials</p>
-        <h2 className="text-4xl font-bold text-gray-800 dark:text-white mb-4">Customer Reviews</h2>
+        <p className="text-sm uppercase text-blue-600 dark:text-blue-400 mb-2 tracking-wider">
+          Testimonials
+        </p>
+        <h2 className="text-4xl font-bold text-gray-800 dark:text-white mb-4">
+          Customer Reviews
+        </h2>
         <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-12">
-          Our clients speak for us — discover real stories from real customers who trust MediCare for safe and reliable health solutions.
+          Our clients speak for us — discover real stories from real customers
+          who trust MediCare for safe and reliable health solutions.
         </p>
 
         <Swiper
@@ -78,9 +85,13 @@ const Testimonials = () => {
                   className="w-24 h-24 rounded-full object-cover border-4 border-blue-500 dark:border-blue-400 mb-4"
                   loading="lazy"
                 />
-                <h3 className="text-lg font-semibold text-gray-800 dark:text-white">{name}</h3>
+                <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
+                  {name}
+                </h3>
                 <StarRating rating={rating} />
-                <p className="mt-4 text-gray-700 dark:text-gray-300 text-sm italic">"{text}"</p>
+                <p className="mt-4 text-gray-700 dark:text-gray-300 text-sm italic">
+                  "{text}"
+                </p>
               </div>
             </SwiperSlide>
           ))}
