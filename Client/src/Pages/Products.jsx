@@ -138,11 +138,11 @@ const Products = ({ darkMode }) => {
         {/* filters */}
         <div className="w-[30%] border-r-2 border-r-amber-100 md:block hidden"></div>
         {/* Product Cards Grid */}
-        <div className="grid mx-0 md:mx-auto md:px-18 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid md:px-18 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {products.map((medicine, index) => (
             <div
               key={index}
-              className={`rounded-3xl p-3 h-[22rem] w-[17rem] hover:shadow-2xl transition-all duration-300 group cursor-pointer border transform hover:-translate-y-1 flex flex-col ${
+              className={`mx-auto md:mx-0 rounded-3xl p-3 h-[22rem] w-[17rem] hover:shadow-2xl transition-all duration-300 group cursor-pointer border transform hover:-translate-y-1 flex flex-col ${
                 darkMode
                   ? "bg-gray-800 border-gray-700 hover:border-blue-500"
                   : "bg-white border-gray-100 hover:border-blue-200"
