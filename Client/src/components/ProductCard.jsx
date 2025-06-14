@@ -1,7 +1,6 @@
 import { CheckCircle } from "lucide-react";
-function ProductCard({ medicine, darkMode }) {
-  console.log("Medicine Data:", medicine);
-  
+const ProductCard = ({ medicine, darkMode })=> {
+
   return (
     <div
       className={`rounded-3xl p-3 hover:shadow-2xl transition-all duration-300 group cursor-pointer border transform hover:-translate-y-1 ${
