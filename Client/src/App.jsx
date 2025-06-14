@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Route, Routes } from "react-router-dom";
 import Home from "./Pages/Home.jsx";
 import { Moon, Sun } from "lucide-react";
-import Footer from "./components/Footer.jsx";
+import Footer from "./Components/Footer.jsx";
 import ProductDetails from "./Pages/ProductDetails.jsx";
 import { AppContext } from "./Context/AppContext.jsx";
 import Auth from "./Pages/Auth.jsx";
@@ -10,7 +10,7 @@ import Products from "./Pages/Products.jsx";
 import Categories from "./Pages/Categories.jsx";
 import About from "./Pages/About.jsx";
 import Contact from "./Pages/Contact.jsx";
-import Navbar from "./components/Navbar.jsx";
+import Navbar from "./Components/Navbar.jsx";
 
 function App() {
   const { darkMode, setDarkMode } = useContext(AppContext);

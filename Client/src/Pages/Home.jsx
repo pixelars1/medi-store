@@ -9,7 +9,7 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { useState } from "react";
-// import ProductCard from "../Components/ProductCard.jsx";
+import ProductCard from "../Components/ProductCard.jsx";
 
 const Home = ({ darkMode }) => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -207,7 +207,7 @@ const Home = ({ darkMode }) => {
             </p>
           </div>
 
-          {/* <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
               {
                 name: "Lisinopril 10mg",
@@ -288,7 +288,7 @@ const Home = ({ darkMode }) => {
                 index={index}
               />
             ))}
-          </div> */}
+          </div>
         </div>
       </section>
 
