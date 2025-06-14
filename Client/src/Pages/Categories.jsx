@@ -81,7 +81,6 @@ const CategoryPage = () => {
   const [availability, setAvailability] = useState("All");
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOption, setSortOption] = useState("default");
-  const [loading, setLoading] = useState(false);
 
   const categories = getUniqueValues(products, "category");
   const companies = getUniqueValues(products, "company");
@@ -247,11 +246,6 @@ const CategoryPage = () => {
               </select>
             </div>
           </div>
-
-          {/* Loading State */}
-          {loading && (
-            <div className="text-center text-gray-500">Loading...</div>
-          )}
 
           {/* Product Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
