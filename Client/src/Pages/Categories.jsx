@@ -2,79 +2,79 @@ import React, { useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import ProductCard from "../Components/ProductCard.jsx";
 
-const products = [
-  {
-    name: "Paracetamol 500mg",
-    category: "Pain Relief",
-    company: "Cipla",
-    image:
-      "https://images.unsplash.com/photo-1629451565902-4c40a51b374e?q=80&w=1932&auto=format&fit=crop",
-    description:
-      "Effective for fever and mild pain relief. Suitable for adults and children.",
-    price: "$4.99",
-    originalPrice: "$7.99",
-  },
-  {
-    name: "Amoxicillin 250mg",
-    category: "Antibiotics",
-    company: "Sun Pharma",
-    image:
-      "https://plus.unsplash.com/premium_photo-1723921254681-1cd80686b44e?q=80&w=2020&auto=format&fit=crop",
-    description:
-      "A broad-spectrum antibiotic used to treat various bacterial infections.",
-    price: "$6.50",
-    originalPrice: "$8.99",
-  },
-  {
-    name: "Cetirizine Hydrochloride",
-    category: "Allergy Relief",
-    company: "Pfizer",
-    image:
-      "https://images.unsplash.com/photo-1748385367968-6fd2af37aafb?q=80&w=1984&auto=format&fit=crop",
-    description: "Antihistamine used to treat hay fever, allergies, and hives.",
-    price: "$3.25",
-    originalPrice: "$5.75",
-  },
-  {
-    name: "Metformin 500mg",
-    category: "Diabetes",
-    company: "Modafinil",
-    image:
-      "https://www.netmeds.com/images/product-v1/400x400/916665/metform_500mg_tablet_20s_0_0.webp",
-    description:
-      "Used to control high blood sugar in people with type 2 diabetes.",
-    price: "$7.00",
-    originalPrice: "$11.25",
-  },
-  {
-    name: "Ibuprofen 400mg",
-    category: "Pain Relief",
-    company: "Cipla",
-    image:
-      "https://5.imimg.com/data5/SELLER/Default/2023/6/319597573/MH/NE/SR/135658020/ibuprofen-400-mg-bp-tablets.jpg",
-    description:
-      "Non-steroidal anti-inflammatory drug (NSAID) for pain and inflammation.",
-    price: "$4.20",
-    originalPrice: "$7.75",
-  },
-  {
-    name: "Omeprazole 20mg",
-    category: "Digestive Health",
-    company: "Sun Pharma",
-    image:
-      "https://www.adegenpharma.com/wp-content/uploads/2023/02/OMILESS-20-CAPSULE.jpg",
-    description: "Reduces stomach acid; used for GERD and ulcers.",
-    price: "$5.10",
-    originalPrice: "$8.99",
-  },
-];
-
-const getUniqueValues = (items, key) => [
-  "All",
-  ...Array.from(new Set(items.map((item) => item[key]))),
-];
-
 const CategoryPage = () => {
+  const products = [
+    {
+      name: "Paracetamol 500mg",
+      category: "Pain Relief",
+      company: "Cipla",
+      image:
+        "https://images.unsplash.com/photo-1629451565902-4c40a51b374e?q=80&w=1932&auto=format&fit=crop",
+      description:
+        "Effective for fever and mild pain relief. Suitable for adults and children.",
+      price: "$4.99",
+      originalPrice: "$7.99",
+    },
+    {
+      name: "Amoxicillin 250mg",
+      category: "Antibiotics",
+      company: "Sun Pharma",
+      image:
+        "https://plus.unsplash.com/premium_photo-1723921254681-1cd80686b44e?q=80&w=2020&auto=format&fit=crop",
+      description:
+        "A broad-spectrum antibiotic used to treat various bacterial infections.",
+      price: "$6.50",
+      originalPrice: "$8.99",
+    },
+    {
+      name: "Cetirizine Hydrochloride",
+      category: "Allergy Relief",
+      company: "Pfizer",
+      image:
+        "https://images.unsplash.com/photo-1748385367968-6fd2af37aafb?q=80&w=1984&auto=format&fit=crop",
+      description:
+        "Antihistamine used to treat hay fever, allergies, and hives.",
+      price: "$3.25",
+      originalPrice: "$5.75",
+    },
+    {
+      name: "Metformin 500mg",
+      category: "Diabetes",
+      company: "Modafinil",
+      image:
+        "https://www.netmeds.com/images/product-v1/400x400/916665/metform_500mg_tablet_20s_0_0.webp",
+      description:
+        "Used to control high blood sugar in people with type 2 diabetes.",
+      price: "$7.00",
+      originalPrice: "$11.25",
+    },
+    {
+      name: "Ibuprofen 400mg",
+      category: "Pain Relief",
+      company: "Cipla",
+      image:
+        "https://5.imimg.com/data5/SELLER/Default/2023/6/319597573/MH/NE/SR/135658020/ibuprofen-400-mg-bp-tablets.jpg",
+      description:
+        "Non-steroidal anti-inflammatory drug (NSAID) for pain and inflammation.",
+      price: "$4.20",
+      originalPrice: "$7.75",
+    },
+    {
+      name: "Omeprazole 20mg",
+      category: "Digestive Health",
+      company: "Sun Pharma",
+      image:
+        "https://www.adegenpharma.com/wp-content/uploads/2023/02/OMILESS-20-CAPSULE.jpg",
+      description: "Reduces stomach acid; used for GERD and ulcers.",
+      price: "$5.10",
+      originalPrice: "$8.99",
+    },
+  ];
+
+  const getUniqueValues = (items, key) => [
+    "All",
+    ...Array.from(new Set(items.map((item) => item[key]))),
+  ];
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedCompany, setSelectedCompany] = useState("All");
   const [priceRange, setPriceRange] = useState("All");
