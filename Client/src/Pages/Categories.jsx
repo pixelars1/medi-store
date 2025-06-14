@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FaSearch } from "react-icons/fa";
-import ProductCard from "../Components/ProductCard";
+import ProductCard from "../Components/ProductCard.jsx";
 
 const products = [
   {

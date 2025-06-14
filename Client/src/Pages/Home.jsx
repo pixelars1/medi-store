@@ -9,7 +9,6 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { useState } from "react";
-import ProductCard from "../components/ProductCard";
 
 export default function Home({ darkMode }) {
   const [searchQuery, setSearchQuery] = useState("");
