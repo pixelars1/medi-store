@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FaSearch } from "react-icons/fa";
-import ProductCard from "../Components/ProductCard.jsx";
+import ProductCard from "../components/ProductCard.jsx";
 
 const CategoryPage = () => {
   const products = [

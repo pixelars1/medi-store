@@ -9,7 +9,7 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { useState } from "react";
-import ProductCard from "../Components/ProductCard.jsx";
+import ProductCard from "../components/ProductCard.jsx";
 
 const Home = ({ darkMode }) => {
   const [searchQuery, setSearchQuery] = useState("");
