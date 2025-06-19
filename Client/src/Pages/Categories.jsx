@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import ProductCard from "../components/ProductCard.jsx";
+import { Menu, Search } from "lucide-react";
 
 const CategoryPage = () => {
   const products = [
@@ -70,7 +71,7 @@ const CategoryPage = () => {
       originalPrice: "$8.99",
     },
   ];
-
+ 
   const getUniqueValues = (items, key) => [
     "All",
     ...Array.from(new Set(items.map((item) => item[key]))),
@@ -93,7 +94,36 @@ const CategoryPage = () => {
     "nameAsc",
     "nameDesc",
   ];
-
+ const filterOptions = [
+    {
+      label: "Company",
+      value: selectedCompany,
+      onChange: setSelectedCompany,
+      options: companies,
+    },
+    {
+      label: "Price",
+      value: priceRange,
+      onChange: setPriceRange,
+      options: prices,
+    },
+    {
+      label: "Availability",
+      value: availability,
+      onChange: setAvailability,
+      options: availabilityOptions,
+    },
+    {
+      label: "Sort By",
+      value: sortOption,
+      onChange: setSortOption,
+      options: sortOptions.map((opt) => ({
+        value: opt,
+        label:
+          opt === "default" ? "Default" : opt.replace(/([A-Z])/g, " $1").trim(),
+      })),
+    },
+  ];
   const filterByPrice = (price, range) => {
     const val = parseFloat(price.replace("$", ""));
     if (range === "$0 - $5") return val <= 5;
@@ -124,128 +154,130 @@ const CategoryPage = () => {
     return 0; // default
   });
 
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
+ 
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4 pt-20">
-      <h1 className="text-3xl font-bold text-center text-green-600 mb-2">
+      <h1 className="text-2xl sm:text-3xl font-bold text-center text-green-600 mb-2">
         Browse Medicines by Category
       </h1>
-      <p className="text-center text-gray-600 dark:text-gray-300 mb-6">
+      <p className="text-center text-gray-600 dark:text-gray-300 mb-6 text-sm sm:text-base">
         Filter your results by category, company, and more
       </p>
 
       <div className="flex flex-col lg:flex-row gap-6">
-        {/* Sidebar - Categories Only */}
-        <aside className="lg:w-1/5 h-fit sticky top-24 bg-white dark:bg-gray-800 p-4 rounded-xl shadow-md">
-          <h2 className="text-lg font-semibold text-gray-700 dark:text-white mb-4">
-            Categories
-          </h2>
-          <ul className="space-y-2">
-            {categories.map((cat) => (
-              <li
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                className={`cursor-pointer px-4 py-2 rounded-md transition duration-200 font-medium ${
-                  selectedCategory === cat
-                    ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white"
-                    : "hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300"
-                }`}
-              >
-                {cat}
-              </li>
-            ))}
-          </ul>
-        </aside>
+        {/* Header Row for Mobile */}
+        {/* Mobile Menu and Search Bar - Only for Small Screens */}
+<div className="flex items-center justify-between lg:hidden mb-4">
+  <button
+    onClick={() => setShowMobileFilters((prev) => !prev)}
+    className="text-green-600"
+    aria-label="Toggle Filters"
+  >
+    <Menu size={24} />
+  </button>
+
+  {/* Search bar */}
+  <div className="flex-1 ml-4 relative">
+    <input
+      type="text"
+      placeholder="Search products..."
+      value={searchTerm}
+      onChange={(e) => setSearchTerm(e.target.value)}
+      className="w-full pl-4 pr-10 py-2 rounded-md border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition text-sm"
+    />
+    <Search
+      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-300"
+      size={18}
+    />
+  </div>
+</div>
+
+{/* Sidebar - Categories Only for Large Screens */}
+<aside className="hidden lg:block lg:w-1/5 h-fit bg-white dark:bg-gray-800 p-4 rounded-xl shadow-md sticky top-24">
+  <h2 className="text-lg font-semibold text-gray-700 dark:text-white mb-4">
+    Categories
+  </h2>
+  <ul className="space-y-2">
+    {categories.map((cat) => (
+      <li
+        key={cat}
+        onClick={() => setSelectedCategory(cat)}
+        className={`cursor-pointer px-4 py-2 rounded-md transition font-medium text-sm sm:text-base ${
+          selectedCategory === cat
+            ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white"
+            : "hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300"
+        }`}
+      >
+        {cat}
+      </li>
+    ))}
+  </ul>
+</aside>
+
+{/* Filter Section - Only for Mobile Screens (toggleable) */}
+{showMobileFilters && (
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-4 lg:hidden">
+    {filterOptions.map((filter, i) => (
+      <div key={i} className="w-full">
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+          {filter.label}
+        </label>
+        <select
+          value={filter.value}
+          onChange={(e) => filter.onChange(e.target.value)}
+          className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition text-sm"
+        >
+          {(filter.options || []).map((opt) => (
+            <option key={opt.value || opt} value={opt.value || opt}>
+              {opt.label || opt}
+            </option>
+          ))}
+        </select>
+      </div>
+    ))}
+  </div>
+)}
+
 
         {/* Main Content */}
         <div className="flex-1 flex flex-col gap-4">
-          {/* Top Filters */}
-          <div className="sticky top-18 z-10 bg-white dark:bg-gray-800 p-4 rounded-b-xl shadow-md grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 items-end">
-            {/* Search Bar */}
-            <div className="col-span-full lg:col-span-2 relative">
-              <input
-                type="text"
-                placeholder="Search products..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-4 pr-10 py-2 rounded-md border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
-              />
-              <FaSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-300 pointer-events-none" />
-            </div>
+          {/* Top Filters - Hidden on Small Screens */}
+<div className="hidden lg:grid sticky top-16 z-10 bg-white dark:bg-gray-800 p-4 rounded-b-xl shadow-md grid-cols-1 items-center sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+  {/* Search Bar */}
+  <div className="col-span-full lg:col-span-2 relative">
+    <input
+      type="text"
+      placeholder="Search products..."
+      value={searchTerm}
+      onChange={(e) => setSearchTerm(e.target.value)}
+      className="w-full pl-4 pr-10 py-2 rounded-md border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition text-sm"
+    />
+    <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-300 pointer-events-none" />
+  </div>
 
-            {/* Company Filter */}
-            <div className="w-full">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
-                Company
-              </label>
-              <select
-                value={selectedCompany}
-                onChange={(e) => setSelectedCompany(e.target.value)}
-                className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
-              >
-                {companies.map((comp) => (
-                  <option key={comp} value={comp}>
-                    {comp}
-                  </option>
-                ))}
-              </select>
-            </div>
+  {/* Filters */}
+  {filterOptions.map((filter, i) => (
+    <div key={i} className="w-full">
+      <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+        {filter.label}
+      </label>
+      <select
+        value={filter.value}
+        onChange={(e) => filter.onChange(e.target.value)}
+        className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition text-sm"
+      >
+        {(filter.options || []).map((opt) => (
+          <option key={opt.value || opt} value={opt.value || opt}>
+            {opt.label || opt}
+          </option>
+        ))}
+      </select>
+    </div>
+  ))}
+</div>
 
-            {/* Price Filter */}
-            <div className="w-full">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
-                Price
-              </label>
-              <select
-                value={priceRange}
-                onChange={(e) => setPriceRange(e.target.value)}
-                className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
-              >
-                {prices.map((range) => (
-                  <option key={range} value={range}>
-                    {range}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Availability Filter */}
-            <div className="w-full">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
-                Availability
-              </label>
-              <select
-                value={availability}
-                onChange={(e) => setAvailability(e.target.value)}
-                className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
-              >
-                {availabilityOptions.map((status) => (
-                  <option key={status} value={status}>
-                    {status}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Sort Options */}
-            <div className="w-full">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
-                Sort By
-              </label>
-              <select
-                value={sortOption}
-                onChange={(e) => setSortOption(e.target.value)}
-                className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition"
-              >
-                {sortOptions.map((option) => (
-                  <option key={option} value={option}>
-                    {option === "default"
-                      ? "Default"
-                      : option.replace(/([A-Z])/g, " $1").trim()}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
 
           {/* Product Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
@@ -254,7 +286,7 @@ const CategoryPage = () => {
                 <ProductCard key={index} medicine={product} />
               ))
             ) : (
-              <p className="text-gray-500 dark:text-gray-300 col-span-full">
+              <p className="text-gray-500 dark:text-gray-300 col-span-full text-center">
                 No matching products found.
               </p>
             )}
