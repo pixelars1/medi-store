@@ -1,201 +1,331 @@
 import { useState } from "react";
-import { CheckCircle, Search } from "lucide-react";
+import { ArrowBigLeft, ArrowLeftIcon, ArrowLeftSquare, ArrowLeftToLineIcon, ArrowRightIcon, CheckCircle, ChevronLeft, ChevronRight, Search } from "lucide-react";
 
-const products = [
+const products = 
+  [
   {
-    name: "Paracetamol 500mg",
+    name: "Adderall 30mg",
+    category: "Stronger One",
+    image: "https://legitmedications.com/wp-content/uploads/2024/07/purchase-adderall-xr-30mg-capsules-online.jpg",
+    price: "$389.00 – $509.00",
+    originalPrice: "$509.00"
+  },
+  {
+    name: "Ativan Lorazepam 2mg",
+    category: "Anxiety",
+    image: "https://legitmedications.com/wp-content/uploads/2024/07/ativan-lorazepam-tablets-2mg-us-to-us-worldwide-delivery.jpeg",
+    price: "$359.00 – $479.00",
+    originalPrice: "$479.00"
+  },
+  {
+    name: "Carisoprodol Pain o soma 350mg",
     category: "Pain Relief",
-    image:
-      "https://images.unsplash.com/photo-1629451565902-4c40a51b374e?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    description:
-      "Effective for fever and mild pain relief. Suitable for adults and children.",
-    price: "$4.99",
-    originalPrice: "$7.99",
+    image: "https://legitmedications.com/wp-content/uploads/2024/07/pain-o-soma-tablets.jpg",
+    price: "$239.00",
+    originalPrice: "$380.00"
   },
   {
-    name: "Amoxicillin 250mg",
-    category: "Antibiotics",
-    image:
-      "https://plus.unsplash.com/premium_photo-1723921254681-1cd80686b44e?q=80&w=2020&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    description:
-      "A broad-spectrum antibiotic used to treat various bacterial infections.",
-    price: "$6.50",
-    originalPrice: "$8.99",
-  },
-  {
-    name: "Cetirizine Hydrochloride",
-    category: "Allergy Relief",
-    image:
-      "https://images.unsplash.com/photo-1748385367968-6fd2af37aafb?q=80&w=1984&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    description: "Antihistamine used to treat hay fever, allergies, and hives.",
-    price: "$3.25",
-    originalPrice: "$5.75",
-  },
-  {
-    name: "Metformin 500mg",
-    category: "Diabetes",
-    image:
-      "https://www.netmeds.com/images/product-v1/400x400/916665/metform_500mg_tablet_20s_0_0.webp",
-    description:
-      "Used to control high blood sugar in people with type 2 diabetes.",
-    price: "$7.00",
-    originalPrice: "$11.25",
-  },
-  {
-    name: "Ibuprofen 400mg",
+    name: "Carisoprodol pain o soma 500 mg",
     category: "Pain Relief",
-    image:
-      "https://5.imimg.com/data5/SELLER/Default/2023/6/319597573/MH/NE/SR/135658020/ibuprofen-400-mg-bp-tablets.jpg",
-    description:
-      "Non-steroidal anti-inflammatory drug (NSAID) for pain and inflammation.",
-    price: "$4.20",
-    originalPrice: "$7.75",
+    image: "https://legitmedications.com/wp-content/uploads/2024/07/carisoprodol-pain-o-soma-tablet-500x500-1.webp",
+    price: "$259.00",
+    originalPrice: "$380.00"
   },
   {
-    name: "Omeprazole 20mg",
-    category: "Digestive Health",
-    image:
-      "https://www.adegenpharma.com/wp-content/uploads/2023/02/OMILESS-20-CAPSULE.jpg",
-    description:
-      "Reduces stomach acid; used for GERD and ulcers. the Digestive Health",
-    price: "$5.10",
-    originalPrice: "$8.99",
+    name: "Cenforce sildenafil 200mg",
+    category: "Erectile dysfunction",
+    image: "https://legitmedications.com/wp-content/uploads/2024/07/cenforce-200mg-tablets-1000x1000.jpg",
+    price: "$249.00",
+    originalPrice: "$330.00"
   },
-];
+  {
+    name: "Citra tramadol 100mg",
+    category: "Pain Relief",
+    image: "https://legitmedications.com/wp-content/uploads/2024/07/whatsapp-image-2024-02-04-at-08-45-44-13559ab2-500x500-1.webp",
+    price: "$329.00",
+    originalPrice: "$380.00"
+  },
+  {
+    name: "Gabapentin 800mg gabasign",
+    category: "Pain Relief",
+    image: "https://legitmedications.com/wp-content/uploads/2024/07/gabasign-800mg-gabapentin-tablets-500x500-1.webp",
+    price: "$379.00 – $529.00",
+    originalPrice: "$529.00"
+  },
+  {
+    name: "Hydrocodone 10mg M367",
+    category: "Stronger One",
+    image: "https://legitmedications.com/wp-content/uploads/2024/07/the-dangers-of-m367-pill-768x576.jpg",
+    price: "$389.00 – $519.00",
+    originalPrice: "$519.00"
+  },
+  {
+    name: "Modofilnil 100mg",
+    category: "Sleep Aid",
+    image: "https://legitmedications.com/wp-content/uploads/2024/07/MOODFINE100sterisnew1_CAT_1713774948-768x432.png",
+    price: "$409.00",
+    originalPrice: "$455.00"
+  },
+  {
+    name: "Viagra 100mg",
+    category: "Erectile dysfunction",
+    image: "https://legitmedications.com/wp-content/uploads/2024/07/viagra-100-mg-tablet-500x500-1.webp",
+    price: "$249.00",
+    originalPrice: "$429.00"
+  },
+  {
+    name: "Xanax 1mg alprazolam",
+    category: "Anxiety",
+    image: "https://legitmedications.com/wp-content/uploads/2024/07/xany-1024x650.jpeg",
+    price: "$369.00 – $529.00",
+    originalPrice: "$529.00"
+  },
+  {
+    name: "Xanax 2mg bar alprazolam",
+    category: "Anxiety",
+    image: "https://legitmedications.com/wp-content/uploads/2024/07/xanax-bars-2mg-500x500-1.png",
+    price: "$379.00 – $479.00",
+    originalPrice: "$479.00"
+  },
+  {
+    name: "Zolpiclone 2mg",
+    category: "Sleep Aid",
+    image: "https://legitmedications.com/wp-content/uploads/2024/07/zopiclone-1542652872-4470569-768x576.jpeg",
+    price: "$369.00 – $479.00",
+    originalPrice: "$479.00"
+  },
+  {
+    name: "Zolpidem ambien 10mg",
+    category: "Sleep Aid",
+    image: "https://legitmedications.com/wp-content/uploads/2024/07/fcf059b3a04a642eca4c21bd3fa5e9e3.webp",
+    price: "$349.00 – $459.00",
+    originalPrice: "$459.00"
+  },
+  {
+    name: "Zopiclone zopisign 10mg",
+    category: "Sleep Aid",
+    image: "https://legitmedications.com/wp-content/uploads/2024/07/zopiclones-zopisign-768x768.webp",
+    price: "$379.00 – $479.00",
+    originalPrice: "$479.00"
+  },
+  {
+    name: "Modafinil 200mg",
+    category: "Sleep Aid",
+    image: "https://legitmedications.com/wp-content/uploads/2024/07/Modanil-200-scaled-1-1024x1024.jpg",
+    price: "$429.00",
+    originalPrice: "$455.00"
+  },
+  {
+    name: "Oxycodone 30mg",
+    category: "Stronger One",
+    image: "https://legitmedications.com/wp-content/uploads/2024/07/Oxycodone_HCL_30mg_500ct_bottle_fit-main.jpg",
+    price: "$389.00 – $529.00",
+    originalPrice: "$529.00"
+  },
+  {
+    name: "Phentermine 37.5mg",
+    category: "Weight Loss",
+    image: "https://legitmedications.com/wp-content/uploads/2024/07/1060291909.jpg",
+    price: "$379.00 – $529.00",
+    originalPrice: "$529.00"
+  },
+  {
+    name: "Rivotril klonopin 2mg",
+    category: "Anxiety",
+    image: "https://legitmedications.com/wp-content/uploads/2024/07/rivotril2-jpg-500x500-1.webp",
+    price: "$359.00 – $529.00",
+    originalPrice: "$529.00"
+  },
+  {
+    name: "Tadalafil vidalista cialis 20mg",
+    category: "Erectile dysfunction",
+    image: "https://legitmedications.com/wp-content/uploads/2024/07/vidalista-tablets-1717906594-5730265-768x793.jpg",
+    price: "$259.00",
+    originalPrice: "$330.00"
+  },
+  {
+    name: "Tapentadol Aspadol 100mg",
+    category: "Pain Relief",
+    image: "https://legitmedications.com/wp-content/uploads/2024/07/asp.webp",
+    price: "$389.00",
+    originalPrice: "$580.00"
+  },
+  {
+    name: "Tramadol Trakem 100mg",
+    category: "Pain Relief",
+    image: "https://legitmedications.com/wp-content/uploads/2024/07/photo_2024-07-26_01-21-27.jpg",
+    price: "$359.00 – $449.00",
+    originalPrice: "$449.00"
+  },
+  {
+    name: "Tramadol ultram brand 100mg",
+    category: "Pain Relief",
+    image: "https://legitmedications.com/wp-content/uploads/2024/07/tramadol2-768x687.jpeg",
+    price: "$529.00",
+    originalPrice: "$570.00"
+  },
+  {
+    name: "Valium Daizepam 10mg",
+    category: "Anxiety",
+    image: "https://legitmedications.com/wp-content/uploads/2024/07/valium-5mg-roche-diazepam-500x500-2.webp",
+    price: "$369.00 – $479.00",
+    originalPrice: "$479.00"
+  }
+]
 
 const Products = ({ darkMode }) => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1)
 
   return (
-    <div className="p-10 pt-20 bg-amber-50 dark:bg-[#101828] min-h-screen">
-      <h1 className="text-5xl mt-8 font-extrabold text-center text-amber-50 mb-10">
-        Explore Medicines
-      </h1>
+  <div className="pt-20 pb-4 px-4 sm:px-8 lg:px-16 bg-amber-50 dark:bg-[#101828] min-h-screen">
+  <div className="max-w-[1440px] mx-auto">
+    <h1 className="text-4xl md:text-5xl font-extrabold text-center text-amber-700 dark:text-white mb-12">
+      Explore Medicines
+    </h1>
 
-      {/* Search Bar */}
-      <div className="w-full md:w-[70%] mx-auto mb-12">
-        <div className="relative">
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search for medications"
-            className="w-full pl-4 pr-6 py-5 text-lg bg-white rounded-2xl shadow-2xl focus:outline-none focus:ring-4 focus:ring-blue-300 border-0"
-          />
-          <button className="absolute inset-y-0 right-0 pr-6 flex items-center cursor-pointer">
-            <Search className="h-6 w-6 text-gray-400" />
-          </button>
-        </div>
-      </div>
-
-      <div className="w-full mx-auto md:flex">
-        {/* Sidebar Filters (reserved space) */}
-        <div className="w-[30%] border-r-2 border-r-amber-100 md:block hidden"></div>
-
-        {/* Product Cards */}
-        <div className="grid md:px-18 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {products
-            .filter((product) =>
-              product.name.toLowerCase().includes(searchTerm.toLowerCase())
-            )
-            .map((medicine, index) => (
-              <div
-                key={index}
-                className={`mx-auto md:mx-0 rounded-3xl p-3 h-[22rem] w-[17rem] hover:shadow-2xl transition-all duration-300 group cursor-pointer border transform hover:-translate-y-1 flex flex-col ${
-                  darkMode
-                    ? "bg-gray-800 border-gray-700 hover:border-blue-500"
-                    : "bg-white border-gray-100 hover:border-blue-200"
-                }`}
-              >
-                {/* Image */}
-                <div className="w-full h-42 mb-3 rounded-xl overflow-hidden">
-                  <img
-                    src={medicine.image}
-                    alt={medicine.name}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-
-                {/* Info */}
-                <div className="flex-1 flex flex-col">
-                  <div
-                    className={`flex items-center text-xs mb-2 ${
-                      darkMode ? "text-green-400" : "text-green-600"
-                    }`}
-                  >
-                    <CheckCircle className="w-3 h-3 mr-1" />
-                    In Stock
-                  </div>
-
-                  <div className="mb-3 flex-1">
-                    <h3
-                      className={`text-lg font-bold mb-1 leading-tight ${
-                        darkMode ? "text-white" : "text-gray-900"
-                      }`}
-                    >
-                      {medicine.name}
-                    </h3>
-                    <p
-                      className={`text-sm ${
-                        darkMode ? "text-gray-300" : "text-gray-600"
-                      }`}
-                    >
-                      {medicine.description}
-                    </p>
-                  </div>
-
-                  {/* Price */}
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-baseline">
-                      <span
-                        className={`text-lg font-bold ${
-                          darkMode ? "text-blue-400" : "text-blue-600"
-                        }`}
-                      >
-                        {medicine.price}
-                      </span>
-                      <span
-                        className={`ml-1 text-xs line-through ${
-                          darkMode ? "text-gray-500" : "text-gray-400"
-                        }`}
-                      >
-                        {medicine.originalPrice}
-                      </span>
-                    </div>
-                    <div
-                      className={`text-xs font-semibold px-2 py-1 rounded ${
-                        darkMode
-                          ? "bg-green-900 text-green-200"
-                          : "bg-green-100 text-green-800"
-                      }`}
-                    >
-                      Save{" "}
-                      {Math.round(
-                        ((parseFloat(medicine.originalPrice.slice(1)) -
-                          parseFloat(medicine.price.slice(1))) /
-                          parseFloat(medicine.originalPrice.slice(1))) *
-                          100
-                      )}
-                      %
-                    </div>
-                  </div>
-
-                  {/* Add to Cart */}
-                  <button
-                    className={`w-full py-2.5 rounded-xl font-semibold transition-all duration-300 text-sm ${
-                      darkMode
-                        ? "bg-blue-600 text-white hover:bg-blue-700"
-                        : "bg-blue-600 text-white hover:bg-blue-700"
-                    }`}
-                  >
-                    Add to Cart
-                  </button>
-                </div>
-              </div>
-            ))}
-        </div>
+    {/* Search Bar */}
+    <div className="w-full max-w-2xl mx-auto mb-10">
+      <div className="relative">
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Search for medications"
+          className="w-full pl-5 pr-12 py-4 text-lg bg-white dark:bg-gray-900 dark:text-white rounded-2xl shadow-md focus:outline-none focus:ring-4 focus:ring-blue-300"
+        />
+        <Search className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-300 h-5 w-5" />
       </div>
     </div>
+
+    {/* Product Grid */}
+    <section className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+      {products
+        .filter((product) =>
+          product.name.toLowerCase().includes(searchTerm.toLowerCase())
+        ).slice((currentPage-1)*8,(currentPage)*8)
+        .map((medicine, index) => (
+          <div
+            key={index}
+            className={`rounded-3xl overflow-hidden hover:shadow-xl border transition-transform duration-300 transform hover:-translate-y-1 group flex flex-col justify-between ${
+              darkMode
+                ? "bg-gray-800 border-gray-700 hover:border-blue-500"
+                : "bg-white border-gray-200 hover:border-blue-200"
+            }`}
+          >
+            {/* Product Image */}
+            <div className="aspect-[4/3] w-full overflow-hidden">
+              <img
+                src={medicine.image}
+                alt={medicine.name}
+               
+                className="w-full h-full object-fill group-hover:scale-105 transition-transform duration-300"
+              />
+            </div>
+
+            {/* Product Info */}
+            <div className="p-4 flex flex-col justify-between flex-grow">
+              <div>
+                <div
+                  className={`flex items-center text-xs mb-2 ${
+                    darkMode ? "text-green-400" : "text-green-600"
+                  }`}
+                >
+                  <CheckCircle className="w-4 h-4 mr-1" />
+                  In Stock
+                </div>
+
+                <h3
+                  className={`text-lg font-bold mb-1 ${
+                    darkMode ? "text-white" : "text-gray-900"
+                  }`}
+                >
+                  {medicine.name}
+                </h3>
+                <p
+                  className={`text-sm leading-relaxed mb-4 ${
+                    darkMode ? "text-gray-300" : "text-gray-600"
+                  }`}
+                >
+                  {medicine.description}
+                </p>
+              </div>
+
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-baseline">
+                  <span
+                    className={`text-lg font-bold ${
+                      darkMode ? "text-blue-400" : "text-blue-600"
+                    }`}
+                  >
+                    {medicine.price}
+                  </span>
+                  <span
+                    className={`ml-2 text-sm line-through ${
+                      darkMode ? "text-gray-500" : "text-gray-400"
+                    }`}
+                  >
+                    {medicine.originalPrice}
+                  </span>
+                </div>
+
+                <span
+                  className={`text-xs font-semibold px-2 py-1 rounded ${
+                    darkMode
+                      ? "bg-green-900 text-green-200"
+                      : "bg-green-100 text-green-800"
+                  }`}
+                >
+                  Save{" "}
+                  {Math.round(
+                    ((parseFloat(medicine.originalPrice.slice(1)) -
+                      parseFloat(medicine.price.slice(1))) /
+                      parseFloat(medicine.originalPrice.slice(1))) *
+                      100
+                  )}
+                  %
+                </span>
+              </div>
+
+              {/* Add to Cart Button */}
+              <button
+                className={`w-full py-2.5 rounded-xl font-semibold text-sm transition-all duration-300 ${
+                  darkMode
+                    ? "bg-blue-600 text-white hover:bg-blue-700"
+                    : "bg-blue-600 text-white hover:bg-blue-700"
+                }`}
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+        ))}
+
+        {/* Pagination */}
+        <div className="col-span-full flex justify-center ">
+        {
+          products.length > 8 && (
+            <div className="flex  items-center justify-center space-x-4 mt-10">
+              <a className="text-white cursor-pointer" onClick={()=> setCurrentPage(Math.max(currentPage-1,1))}>
+                <ChevronLeft className=""/>
+              </a>
+              {Array.from({length:Math.ceil(products.length/8)}).map((__, index)=>
+                   <a key={index} >
+                      <button onClick={()=>setCurrentPage(index+1)} className={`w-10 cursor-pointer h-10 flex justify-center items-center border border-gray-300 rounded ${currentPage === index+1 ? 'bg-blue-100 text-blue-500' : 'text-gray-500'}`}>{index +1}</button>
+                   </a>
+               )}
+               <a className="text-white cursor-pointer" onClick={()=>setCurrentPage(Math.min(currentPage+1,Math.ceil(products.length/8)))}>
+                <ChevronRight/>
+                 
+               </a>
+            </div>
+          )
+        }
+        </div>
+    </section>
+  </div>
+</div>
+
   );
 };
 
