@@ -1,16 +1,29 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from "react";
 import { Menu, X, Heart } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [activeItem, setActiveItem] = useState("Home");
+  const [activeItem, setActiveItem] = useState("");
   const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
 
   const handleAuthClick = (mode) => {
     navigate(`/auth?mode=${mode}`);
   };
+
+  const location = useLocation();
+
+  const navItems = ["Home", "Products", "Categories", "About", "Contact"];
+
+  useEffect(() => {
+    const path = location.pathname.split("/")[1] || "home";
+    const capitalized = path.charAt(0).toUpperCase() + path.slice(1);
+    if (navItems.includes(capitalized)) {
+      setActiveItem(capitalized);
+    }
+  }, [location.pathname, navItems]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -19,8 +32,6 @@ const Navbar = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  const navItems = ["Home", "Products", "Categories", "About", "Contact"];
 
   return (
     <nav
