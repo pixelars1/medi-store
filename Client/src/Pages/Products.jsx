@@ -214,7 +214,7 @@ const Products = ({ darkMode }) => {
             }`}
           >
             {/* Product Image */}
-            <div className="aspect-[4/3] w-full overflow-hidden">
+            <div className="w-full aspect-[4/3] min-h-[150px] overflow-hidden">
               <img
                 src={medicine.image}
                 alt={medicine.name}
