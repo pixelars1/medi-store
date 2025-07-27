@@ -1,16 +1,13 @@
-import { useState, useEffect } from "react";
-import {
-  CheckCircle,
-  ChevronLeft,
-  ChevronRight,
-  Search,
-} from "lucide-react";
+import { useState, useEffect, useContext } from "react";
+import { CheckCircle, ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { products as productData } from "../assets/assets";
+import { AppContext } from "../Context/AppContext";
 
 const Products = ({ darkMode }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [products, setProducts] = useState([]);
+  const { setCartCount } = useContext(AppContext);
 
   // 🔄 Load cart state from localStorage on mount
   useEffect(() => {
@@ -33,6 +30,8 @@ const Products = ({ darkMode }) => {
       .filter((p) => p.inCart === 1)
       .map((p) => p.name);
     localStorage.setItem("cart", JSON.stringify(newCart));
+    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
+    setCartCount(storedCart.length);
   };
 
   const filteredProducts = products.filter((product) =>
