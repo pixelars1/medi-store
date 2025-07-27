@@ -31,7 +31,6 @@ function App() {
       }`}
     >
       {/* Dark Mode Toggle - Fixed positioning with higher z-index */}
-
       <div className="fixed bottom-4 right-4 z-[9999]">
         <button
           onClick={toggleDarkMode}
