@@ -15,7 +15,7 @@ const Navbar = () => {
 
   const location = useLocation();
 
-  const navItems = ["Home", "Products", "Categories", "About", "Contact"];
+  const navItems = ["Home", "Products", "Categories", "About", "Contact" , "Cart"];
 
   useEffect(() => {
     const path = location.pathname.split("/")[1] || "home";
