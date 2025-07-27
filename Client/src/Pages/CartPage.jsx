@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Trash2 } from "lucide-react";
 import { products as productData } from "../assets/assets";
+import { AppContext } from "../Context/AppContext";
 
 export default function CartPage({ darkMode }) {
   const [cartItems, setCartItems] = useState([]);
@@ -20,6 +21,7 @@ export default function CartPage({ darkMode }) {
       }));
 
     setCartItems(initialItems);
+    
   }, []);
 
   // Quantity update
@@ -51,6 +53,10 @@ export default function CartPage({ darkMode }) {
     (sum, item) => sum + item.price * item.quantity,
     0
   );
+  const { setCartCount } = useContext(AppContext);
+  useEffect(() => {
+    setCartCount(cartItems.length);
+  }, [cartItems, setCartCount]);
 
   return (
     <section
