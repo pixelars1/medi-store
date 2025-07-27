@@ -11,6 +11,8 @@ import Categories from "./Pages/Categories.jsx";
 import About from "./Pages/About.jsx";
 import Contact from "./Pages/Contact.jsx";
 import Navbar from "./components/Navbar.jsx";
+import CartPage from "./Pages/CartPage.jsx";
+import FloatingCartBtn from "./components/FloatingCartBtn.jsx";
 
 function App() {
   const { darkMode, setDarkMode } = useContext(AppContext);
@@ -29,6 +31,7 @@ function App() {
       }`}
     >
       {/* Dark Mode Toggle - Fixed positioning with higher z-index */}
+
       <div className="fixed bottom-4 right-4 z-[9999]">
         <button
           onClick={toggleDarkMode}
@@ -45,7 +48,6 @@ function App() {
           )}
         </button>
       </div>
-
       {/* Navigation - Pass dark mode props */}
       <Navbar darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
 
@@ -68,8 +70,11 @@ function App() {
         <Route path="/categories" element={<Categories />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/cart" element={<CartPage darkMode={darkMode} />} />
       </Routes>
       <Footer />
+      {/* Floating Cart Button */}
+      <FloatingCartBtn/>
     </div>
   );
 }
