@@ -1,15 +1,11 @@
 import { ShoppingCart } from "lucide-react";
 import { useNavigate } from "react-router-dom"; // ✅ Correct hook
-import { useEffect, useState } from "react";
+import { useContext } from "react";
+import { AppContext } from "../Context/AppContext";
 
 const FloatingCartBtn = ({ darkMode }) => {
   const navigate = useNavigate(); // ✅ useNavigate instead of useRouter
-  const [cartCount, setCartCount] = useState(0);
-
-  useEffect(() => {
-    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-    setCartCount(storedCart.length);
-  }, []);
+  const { cartCount } = useContext(AppContext); // ✅ Use context to get cart count 
 
   return (
     <div className="fixed bottom-20 right-4 z-[9999]">
