@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import Home from "./Pages/Home.jsx";
 import { Moon, Sun } from "lucide-react";
@@ -15,13 +15,16 @@ import CartPage from "./Pages/CartPage.jsx";
 import FloatingCartBtn from "./components/FloatingCartBtn.jsx";
 
 function App() {
-  const { darkMode, setDarkMode } = useContext(AppContext);
+  const { darkMode, setDarkMode, setCartCount } = useContext(AppContext);
   const toggleDarkMode = () => {
     const newMode = !darkMode;
     setDarkMode(newMode);
     localStorage.setItem("theme", newMode ? "dark" : "light");
   };
-
+  useEffect(() => {
+    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
+    setCartCount(storedCart.length);
+  }, [setCartCount]);
   return (
     <div
       className={`min-h-screen w-full relative transition-colors duration-300 ${
@@ -73,7 +76,7 @@ function App() {
       </Routes>
       <Footer />
       {/* Floating Cart Button */}
-      <FloatingCartBtn/>
+      <FloatingCartBtn />
     </div>
   );
 }
