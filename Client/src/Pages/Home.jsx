@@ -8,11 +8,49 @@ import {
   Truck,
   CheckCircle,
 } from "lucide-react";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import ProductCard from "../components/ProductCard.jsx";
+import { products as productData} from "../assets/assets.js";
+import { AppContext } from "../Context/AppContext.jsx";
 
 const Home = ({ darkMode }) => {
   const [searchQuery, setSearchQuery] = useState("");
+ const [products, setProducts] = useState([]);
+    const { setCartCount } = useContext(AppContext);
+   useEffect(() => {
+      const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
+      const updatedProducts = productData.map((product) => ({
+        ...product,
+        inCart: storedCart.includes(product.name) ? 1 : 0,
+      }));
+      setProducts(updatedProducts);
+      setCartCount(storedCart.length);
+    }, [setCartCount]);
+ 
+   const handleAddToCart = (index) => {
+    const updatedProducts = products.map((product, i) =>
+      i === index ? { ...product, inCart: 1 } : product
+    );
+    setProducts(updatedProducts);
+
+    const newCart = updatedProducts
+      .filter((p) => p.inCart === 1)
+      .map((p) => p.name);
+    localStorage.setItem("cart", JSON.stringify(newCart));
+    setCartCount(newCart.length);
+  };
+  const handleRemoveFromCart = (index) => {
+    const updatedProducts = products.map((product, i) =>
+      i === index ? { ...product, inCart: 0 } : product
+    );
+    setProducts(updatedProducts);
+
+    const newCart = updatedProducts
+      .filter((p) => p.inCart === 1)
+      .map((p) => p.name);
+    localStorage.setItem("cart", JSON.stringify(newCart));
+    setCartCount(newCart.length);
+  }
 
   return (
     <div
@@ -208,85 +246,18 @@ const Home = ({ darkMode }) => {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              {
-                name: "Lisinopril 10mg",
-                image:
-                  "https://media.gettyimages.com/id/1778918997/photo/background-of-a-large-group-of-assorted-capsules-pills-and-blisters.jpg?s=612x612&w=gi&k=20&c=hRn3MwcMQfMkbtHTzR-j0-pzxC6U3gAlvNW5GEUQQig=",
-                genericName: "ACE Inhibitor",
-                price: "$12.99",
-                originalPrice: "$18.99",
-                rating: 4.8,
-                description:
-                  "For high blood pressure and heart failure treatment",
-                inStock: true,
-              },
-              {
-                name: "Metformin 500mg",
-                image:
-                  "https://media.gettyimages.com/id/1778918997/photo/background-of-a-large-group-of-assorted-capsules-pills-and-blisters.jpg?s=612x612&w=gi&k=20&c=hRn3MwcMQfMkbtHTzR-j0-pzxC6U3gAlvNW5GEUQQig=",
-                genericName: "Diabetes Medication",
-                price: "$8.99",
-                originalPrice: "$15.99",
-                rating: 4.9,
-                description:
-                  "Type 2 diabetes management and blood sugar control",
-                inStock: true,
-              },
-              {
-                name: "Ibuprofen 200mg",
-                image:
-                  "https://media.gettyimages.com/id/1778918997/photo/background-of-a-large-group-of-assorted-capsules-pills-and-blisters.jpg?s=612x612&w=gi&k=20&c=hRn3MwcMQfMkbtHTzR-j0-pzxC6U3gAlvNW5GEUQQig=",
-                genericName: "Pain Reliever",
-                price: "$6.99",
-                originalPrice: "$9.99",
-                rating: 4.7,
-                description: "Anti-inflammatory pain relief and fever reducer",
-                inStock: true,
-              },
-              {
-                name: "Omeprazole 20mg",
-                image:
-                  "https://media.gettyimages.com/id/1778918997/photo/background-of-a-large-group-of-assorted-capsules-pills-and-blisters.jpg?s=612x612&w=gi&k=20&c=hRn3MwcMQfMkbtHTzR-j0-pzxC6U3gAlvNW5GEUQQig=",
-                genericName: "Proton Pump Inhibitor",
-                price: "$14.99",
-                originalPrice: "$22.99",
-                rating: 4.8,
-                description:
-                  "Gastric acid reduction for GERD and ulcer treatment",
-                inStock: true,
-              },
-              {
-                name: "Atorvastatin 20mg",
-                image:
-                  "https://media.gettyimages.com/id/1778918997/photo/background-of-a-large-group-of-assorted-capsules-pills-and-blisters.jpg?s=612x612&w=gi&k=20&c=hRn3MwcMQfMkbtHTzR-j0-pzxC6U3gAlvNW5GEUQQig=",
-                genericName: "Statin",
-                price: "$16.99",
-                originalPrice: "$28.99",
-                rating: 4.9,
-                description:
-                  "Cholesterol management and cardiovascular protection",
-                inStock: true,
-              },
-              {
-                name: "Cetirizine 10mg",
-                image:
-                  "https://media.gettyimages.com/id/1778918997/photo/background-of-a-large-group-of-assorted-capsules-pills-and-blisters.jpg?s=612x612&w=gi&k=20&c=hRn3MwcMQfMkbtHTzR-j0-pzxC6U3gAlvNW5GEUQQig=",
-                genericName: "Antihistamine",
-                price: "$9.99",
-                originalPrice: "$13.99",
-                rating: 4.6,
-                description:
-                  "Allergy relief for seasonal and year-round symptoms",
-                inStock: true,
-              },
-            ].map((medicine, index) => (
+            {products.slice(0,6).map((medicine, index) => (
               <ProductCard
-                key={index}
-                darkMode={darkMode}
-                medicine={medicine}
-                index={index}
-              />
+              key={index}
+              product={medicine}
+              darkMode={darkMode}
+              onAddToCart={() =>
+                handleAddToCart(products.findIndex((p) => p.name === medicine.name))
+              }
+              onRemoveFromCart={() =>
+                handleRemoveFromCart(products.findIndex((p) => p.name === medicine.name))
+              }
+            />
             ))}
           </div>
         </div>
