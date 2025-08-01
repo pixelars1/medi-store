@@ -13,6 +13,8 @@ import Contact from "./Pages/Contact.jsx";
 import Navbar from "./components/Navbar.jsx";
 import CartPage from "./Pages/CartPage.jsx";
 import FloatingCartBtn from "./components/FloatingCartBtn.jsx";
+import CheckoutPage from "./Pages/CheckoutPage.jsx";
+import ProductDetailsPage from "./Pages/ProductDetailsPage.jsx";
 
 function App() {
   const { darkMode, setDarkMode, setCartCount } = useContext(AppContext);
@@ -72,7 +74,11 @@ function App() {
         <Route path="/categories" element={<Categories />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/cart" element={<CartPage darkMode={darkMode} />} />
+        <Route path="/cart" element={<CartPage />} />
+        <Route path="/checkout" element={<CheckoutPage />} />
+        <Route path="/product/:productName" element={<ProductDetailsPage />} />
+
+        {/* Add more routes as needed */}
       </Routes>
       <Footer />
       {/* Floating Cart Button */}
