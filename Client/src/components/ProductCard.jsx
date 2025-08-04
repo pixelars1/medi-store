@@ -3,7 +3,7 @@ import { CheckCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const ProductCard = ({ product, darkMode, onAddToCart, onRemoveFromCart }) => {
-  const { name, image, description, price, originalPrice, inCart } = product;
+  const { name, image, price, originalPrice, inCart } = product;
 
   const discount = Math.round(
     ((parseFloat(originalPrice.slice(1)) - parseFloat(price.slice(1))) /
@@ -60,13 +60,6 @@ const ProductCard = ({ product, darkMode, onAddToCart, onRemoveFromCart }) => {
             >
               {name}
             </h3>
-            <p
-              className={`text-sm leading-relaxed mb-4 ${
-                darkMode ? "text-gray-300" : "text-gray-600"
-              }`}
-            >
-              {description}
-            </p>
           </div>
 
           <div className="flex items-center justify-between mb-4">
