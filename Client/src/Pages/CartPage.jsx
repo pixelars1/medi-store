@@ -2,29 +2,31 @@ import React, { useContext, useEffect, useState } from "react";
 import { Trash2 } from "lucide-react";
 import { products as productData } from "../assets/assets";
 import { AppContext } from "../Context/AppContext";
+import { useNavigate } from "react-router-dom";
 
-export default function CartPage({ darkMode }) {
+export default function CartPage() {
   const [cartItems, setCartItems] = useState([]);
+  const { darkMode, setCartCount } = useContext(AppContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Get cart names from localStorage
     const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-
-    // Filter from actual product data
     const initialItems = productData
       .filter((product) => storedCart.includes(product.name))
-      .map((item, index) => ({
-        ...item,
-        id: index + 1,
-        quantity: 1,
-        price: parseFloat(item.price.replace("$", "").split("–")[0]),
-      }));
-
+      .map((item, index) => {
+        const prices = item.price.replace(/\$/g, "").split("–").map(p => parseFloat(p.trim()));
+        return {
+          ...item,
+          id: index + 1,
+          quantity: 1,
+          selectedQuantity: "180",
+          lowPrice: prices[0],
+          highPrice: prices.length > 1 ? prices[1] : prices[0],
+        };
+      });
     setCartItems(initialItems);
-    
   }, []);
 
-  // Quantity update
   const updateQuantity = (id, amount) => {
     setCartItems((prev) =>
       prev.map((item) =>
@@ -35,13 +37,11 @@ export default function CartPage({ darkMode }) {
     );
   };
 
-  // Remove from cart (also update localStorage)
   const removeItem = (id) => {
     const itemToRemove = cartItems.find((item) => item.id === id);
     const updatedCart = cartItems.filter((item) => item.id !== id);
     setCartItems(updatedCart);
 
-    // Update localStorage cart
     const currentCartNames = JSON.parse(localStorage.getItem("cart")) || [];
     const newCartNames = currentCartNames.filter(
       (name) => name !== itemToRemove.name
@@ -49,14 +49,23 @@ export default function CartPage({ darkMode }) {
     localStorage.setItem("cart", JSON.stringify(newCartNames));
   };
 
-  const totalPrice = cartItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
-  const { setCartCount } = useContext(AppContext);
+  const handleQuantityChange = (id, value) => {
+    setCartItems((prev) =>
+      prev.map((item) =>
+        item.id === id ? { ...item, selectedQuantity: value } : item
+      )
+    );
+  };
+
   useEffect(() => {
     setCartCount(cartItems.length);
   }, [cartItems, setCartCount]);
+
+  const totalPrice = cartItems.reduce(
+    (sum, item) =>
+      sum + (item.selectedQuantity === "90" ? item.lowPrice : item.highPrice) * item.quantity,
+    0
+  );
 
   return (
     <section
@@ -79,7 +88,6 @@ export default function CartPage({ darkMode }) {
           </p>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Cart Items */}
             <div className="lg:col-span-2 space-y-6">
               {cartItems.map((item) => (
                 <div
@@ -100,7 +108,7 @@ export default function CartPage({ darkMode }) {
                         darkMode ? "text-gray-400" : "text-gray-500"
                       }`}
                     >
-                      ${item.price.toFixed(2)} per unit
+                      ${(item.selectedQuantity === "90" ? item.lowPrice : item.highPrice).toFixed(2)} per unit
                     </p>
                     <div className="flex items-center mt-3 gap-2">
                       <button
@@ -116,8 +124,26 @@ export default function CartPage({ darkMode }) {
                       >
                         +
                       </button>
+                    <div className="flex items-center gap-3 mt-2 ml-4">
+                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Quantity:
+                      </label>
+                      {item.lowPrice !== item.highPrice ? (
+                        <select
+                          value={item.selectedQuantity}
+                          onChange={(e) => handleQuantityChange(item.id, e.target.value)}
+                          className="border rounded-md px-3 py-1 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm"
+                        >
+                          <option value="90">90 Tablets</option>
+                          <option value="180">180 Tablets</option>
+                        </select>
+                      ) : (
+                        <span className="text-sm font-semibold">180 Tablets</span>
+                      )}
+                    </div>
                     </div>
                   </div>
+
                   <button
                     onClick={() => removeItem(item.id)}
                     className="text-red-500 hover:text-red-600"
@@ -129,7 +155,6 @@ export default function CartPage({ darkMode }) {
               ))}
             </div>
 
-            {/* Summary */}
             <div
               className={`rounded-2xl shadow-md p-6 h-fit ${
                 darkMode ? "bg-gray-800" : "bg-white"
@@ -146,7 +171,10 @@ export default function CartPage({ darkMode }) {
                 <span>Total Price:</span>
                 <span>${totalPrice.toFixed(2)}</span>
               </div>
-              <button className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl font-semibold transition duration-300">
+              <button
+                onClick={() => navigate("/checkout")}
+                className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl font-semibold transition duration-300"
+              >
                 Proceed to Checkout
               </button>
             </div>
