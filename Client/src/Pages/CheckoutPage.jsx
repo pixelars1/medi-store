@@ -2,10 +2,10 @@ import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { products as productData } from "../assets/assets";
 import { AppContext } from "../Context/AppContext";
-import { ArrowBigLeft } from "lucide-react";
+import { ArrowBigLeft , Trash, Trash2} from "lucide-react";
 
 export default function CheckoutPage() {
-  const { darkMode } = useContext(AppContext);
+  const { darkMode,setCartCount } = useContext(AppContext);
   const [cartItems, setCartItems] = useState([]);
   const [customer, setCustomer] = useState({
     name: "",
@@ -48,7 +48,14 @@ export default function CheckoutPage() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    if (!customer.name || !customer.email || !customer.address || !customer.city || !customer.state || !customer.zip) {
+    if (
+      !customer.name ||
+      !customer.email ||
+      !customer.address ||
+      !customer.city ||
+      !customer.state ||
+      !customer.zip
+    ) {
       setMessage("Please fill in all required fields.");
       setIsSubmitting(false);
       return;
@@ -87,20 +94,39 @@ export default function CheckoutPage() {
     setIsSubmitting(false);
   };
 
+  
+  // Handle remove item from cart
+    // Remove from cart (also update localStorage)
+  const removeItem = (id) => {
+    const itemToRemove = cartItems.find((item) => item.id === id);
+    const updatedCart = cartItems.filter((item) => item.id !== id);
+    setCartItems(updatedCart);
+
+    // Update localStorage cart
+    const currentCartNames = JSON.parse(localStorage.getItem("cart")) || [];
+    const newCartNames = currentCartNames.filter(
+      (name) => name !== itemToRemove.name
+    );
+    localStorage.setItem("cart", JSON.stringify(newCartNames));
+  };
+
+  useEffect(() => {
+      setCartCount(cartItems.length);
+    }, [cartItems, setCartCount]);
+
   return (
     <section
       className={`min-h-screen px-6 py-16 max-w-5xl mx-auto transition-colors duration-500 ${
         darkMode ? "bg-gray-900 text-gray-100" : "bg-gray-50 text-gray-900"
       }`}
     >
-     
       <h2 className="text-4xl font-extrabold mb-14 text-center text-green-600 dark:text-green-400 tracking-tight">
         Checkout
       </h2>
 
       <form
         onSubmit={handleSubmit}
-        className={`grid grid-cols-1 md:grid-cols-3 gap-10 rounded-3xl shadow-lg p-10 ${
+        className={`grid grid-cols-1 md:grid-cols-4 gap-10 rounded-3xl shadow-lg p-10 ${
           darkMode ? "bg-gray-800" : "bg-white"
         }`}
         noValidate
@@ -110,14 +136,49 @@ export default function CheckoutPage() {
           <fieldset className="space-y-6">
             {[...Array(8)].map((_, i) => {
               const fields = [
-                { label: "Full Name", name: "name", type: "text", required: true },
-                { label: "Email Address", name: "email", type: "email", required: true },
-                { label: "Street Address", name: "address", type: "textarea", required: true },
+                {
+                  label: "Full Name",
+                  name: "name",
+                  type: "text",
+                  required: true,
+                },
+                {
+                  label: "Email Address",
+                  name: "email",
+                  type: "email",
+                  required: true,
+                },
+                {
+                  label: "Street Address",
+                  name: "address",
+                  type: "textarea",
+                  required: true,
+                },
                 { label: "City", name: "city", type: "text", required: true },
-                { label: "State/Province", name: "state", type: "text", required: true },
-                { label: "ZIP / Postal Code", name: "zip", type: "text", required: true },
-                { label: "Phone Number", name: "phone", type: "tel", required: false },
-                { label: "Order Notes (optional)", name: "notes", type: "textarea", required: false },
+                {
+                  label: "State/Province",
+                  name: "state",
+                  type: "text",
+                  required: true,
+                },
+                {
+                  label: "ZIP / Postal Code",
+                  name: "zip",
+                  type: "text",
+                  required: true,
+                },
+                {
+                  label: "Phone Number",
+                  name: "phone",
+                  type: "tel",
+                  required: false,
+                },
+                {
+                  label: "Order Notes (optional)",
+                  name: "notes",
+                  type: "textarea",
+                  required: false,
+                },
               ];
               const { label, name, type, required } = fields[i];
               return (
@@ -133,7 +194,9 @@ export default function CheckoutPage() {
                         required={required}
                         placeholder={label}
                         className={`peer w-full rounded-xl border shadow-sm ${
-                          darkMode ? "border-gray-600 bg-gray-900 text-gray-100 placeholder-gray-400" : "border-gray-300 bg-white text-gray-900 placeholder-gray-500"
+                          darkMode
+                            ? "border-gray-600 bg-gray-900 text-gray-100 placeholder-gray-400"
+                            : "border-gray-300 bg-white text-gray-900 placeholder-gray-500"
                         } px-5 pt-6 pb-2 resize-none placeholder-transparent focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition`}
                       />
                       <label
@@ -141,7 +204,9 @@ export default function CheckoutPage() {
                         className={`absolute left-5 top-3 text-sm cursor-text transition-all peer-placeholder-shown:top-6 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-3 peer-focus:text-sm peer-focus:text-green-500`}
                       >
                         {label}
-                        {required && <span className="text-red-500 ml-1">*</span>}
+                        {required && (
+                          <span className="text-red-500 ml-1">*</span>
+                        )}
                       </label>
                     </>
                   ) : (
@@ -155,7 +220,9 @@ export default function CheckoutPage() {
                         required={required}
                         placeholder={label}
                         className={`peer w-full rounded-xl border shadow-sm ${
-                          darkMode ? "border-gray-600 bg-gray-900 text-gray-100 placeholder-gray-400" : "border-gray-300 bg-white text-gray-900 placeholder-gray-500"
+                          darkMode
+                            ? "border-gray-600 bg-gray-900 text-gray-100 placeholder-gray-400"
+                            : "border-gray-300 bg-white text-gray-900 placeholder-gray-500"
                         } px-5 pt-6 pb-2 placeholder-transparent focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition`}
                       />
                       <label
@@ -163,7 +230,9 @@ export default function CheckoutPage() {
                         className={`absolute left-5 top-3 text-sm cursor-text transition-all peer-placeholder-shown:top-6 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-3 peer-focus:text-sm peer-focus:text-green-500`}
                       >
                         {label}
-                        {required && <span className="text-red-500 ml-1">*</span>}
+                        {required && (
+                          <span className="text-red-500 ml-1">*</span>
+                        )}
                       </label>
                     </>
                   )}
@@ -171,41 +240,45 @@ export default function CheckoutPage() {
               );
             })}
           </fieldset>
-           <div className="flex items-center justify-between mt-5 mb-5">
-        <button
-          onClick={() => navigate("/cart")}
-          className={`flex max-sm:hidden items-center mx-auto gap-2 text-sm font-semibold rounded-lg px-4 py-2 transition-colors duration-300 ${
-            darkMode
-              ? "bg-green-700 text-green-100 hover:bg-green-600"
-              : "bg-green-600 text-white hover:bg-green-700"
-          }`}
-          aria-label="Back to Cart"
-        >
-          <ArrowBigLeft /> Back to Cart
-        </button>
-      </div>
-
+          <div className="flex items-center justify-between mt-5 mb-5">
+            <button
+              onClick={() => navigate("/cart")}
+              className={`flex max-sm:hidden items-center mx-auto gap-2 text-sm font-semibold rounded-lg px-4 py-2 transition-colors duration-300 ${
+                darkMode
+                  ? "bg-green-700 text-green-100 hover:bg-green-600"
+                  : "bg-green-600 text-white hover:bg-green-700"
+              }`}
+              aria-label="Back to Cart"
+            >
+              <ArrowBigLeft /> Back to Cart
+            </button>
+          </div>
         </div>
 
         {/* Order Summary */}
         <aside
-          className={`rounded-3xl p-7 flex flex-col justify-between shadow-inner md:sticky md:top-24 h-fit ${
-            darkMode ? "bg-gray-900 text-gray-100" : "bg-green-50 text-green-900"
+          className={`md:col-span-2 rounded-3xl p-7 flex flex-col justify-between shadow-inner md:sticky md:top-24 h-fit ${
+            darkMode
+              ? "bg-gray-900 text-gray-100"
+              : "bg-green-50 text-green-900"
           }`}
           aria-label="Order summary"
         >
-          <div>
+          <div className="">
             <h3 className="text-2xl font-semibold mb-6 text-green-700 dark:text-green-400">
               Order Summary
             </h3>
-            <ul className="space-y-4 max-h-64 overflow-y-auto mb-6 pr-2">
+            <ul className="space-y-4 max-h-64 overflow-y-auto overflow-x-hidden scrollbar-hide mb-6 pr-2">
               {cartItems.length === 0 && (
                 <p className="text-gray-500 dark:text-gray-400 text-center">
                   Your cart is empty.
                 </p>
               )}
               {cartItems.map((item) => (
-                <li key={item.id} className="flex gap-3 items-center">
+                <li
+                  key={item.id}
+                  className="flex gap-3 items-center relative group"
+                >
                   <img
                     src={item.image}
                     alt={item.name}
@@ -213,9 +286,22 @@ export default function CheckoutPage() {
                   />
                   <div className="flex-1">
                     <p className="text-sm font-medium">{item.name}</p>
-                    <p className="text-xs text-green-500">Qty: {item.quantity}</p>
+                    <p className="text-xs text-green-500">
+                      Qty: {item.quantity}
+                    </p>
                   </div>
-                  <span className="font-semibold">${(item.price * item.quantity).toFixed(2)}</span>
+                  <span className="font-semibold">
+                    ${(item.price * item.quantity).toFixed(2)}
+                  </span>
+
+                  {/* Remove Icon */}
+                  <button
+                    onClick={() => removeItem(item.id)}
+                    className="text-red-600 transition-opacity cursor-pointer"
+                    aria-label="Remove item"
+                  >
+                    <Trash2 className="w-[20px] h-[20px]" />
+                  </button>
                 </li>
               ))}
             </ul>
