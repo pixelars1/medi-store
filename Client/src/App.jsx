@@ -16,6 +16,7 @@ import FloatingCartBtn from "./components/FloatingCartBtn.jsx";
 import CheckoutPage from "./Pages/CheckoutPage.jsx";
 import ProductDetailsPage from "./Pages/ProductDetailsPage.jsx";
 import { startProgress, stopProgress } from "./progressBar.js";
+import TitleUpdater from "./components/TitleUpdater.jsx";
 
 function ProgressHandler() {
   const location = useLocation();
@@ -70,6 +71,7 @@ function App() {
       {/* Navigation - Pass dark mode props */}
       <Navbar darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
 
+        <TitleUpdater />
       {/* Routes */}
       <Routes>
         <Route
