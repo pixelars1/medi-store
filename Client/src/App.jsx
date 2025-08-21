@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import Home from "./Pages/Home.jsx";
 import { Moon, Sun } from "lucide-react";
 import Footer from "./components/Footer.jsx";
@@ -15,7 +15,21 @@ import CartPage from "./Pages/CartPage.jsx";
 import FloatingCartBtn from "./components/FloatingCartBtn.jsx";
 import CheckoutPage from "./Pages/CheckoutPage.jsx";
 import ProductDetailsPage from "./Pages/ProductDetailsPage.jsx";
+import { startProgress, stopProgress } from "./progressBar.js";
 
+function ProgressHandler() {
+  const location = useLocation();
+
+  useEffect(() => {
+    startProgress();
+    const timer = setTimeout(() => {
+      stopProgress();
+    }, 500); // small delay for smooth effect
+    return () => clearTimeout(timer);
+  }, [location]);
+
+  return null;
+}
 function App() {
   const { darkMode, setDarkMode, setCartCount } = useContext(AppContext);
   const toggleDarkMode = () => {
@@ -35,6 +49,7 @@ function App() {
           : "bg-gradient-to-br from-green-50 via-white to-emerald-50"
       }`}
     >
+      <ProgressHandler />
       {/* Dark Mode Toggle - Fixed positioning with higher z-index */}
       <div className="fixed bottom-4 right-4 z-[9999]">
         <button
