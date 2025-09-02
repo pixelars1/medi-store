@@ -17,6 +17,10 @@ import CheckoutPage from "./Pages/CheckoutPage.jsx";
 import ProductDetailsPage from "./Pages/ProductDetailsPage.jsx";
 import { startProgress, stopProgress } from "./progressBar.js";
 import TitleUpdater from "./components/TitleUpdater.jsx";
+import AdminDashboard from "./Pages/AdminDashboard.jsx";
+import AdminDashboardPart2 from "./Pages/AdminDashboardPart2.jsx";
+import { AuthProvider } from "./components/admin/AuthProvider.jsx";
+import UserProfile from "./Pages/UserProfile.jsx";
 
 function ProgressHandler() {
   const location = useLocation();
@@ -25,12 +29,13 @@ function ProgressHandler() {
     startProgress();
     const timer = setTimeout(() => {
       stopProgress();
-    }, 500); // small delay for smooth effect
+    }, 500);
     return () => clearTimeout(timer);
   }, [location]);
 
   return null;
 }
+
 function App() {
   const { darkMode, setDarkMode, setCartCount } = useContext(AppContext);
   const toggleDarkMode = () => {
@@ -43,64 +48,64 @@ function App() {
     setCartCount(storedCart.length);
   }, [setCartCount]);
   return (
-    <div
-      className={`min-h-screen w-full relative transition-colors duration-300 ${
-        darkMode
-          ? "bg-gray-900"
-          : "bg-gradient-to-br from-green-50 via-white to-emerald-50"
-      }`}
-    >
-      <ProgressHandler />
-      {/* Dark Mode Toggle - Fixed positioning with higher z-index */}
-      <div className="fixed bottom-4 right-4 z-[9999]">
-        <button
-          onClick={toggleDarkMode}
-          className={`p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-110 ${
-            darkMode
-              ? "bg-gray-800 text-yellow-400 hover:bg-gray-700 border border-gray-600"
-              : "bg-white text-gray-700 hover:bg-gray-100 border border-gray-200"
-          }`}
-        >
-          {darkMode ? (
-            <Sun className="w-5 h-5" />
-          ) : (
-            <Moon className="w-5 h-5" />
-          )}
-        </button>
-      </div>
-      {/* Navigation - Pass dark mode props */}
-      <Navbar darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+    // ✅ Wrap the whole app inside AuthProvider
+    <AuthProvider>
+      <div
+        className={`min-h-screen w-full relative transition-colors duration-300 ${
+          darkMode
+            ? "bg-gray-900"
+            : "bg-gradient-to-br from-green-50 via-white to-emerald-50"
+        }`}
+      >
+        <ProgressHandler />
 
+        {/* Dark Mode Toggle */}
+        <div className="fixed bottom-4 right-4 z-[9999]">
+          <button
+            onClick={toggleDarkMode}
+            className={`p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-110 ${
+              darkMode
+                ? "bg-gray-800 text-yellow-400 hover:bg-gray-700 border border-gray-600"
+                : "bg-white text-gray-700 hover:bg-gray-100 border border-gray-200"
+            }`}
+          >
+            {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+          </button>
+        </div>
+
+        <Navbar darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
         <TitleUpdater />
-      {/* Routes */}
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <Home
-              darkMode={darkMode}
-              setDarkMode={setDarkMode}
-              toggleDarkMode={toggleDarkMode}
-            />
-          }
-        />
-        {/* Add more routes as needed */}
-        <Route path="/product-details" element={<ProductDetails />} />
-        <Route path="/auth" element={<Auth />} />
-        <Route path="/products" darkMode={darkMode} element={<Products />} />
-        <Route path="/categories" element={<Categories />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/cart" element={<CartPage />} />
-        <Route path="/checkout" element={<CheckoutPage />} />
-        <Route path="/product/:productName" element={<ProductDetailsPage />} />
 
-        {/* Add more routes as needed */}
-      </Routes>
-      <Footer />
-      {/* Floating Cart Button */}
-      <FloatingCartBtn />
-    </div>
+        {/* Routes */}
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <Home
+                darkMode={darkMode}
+                setDarkMode={setDarkMode}
+                toggleDarkMode={toggleDarkMode}
+              />
+            }
+          />
+          <Route path="/product-details" element={<ProductDetails />} />
+          <Route path="/auth" element={<Auth />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/categories" element={<Categories />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/cart" element={<CartPage />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/product/:productName" element={<ProductDetailsPage />} />
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin2" element={<AdminDashboardPart2 />} />
+          <Route path="/user-Profile" element={<UserProfile/>}/>
+        </Routes>
+
+        <Footer />
+        <FloatingCartBtn />
+      </div>
+    </AuthProvider>
   );
 }
 
