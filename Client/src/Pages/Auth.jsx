@@ -8,6 +8,7 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signInWithPopup,
+  updateProfile,
 } from "firebase/auth";
 
 // Icons
@@ -19,6 +20,7 @@ const Auth = () => {
   const { darkMode } = useContext(AppContext);
   const [isSignup, setIsSignup] = useState(mode === "signup");
   const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
@@ -43,8 +45,24 @@ const Auth = () => {
     }
     setLoading(true);
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      setSuccess("✅ Signup successful! Please login.");
+     const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+      await updateProfile(user, { displayName: name });
+      navigate("/");
+      // Save user to DB
+      await fetch("medi-store-cpl1.vercel.app/api/users/save-user", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: user.displayName,
+          profile: user.photoURL,
+          email: user.email,
+        }),
+      });
     } catch (err) {
       setError(err.message);
     } finally {
@@ -59,8 +77,19 @@ const Auth = () => {
     setSuccess("");
     setLoading(true);
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+     const result = await signInWithEmailAndPassword(auth, email, password);
+      // Save user to DB
+      await fetch("medi-store-cpl1.vercel.app/api/users/save-user", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: result.user.displayName,
+          profile: result.user.photoURL,
+          email: result.user.email,
+        }),
+      });
       setSuccess("✅ Login successful!");
+      navigate(-1);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -79,7 +108,7 @@ const Auth = () => {
       setUser(result.user);
       navigate(-1);
       // Save user to DB
-      await fetch("http://localhost:8080/api/users/save-user", {
+      await fetch("medi-store-cpl1.vercel.app/api/users/save-user", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -129,6 +158,7 @@ const Auth = () => {
               <input
                 type="text"
                 placeholder="Full Name"
+                onChange={(e) => setName(e.target.value)}
                 className="w-full pl-10 pr-3 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-green-400 dark:bg-gray-800 dark:border-gray-700"
               />
             </div>
