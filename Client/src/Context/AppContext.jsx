@@ -8,12 +8,15 @@ export const AppProvider = ({ children }) => {
     return localStorage.getItem("theme") === "dark";
   });
    const [cartCount, setCartCount] = useState(0);
+   const [user, setUser] = useState(null);
   return (
     <AppContext.Provider value={{
       darkMode,
       setDarkMode,
       cartCount,
-      setCartCount
+      setCartCount,
+      user,
+      setUser
     }}>
       {children}
     </AppContext.Provider>
