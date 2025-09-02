@@ -21,7 +21,8 @@ const Navbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const { user, setUser } = useContext(AppContext);
-
+  console.log(user);
+  
   // Listen to auth state changes
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
