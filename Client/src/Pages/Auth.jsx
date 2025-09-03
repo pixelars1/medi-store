@@ -54,7 +54,7 @@ const Auth = () => {
       await updateProfile(user, { displayName: name });
       navigate("/");
       // Save user to DB
-      await fetch("medi-store-cpl1.vercel.app/api/users/save-user", {
+      await fetch("https://medi-store-cpl1.vercel.app/api/users/save-user", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -79,7 +79,7 @@ const Auth = () => {
     try {
      const result = await signInWithEmailAndPassword(auth, email, password);
       // Save user to DB
-      await fetch("medi-store-cpl1.vercel.app/api/users/save-user", {
+      await fetch("https://medi-store-cpl1.vercel.app/api/users/save-user", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -108,7 +108,7 @@ const Auth = () => {
       setUser(result.user);
       navigate(-1);
       // Save user to DB
-      await fetch("medi-store-cpl1.vercel.app/api/users/save-user", {
+      await fetch("https://medi-store-cpl1.vercel.app/api/users/save-user", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
