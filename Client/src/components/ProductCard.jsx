@@ -1,9 +1,18 @@
-import React from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { CheckCircle } from "lucide-react";
 import { Link } from "react-router-dom";
+import { addToCart, removeCartItem, getCart } from "../api/cartApi";
+import { AppContext } from "@/Context/AppContext";
+const ProductCard = ({ product, darkMode }) => {
+  const { _id, name, image, price, originalPrice,tablet } = product;
+  console.log("product price",price);
+  
+  const [loading, setLoading] = useState(false);
+  const [inCart, setInCart] = useState(false);
+  const [cartId, setCartId] = useState(null); // store cartId
+  const {user,setCartCount}=useContext(AppContext)
 
-const ProductCard = ({ product, darkMode, onAddToCart, onRemoveFromCart }) => {
-  const { name, image, price, originalPrice, inCart } = product;
+  const userId = user?.uid;
 
   const discount = Math.round(
     ((parseFloat(originalPrice.slice(1)) - parseFloat(price.slice(1))) /
@@ -11,18 +20,59 @@ const ProductCard = ({ product, darkMode, onAddToCart, onRemoveFromCart }) => {
       100
   );
 
-  const handleAdd = (e) => {
-    e.stopPropagation();
+  useEffect(() => {
+  const fetchCart = async () => {
+    if (!user) return;
+    try {
+      const cart = await getCart(userId);
+      setCartId(cart._id);
+
+      const exists = cart.items.find(
+        (item) => item.productId && item.productId._id === _id
+      );
+      setCartCount(cart.items.length);
+      setInCart(!!exists);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  fetchCart();
+}, [userId, _id, user, setCartCount]);
+
+
+  const handleAdd = async (e) => {
     e.preventDefault();
-    onAddToCart();
+    if (!userId) return alert("Please login to add items to cart");
+
+    try {
+      setLoading(true);
+      const cartData = { userId, productId: _id, quantity: 1 ,tablet};
+      const carts= await addToCart(cartData);
+      setCartCount(carts?.cart?.items.length || 0);
+      setInCart(true);
+
+    } catch (error) {
+      console.error("Add to cart error:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleRemove = (e) => {
-    e.stopPropagation();
+  const handleRemove = async (e) => {
     e.preventDefault();
-    onRemoveFromCart();
-  };
+    if (!userId || !cartId) return;
 
+    try {
+      setLoading(true);
+      const updatedCarts= await removeCartItem(cartId, _id);
+      setCartCount(updatedCarts?.cart?.items.length || 0);
+      setInCart(false);
+    } catch (error) {
+      console.error("Remove from cart error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div
       className={`rounded-3xl overflow-hidden hover:shadow-xl border transition-transform duration-300 transform hover:-translate-y-1 group flex flex-col justify-between ${
@@ -31,8 +81,7 @@ const ProductCard = ({ product, darkMode, onAddToCart, onRemoveFromCart }) => {
           : "bg-white border-gray-200 hover:border-blue-200"
       }`}
     >
-      <Link to={`/product/${encodeURIComponent(name)}`} className="block">
-        {/* Image */}
+      <Link to={`/product/${_id}`} className="block">
         <div className="w-full aspect-[4/3] min-h-[150px] overflow-hidden">
           <img
             src={image}
@@ -41,7 +90,6 @@ const ProductCard = ({ product, darkMode, onAddToCart, onRemoveFromCart }) => {
           />
         </div>
 
-        {/* Info */}
         <div className="p-4 flex flex-col justify-between flex-grow">
           <div>
             <div
@@ -93,26 +141,26 @@ const ProductCard = ({ product, darkMode, onAddToCart, onRemoveFromCart }) => {
         </div>
       </Link>
 
-      {/* Buttons */}
       <div className="p-4 pt-0 flex gap-2">
         <button
           onClick={handleAdd}
-          disabled={inCart === 1}
+          disabled={loading || inCart}
           className={`w-full py-2.5 rounded-xl font-semibold text-sm transition-all duration-300 ${
-            inCart === 1
+            inCart
               ? "bg-gray-400 text-white cursor-not-allowed"
               : "bg-blue-600 text-white hover:bg-blue-700"
           }`}
         >
-          {inCart === 1 ? "In Cart" : "Add to Cart"}
+          {loading ? "Processing..." : inCart ? "In Cart" : "Add to Cart"}
         </button>
 
-        {inCart === 1 && (
+        {inCart && (
           <button
             onClick={handleRemove}
+            disabled={loading}
             className="w-full py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl font-semibold text-sm transition-all duration-300"
           >
-            Remove
+            {loading ? "Removing..." : "Remove"}
           </button>
         )}
       </div>
