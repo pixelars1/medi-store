@@ -1,11 +1,12 @@
+// CheckoutPage.jsx
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { products as productData } from "../assets/assets";
 import { AppContext } from "../Context/AppContext";
-import { ArrowBigLeft , Trash, Trash2} from "lucide-react";
+import { ArrowBigLeft, Trash2 } from "lucide-react";
+import { getCart, removeCartItem } from "../api/cartApi"; // ✅ use same API as CartPage
 
 export default function CheckoutPage() {
-  const { darkMode,setCartCount } = useContext(AppContext);
+  const { darkMode, setCartCount, user } = useContext(AppContext);
   const [cartItems, setCartItems] = useState([]);
   const [customer, setCustomer] = useState({
     name: "",
@@ -21,29 +22,48 @@ export default function CheckoutPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
+  // ✅ Fetch cart from DB
   useEffect(() => {
-    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-    const initialItems = productData
-      .filter((product) => storedCart.includes(product.name))
-      .map((item, index) => ({
-        ...item,
-        id: index + 1,
-        quantity: 1,
-        price: parseFloat(item.price.replace("$", "").split("–")[0]),
-      }));
-    setCartItems(initialItems);
-  }, []);
+    const fetchCart = async () => {
+      try {
+        const cart= await getCart(user.uid);
+        if (cart && cart.items) {
+          setCartItems(cart.items);
+          setCartCount(cart.items.length);
+        }
+      } catch (error) {
+        console.error("Error fetching cart:", error);
+      }
+    };
+    if (user) fetchCart();
+  }, [user, setCartCount]);
 
+  // ✅ Remove item
+  const removeItem = async (productId) => {
+    try {
+      const updatedCart = await removeCartItem(user.uid, productId);
+      setCartItems(updatedCart.items);
+      setCartCount(updatedCart.items.length);
+    } catch (error) {
+      console.error("Error removing item:", error);
+    }
+  };
+
+  // ✅ Total Price
   const totalPrice = cartItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
   );
+  console.log("cartItems",cartItems);
+  
 
+  // ✅ Handle form change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setCustomer((prev) => ({ ...prev, [name]: value }));
   };
 
+  // ✅ Place Order
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -72,8 +92,8 @@ export default function CheckoutPage() {
 
       if (response.ok) {
         setMessage("Order placed successfully! Please check your email.");
-        localStorage.removeItem("cart");
         setCartItems([]);
+        setCartCount(0);
         setCustomer({
           name: "",
           email: "",
@@ -94,26 +114,6 @@ export default function CheckoutPage() {
     setIsSubmitting(false);
   };
 
-  
-  // Handle remove item from cart
-    // Remove from cart (also update localStorage)
-  const removeItem = (id) => {
-    const itemToRemove = cartItems.find((item) => item.id === id);
-    const updatedCart = cartItems.filter((item) => item.id !== id);
-    setCartItems(updatedCart);
-
-    // Update localStorage cart
-    const currentCartNames = JSON.parse(localStorage.getItem("cart")) || [];
-    const newCartNames = currentCartNames.filter(
-      (name) => name !== itemToRemove.name
-    );
-    localStorage.setItem("cart", JSON.stringify(newCartNames));
-  };
-
-  useEffect(() => {
-      setCartCount(cartItems.length);
-    }, [cartItems, setCartCount]);
-
   return (
     <section
       className={`min-h-screen px-6 py-16 max-w-5xl mx-auto transition-colors duration-500 ${
@@ -133,122 +133,76 @@ export default function CheckoutPage() {
       >
         {/* Customer Details */}
         <div className="md:col-span-2 space-y-7">
-          <fieldset className="space-y-6">
-            {[...Array(8)].map((_, i) => {
-              const fields = [
-                {
-                  label: "Full Name",
-                  name: "name",
-                  type: "text",
-                  required: true,
-                },
-                {
-                  label: "Email Address",
-                  name: "email",
-                  type: "email",
-                  required: true,
-                },
-                {
-                  label: "Street Address",
-                  name: "address",
-                  type: "textarea",
-                  required: true,
-                },
-                { label: "City", name: "city", type: "text", required: true },
-                {
-                  label: "State/Province",
-                  name: "state",
-                  type: "text",
-                  required: true,
-                },
-                {
-                  label: "ZIP / Postal Code",
-                  name: "zip",
-                  type: "text",
-                  required: true,
-                },
-                {
-                  label: "Phone Number",
-                  name: "phone",
-                  type: "tel",
-                  required: false,
-                },
-                {
-                  label: "Order Notes (optional)",
-                  name: "notes",
-                  type: "textarea",
-                  required: false,
-                },
-              ];
-              const { label, name, type, required } = fields[i];
-              return (
-                <div key={name} className="relative">
-                  {type === "textarea" ? (
-                    <>
-                      <textarea
-                        id={name}
-                        name={name}
-                        value={customer[name]}
-                        onChange={handleChange}
-                        rows={4}
-                        required={required}
-                        placeholder={label}
-                        className={`peer w-full rounded-xl border shadow-sm ${
-                          darkMode
-                            ? "border-gray-600 bg-gray-900 text-gray-100 placeholder-gray-400"
-                            : "border-gray-300 bg-white text-gray-900 placeholder-gray-500"
-                        } px-5 pt-6 pb-2 resize-none placeholder-transparent focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition`}
-                      />
-                      <label
-                        htmlFor={name}
-                        className={`absolute left-5 top-3 text-sm cursor-text transition-all peer-placeholder-shown:top-6 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-3 peer-focus:text-sm peer-focus:text-green-500`}
-                      >
-                        {label}
-                        {required && (
-                          <span className="text-red-500 ml-1">*</span>
-                        )}
-                      </label>
-                    </>
-                  ) : (
-                    <>
-                      <input
-                        id={name}
-                        name={name}
-                        type={type}
-                        value={customer[name]}
-                        onChange={handleChange}
-                        required={required}
-                        placeholder={label}
-                        className={`peer w-full rounded-xl border shadow-sm ${
-                          darkMode
-                            ? "border-gray-600 bg-gray-900 text-gray-100 placeholder-gray-400"
-                            : "border-gray-300 bg-white text-gray-900 placeholder-gray-500"
-                        } px-5 pt-6 pb-2 placeholder-transparent focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition`}
-                      />
-                      <label
-                        htmlFor={name}
-                        className={`absolute left-5 top-3 text-sm cursor-text transition-all peer-placeholder-shown:top-6 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-3 peer-focus:text-sm peer-focus:text-green-500`}
-                      >
-                        {label}
-                        {required && (
-                          <span className="text-red-500 ml-1">*</span>
-                        )}
-                      </label>
-                    </>
-                  )}
-                </div>
-              );
-            })}
-          </fieldset>
+          {[
+            { label: "Full Name", name: "name", type: "text", required: true },
+            { label: "Email Address", name: "email", type: "email", required: true },
+            { label: "Street Address", name: "address", type: "textarea", required: true },
+            { label: "City", name: "city", type: "text", required: true },
+            { label: "State/Province", name: "state", type: "text", required: true },
+            { label: "ZIP / Postal Code", name: "zip", type: "text", required: true },
+            { label: "Phone Number", name: "phone", type: "tel", required: false },
+            { label: "Order Notes (optional)", name: "notes", type: "textarea", required: false },
+          ].map(({ label, name, type, required }) => (
+            <div key={name} className="relative">
+              {type === "textarea" ? (
+                <>
+                  <textarea
+                    id={name}
+                    name={name}
+                    value={customer[name]}
+                    onChange={handleChange}
+                    rows={4}
+                    required={required}
+                    placeholder={label}
+                    className={`peer w-full rounded-xl border shadow-sm ${
+                      darkMode
+                        ? "border-gray-600 bg-gray-900 text-gray-100 placeholder-gray-400"
+                        : "border-gray-300 bg-white text-gray-900 placeholder-gray-500"
+                    } px-5 pt-6 pb-2 resize-none placeholder-transparent focus:outline-none focus:ring-2 focus:ring-green-500`}
+                  />
+                  <label
+                    htmlFor={name}
+                    className="absolute left-5 top-3 text-sm transition-all peer-placeholder-shown:top-6 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-3 peer-focus:text-sm peer-focus:text-green-500"
+                  >
+                    {label}
+                    {required && <span className="text-red-500 ml-1">*</span>}
+                  </label>
+                </>
+              ) : (
+                <>
+                  <input
+                    id={name}
+                    name={name}
+                    type={type}
+                    value={customer[name]}
+                    onChange={handleChange}
+                    required={required}
+                    placeholder={label}
+                    className={`peer w-full rounded-xl border shadow-sm ${
+                      darkMode
+                        ? "border-gray-600 bg-gray-900 text-gray-100 placeholder-gray-400"
+                        : "border-gray-300 bg-white text-gray-900 placeholder-gray-500"
+                    } px-5 pt-6 pb-2 placeholder-transparent focus:outline-none focus:ring-2 focus:ring-green-500`}
+                  />
+                  <label
+                    htmlFor={name}
+                    className="absolute left-5 top-3 text-sm transition-all peer-placeholder-shown:top-6 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:top-3 peer-focus:text-sm peer-focus:text-green-500"
+                  >
+                    {label}
+                    {required && <span className="text-red-500 ml-1">*</span>}
+                  </label>
+                </>
+              )}
+            </div>
+          ))}
           <div className="flex items-center justify-between mt-5 mb-5">
             <button
               onClick={() => navigate("/cart")}
-              className={`flex max-sm:hidden items-center mx-auto gap-2 text-sm font-semibold rounded-lg px-4 py-2 transition-colors duration-300 ${
+              className={`flex max-sm:hidden items-center mx-auto gap-2 text-sm font-semibold rounded-lg px-4 py-2 ${
                 darkMode
                   ? "bg-green-700 text-green-100 hover:bg-green-600"
                   : "bg-green-600 text-white hover:bg-green-700"
               }`}
-              aria-label="Back to Cart"
             >
               <ArrowBigLeft /> Back to Cart
             </button>
@@ -258,49 +212,38 @@ export default function CheckoutPage() {
         {/* Order Summary */}
         <aside
           className={`md:col-span-2 rounded-3xl p-7 flex flex-col justify-between shadow-inner md:sticky md:top-24 h-fit ${
-            darkMode
-              ? "bg-gray-900 text-gray-100"
-              : "bg-green-50 text-green-900"
+            darkMode ? "bg-gray-900 text-gray-100" : "bg-green-50 text-green-900"
           }`}
-          aria-label="Order summary"
         >
-          <div className="">
+          <div>
             <h3 className="text-2xl font-semibold mb-6 text-green-700 dark:text-green-400">
               Order Summary
             </h3>
-            <ul className="space-y-4 max-h-64 overflow-y-auto overflow-x-hidden scrollbar-hide mb-6 pr-2">
+            <ul className="space-y-4 max-h-64 overflow-y-auto pr-2">
               {cartItems.length === 0 && (
                 <p className="text-gray-500 dark:text-gray-400 text-center">
                   Your cart is empty.
                 </p>
               )}
               {cartItems.map((item) => (
-                <li
-                  key={item.id}
-                  className="flex gap-3 items-center relative group"
-                >
+                <li key={item._id} className="flex gap-3 items-center">
                   <img
-                    src={item.image}
-                    alt={item.name}
+                    src={item.productId.image}
+                    alt={item.productId.name}
                     className="w-12 h-12 rounded-lg object-cover border"
                   />
                   <div className="flex-1">
-                    <p className="text-sm font-medium">{item.name}</p>
-                    <p className="text-xs text-green-500">
-                      Qty: {item.quantity}
-                    </p>
+                    <p className="text-sm font-medium">{item.productId.name}</p>
+                    <p className="text-xs text-green-500">Qty: {item.quantity}</p>
                   </div>
                   <span className="font-semibold">
                     ${(item.price * item.quantity).toFixed(2)}
                   </span>
-
-                  {/* Remove Icon */}
                   <button
-                    onClick={() => removeItem(item.id)}
-                    className="text-red-600 transition-opacity cursor-pointer"
-                    aria-label="Remove item"
+                    onClick={() => removeItem(item.productId._id)}
+                    className="text-red-600"
                   >
-                    <Trash2 className="w-[20px] h-[20px]" />
+                    <Trash2 className="w-5 h-5" />
                   </button>
                 </li>
               ))}
@@ -312,7 +255,6 @@ export default function CheckoutPage() {
               <span>Total</span>
               <span>${totalPrice.toFixed(2)}</span>
             </div>
-
             {message && (
               <p
                 className={`mb-4 text-center font-semibold text-sm ${
@@ -320,16 +262,14 @@ export default function CheckoutPage() {
                     ? "text-green-600 dark:text-green-400"
                     : "text-red-600 dark:text-red-400"
                 }`}
-                role="alert"
               >
                 {message}
               </p>
             )}
-
             <button
               type="submit"
               disabled={isSubmitting || cartItems.length === 0}
-              className={`w-full py-3 rounded-2xl font-semibold text-white transition-colors duration-300 ${
+              className={`w-full py-3 rounded-2xl font-semibold text-white ${
                 cartItems.length === 0 || isSubmitting
                   ? "bg-gray-400 cursor-not-allowed"
                   : "bg-green-600 hover:bg-green-700"
