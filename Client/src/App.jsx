@@ -16,7 +16,7 @@ import CheckoutPage from "./Pages/CheckoutPage.jsx";
 import ProductDetailsPage from "./Pages/ProductDetailsPage.jsx";
 import { startProgress, stopProgress } from "./progressBar.js";
 import TitleUpdater from "./components/TitleUpdater.jsx";
-import AdminDashboard from "./Pages/AdminDashboard.jsx";
+// import AdminDashboard from "./Pages/AdminDashboard.jsx";
 // import AdminDashboardPart2 from "./Pages/AdminDashboardPart2.jsx";
 // import { AuthProvider } from "./components/admin/AuthProvider.jsx";
 // import UserProfile from "./Pages/UserProfile.jsx";
@@ -95,7 +95,7 @@ function App() {
           <Route path="/cart" element={<CartPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/product/:productId" element={<ProductDetailsPage />} />
-          <Route path="/admin" element={<AdminDashboard />} />
+          {/* <Route path="/admin" element={<AdminDashboard />} /> */}
           {/* <Route path="/admin2" element={<AdminDashboardPart2 />} /> */}
           {/* <Route path="/user-Profile" element={<UserProfile/>}/> */}
         </Routes>
