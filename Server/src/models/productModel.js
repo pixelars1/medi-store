@@ -8,9 +8,9 @@ const productSchema = new mongoose.Schema(
 
     image: { type: String, required: true },             // Cloudinary URL or local path
 
-    price: { type: Number, required: true },             // Selling price
-    originalPrice: { type: Number },                     // MRP if discounted
-
+    price: { type: String, required: true },             // Selling price
+    originalPrice: { type: String },                     // MRP if discounted
+    tablet:{type:Number,default:180},
     description: { type: String },                       // Details
     stock: { type: Number, default: 0 },                 // Available quantity
 
