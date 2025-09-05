@@ -1,74 +1,75 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Trash2 } from "lucide-react";
-import { products as productData } from "../assets/assets";
 import { AppContext } from "../Context/AppContext";
 import { useNavigate } from "react-router-dom";
+import { getCart, updateCartItem, removeCartItem } from "../api/cartApi";
 
 export default function CartPage() {
   const [cartItems, setCartItems] = useState([]);
-  const { darkMode, setCartCount } = useContext(AppContext);
+  const { darkMode, setCartCount, user } = useContext(AppContext);
+  const [cartId, setCartId] = useState(null);
   const navigate = useNavigate();
 
+  // 🔹 Fetch cart items from backend
   useEffect(() => {
-    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-    const initialItems = productData
-      .filter((product) => storedCart.includes(product.name))
-      .map((item, index) => {
-        const prices = item.price
-          .replace(/\$/g, "")
-          .split("–")
-          .map((p) => parseFloat(p.trim()));
-        return {
-          ...item,
-          id: index + 1,
-          quantity: 1,
-          selectedQuantity: "180",
-          lowPrice: prices[0],
-          highPrice: prices.length > 1 ? prices[1] : prices[0],
-        };
-      });
-    setCartItems(initialItems);
-  }, []);
+    const fetchCart = async () => {
+      if (!user?.uid) return;
+      try {
+        const data = await getCart(user.uid); // ✅ use uid
+        setCartId(data._id);
+        setCartItems(data.items || []);
+      } catch (error) {
+        console.error("Error fetching cart:", error);
+      }
+    };
+    fetchCart();
+  }, [user]);
 
-  const updateQuantity = (id, amount) => {
-    setCartItems((prev) =>
-      prev.map((item) =>
-        item.id === id
-          ? { ...item, quantity: Math.max(1, item.quantity + amount) }
-          : item
-      )
-    );
+  // 🔹 Update quantity
+  const updateQuantity = async (productId, amount) => {
+    if (!user?.uid) return;
+    const item = cartItems.find((i) => i.productId._id === productId);
+    if (!item) return;
+
+    const newQty = Math.max(1, item.quantity + amount);
+
+    try {
+      const updatedCart = await updateCartItem(user.uid, productId, newQty);
+      setCartItems(updatedCart.items || []);
+    } catch (error) {
+      console.error("Error updating quantity:", error);
+    }
   };
 
-  const removeItem = (id) => {
-    const itemToRemove = cartItems.find((item) => item.id === id);
-    const updatedCart = cartItems.filter((item) => item.id !== id);
-    setCartItems(updatedCart);
-
-    const currentCartNames = JSON.parse(localStorage.getItem("cart")) || [];
-    const newCartNames = currentCartNames.filter(
-      (name) => name !== itemToRemove.name
-    );
-    localStorage.setItem("cart", JSON.stringify(newCartNames));
+  // 🔹 Remove item
+  const removeItem = async (productId) => {
+    if (!user?.uid) return;
+    try {
+      const updatedCart = await removeCartItem(cartId, productId);
+      setCartItems(updatedCart?.cart?.items || []);
+      console.log("updatedCart",updatedCart);
+      
+    } catch (error) {
+      console.error("Error removing item:", error);
+    }
   };
 
-  const handleQuantityChange = (id, value) => {
-    setCartItems((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, selectedQuantity: value } : item
-      )
-    );
-  };
-
+  // 🔹 Sync cart count
   useEffect(() => {
     setCartCount(cartItems.length);
   }, [cartItems, setCartCount]);
 
+  // 🔹 Price helper
+  const parsePrice = (price) => {
+    if (!price) return 0;
+    if (typeof price === "number") return price;
+    const numeric = parseFloat(price.toString().replace(/[^0-9.]/g, ""));
+    return isNaN(numeric) ? 0 : numeric;
+  };
+
+  // 🔹 Total price
   const totalPrice = cartItems.reduce(
-    (sum, item) =>
-      sum +
-      (item.selectedQuantity === "90" ? item.lowPrice : item.highPrice) *
-        item.quantity,
+    (sum, item) => sum + parsePrice(item.productId?.price) * item.quantity,
     0
   );
 
@@ -97,38 +98,34 @@ export default function CartPage() {
             <div className="lg:col-span-2 space-y-4 sm:space-y-6">
               {cartItems.map((item) => (
                 <div
-                  key={item.id}
+                  key={item.productId._id}
                   className={`flex relative flex-col sm:flex-row items-center sm:items-start gap-4 p-4 rounded-2xl shadow-md ${
                     darkMode ? "bg-gray-800" : "bg-white"
                   }`}
                 >
                   <img
-                    src={item.image}
-                    alt={item.name}
-                    className="w-24 h-24 sm:w-28 sm:h-28 object-cover rounded-xl"
+                    src={item.productId?.image}
+                    alt={item.productId?.name}
+                    className="w-24 h-24 sm:w-28 sm:h-28 object-contain rounded-xl"
                   />
                   <div className="flex-1 w-full text-center sm:text-left">
-                    <h4 className="font-semibold text-lg mb-1">{item.name}</h4>
+                    <h4 className="font-semibold text-lg mb-1">
+                      {item.productId?.name}
+                    </h4>
                     <p
                       className={`text-sm ${
                         darkMode ? "text-gray-400" : "text-gray-500"
                       }`}
                     >
-                      $
-                      {(
-                        item.selectedQuantity === "90"
-                          ? item.lowPrice
-                          : item.highPrice
-                      ).toFixed(2)}{" "}
-                      per unit
+                      ${parsePrice(item.productId?.price).toFixed(2)} per unit
                     </p>
 
+                    {/* Quantity Controls */}
                     <div className="flex flex-col sm:flex-row sm:items-center mt-3 gap-3">
-                      {/* Quantity Controls */}
                       <div className="flex items-center justify-center sm:justify-start gap-2">
                         <button
                           className="px-2 py-1 rounded-lg bg-green-600 text-white hover:bg-green-700"
-                          onClick={() => updateQuantity(item.id, -1)}
+                          onClick={() => updateQuantity(item.productId._id, -1)}
                         >
                           −
                         </button>
@@ -137,41 +134,18 @@ export default function CartPage() {
                         </span>
                         <button
                           className="px-2 py-1 rounded-lg bg-green-600 text-white hover:bg-green-700"
-                          onClick={() => updateQuantity(item.id, 1)}
+                          onClick={() => updateQuantity(item.productId._id, 1)}
                         >
                           +
                         </button>
-                      </div>
-
-                      {/* Tablet Quantity Selection */}
-                      <div className="flex items-center justify-center sm:justify-start gap-2">
-                        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                          Quantity:
-                        </label>
-                        {item.lowPrice !== item.highPrice ? (
-                          <select
-                            value={item.selectedQuantity}
-                            onChange={(e) =>
-                              handleQuantityChange(item.id, e.target.value)
-                            }
-                            className="border rounded-md px-3 py-1 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm"
-                          >
-                            <option value="90">90 Tablets</option>
-                            <option value="180">180 Tablets</option>
-                          </select>
-                        ) : (
-                          <span className="text-sm font-semibold">
-                            180 Tablets
-                          </span>
-                        )}
                       </div>
                     </div>
                   </div>
 
                   {/* Remove Button */}
                   <button
-                    onClick={() => removeItem(item.id)}
-                    className="absolute text-red-500 hover:text-red-600 self-end sm:self-start"
+                    onClick={() => removeItem(item.productId._id)}
+                    className="absolute right-4 top-4 text-red-500 hover:text-red-600"
                     title="Remove"
                   >
                     <Trash2 />
