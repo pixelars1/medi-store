@@ -13,6 +13,7 @@ import {
 
 // Icons
 import { Mail, Lock, User } from "lucide-react";
+import { registerUser } from "@/api/userApi";
 
 const Auth = () => {
   const [searchParams] = useSearchParams();
@@ -34,95 +35,88 @@ const Auth = () => {
 
   const {setUser}=useContext(AppContext)
 
-  // 🔹 Signup
-  const handleSignup = async (e) => {
-    e.preventDefault();
-    setError("");
-    setSuccess("");
-    if (password !== confirmPassword) {
-      setError("Passwords do not match ❌");
-      return;
-    }
-    setLoading(true);
-    try {
-     const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const user = userCredential.user;
-      await updateProfile(user, { displayName: name });
-      navigate("/");
-      // Save user to DB
-      await fetch("https://medi-store-cpl1.vercel.app/api/users/save-user", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: user.displayName,
-          profile: user.photoURL,
-          email: user.email,
-        }),
-      });
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+// ✅ Signup
+const handleSignup = async (e) => {
+  e.preventDefault();
+  setError("");
+  setSuccess("");
+  if (password !== confirmPassword) {
+    setError("Passwords do not match ❌");
+    return;
+  }
+  setLoading(true);
+  try {
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    const user = userCredential.user;
+    await updateProfile(user, { displayName: name });
 
-  // 🔹 Login
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setError("");
-    setSuccess("");
-    setLoading(true);
-    try {
-     const result = await signInWithEmailAndPassword(auth, email, password);
-      // Save user to DB
-      await fetch("https://medi-store-cpl1.vercel.app/api/users/save-user", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: result.user.displayName,
-          profile: result.user.photoURL,
-          email: result.user.email,
-        }),
-      });
-      setSuccess("✅ Login successful!");
-      navigate(-1);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+    // Save user to DB with firebaseUid
+    registerUser({
+      firebaseUid: user.uid,    // ✅ NEW
+        name: user.displayName,
+        profile: user.photoURL || "",
+        email: user.email,
+    });
 
-  // 🔹 Google Login
-  const handleGoogleLogin = async () => {
-    setError("");
-    setSuccess("");
-    setLoading(true);
-    try {
-      const result = await signInWithPopup(auth, googleProvider);
-      setSuccess(`✅ Welcome, ${result.user.displayName}`);
-      setUser(result.user);
-      navigate(-1);
-      // Save user to DB
-      await fetch("https://medi-store-cpl1.vercel.app/api/users/save-user", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: result.user.displayName,
-          profile: result.user.photoURL,
-          email: result.user.email,
-        }),
-      });
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+    setSuccess("✅ Account created!");
+    navigate("/");
+  } catch (err) {
+    setError(err.message);
+  } finally {
+    setLoading(false);
+  }
+};
+
+// ✅ Login
+const handleLogin = async (e) => {
+  e.preventDefault();
+  setError("");
+  setSuccess("");
+  setLoading(true);
+  try {
+    const result = await signInWithEmailAndPassword(auth, email, password);
+    const user = result.user;
+    setUser(user);
+    setSuccess("✅ Login successful!");
+    navigate(-1);
+  } catch (err) {
+    setError(err.message);
+  } finally {
+    setLoading(false);
+  }
+};
+
+// ✅ Google Login
+const handleGoogleLogin = async () => {
+  setError("");
+  setSuccess("");
+  setLoading(true);
+  try {
+    const result = await signInWithPopup(auth, googleProvider);
+    const user = result.user;
+
+    // Save/update user in DB
+     registerUser({
+      firebaseUid: user.uid,    // ✅ NEW
+        name: user.displayName,
+        profile: user.photoURL || "",
+        email: user.email,
+    });
+
+    setSuccess(`✅ Welcome, ${user.displayName}`);
+    setUser(user);
+    navigate(-1);
+  } catch (err) {
+    setError(err.message);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div
