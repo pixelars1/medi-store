@@ -3,7 +3,6 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import Home from "./Pages/Home.jsx";
 import { Moon, Sun } from "lucide-react";
 import Footer from "./components/Footer.jsx";
-import ProductDetails from "./Pages/ProductDetails.jsx";
 import { AppContext } from "./Context/AppContext.jsx";
 import Auth from "./Pages/Auth.jsx";
 import Products from "./Pages/Products.jsx";
@@ -17,7 +16,7 @@ import CheckoutPage from "./Pages/CheckoutPage.jsx";
 import ProductDetailsPage from "./Pages/ProductDetailsPage.jsx";
 import { startProgress, stopProgress } from "./progressBar.js";
 import TitleUpdater from "./components/TitleUpdater.jsx";
-// import AdminDashboard from "./Pages/AdminDashboard.jsx";
+import AdminDashboard from "./Pages/AdminDashboard.jsx";
 // import AdminDashboardPart2 from "./Pages/AdminDashboardPart2.jsx";
 // import { AuthProvider } from "./components/admin/AuthProvider.jsx";
 // import UserProfile from "./Pages/UserProfile.jsx";
@@ -88,7 +87,6 @@ function App() {
               />
             }
           />
-          <Route path="/product-details" element={<ProductDetails />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/products" element={<Products />} />
           <Route path="/categories" element={<Categories />} />
@@ -96,8 +94,8 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
-          <Route path="/product/:productName" element={<ProductDetailsPage />} />
-          {/* <Route path="/admin" element={<AdminDashboard />} /> */}
+          <Route path="/product/:productId" element={<ProductDetailsPage />} />
+          <Route path="/admin" element={<AdminDashboard />} />
           {/* <Route path="/admin2" element={<AdminDashboardPart2 />} /> */}
           {/* <Route path="/user-Profile" element={<UserProfile/>}/> */}
         </Routes>
