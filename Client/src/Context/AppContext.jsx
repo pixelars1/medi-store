@@ -7,6 +7,8 @@ export const AppProvider = ({ children }) => {
    const [darkMode, setDarkMode] = useState(() => {
     return localStorage.getItem("theme") === "dark";
   });
+   const[products, setProducts]=useState([]);
+   const [cart, setCart] = useState(null);
    const [cartCount, setCartCount] = useState(0);
    const [user, setUser] = useState(null);
   return (
@@ -16,7 +18,11 @@ export const AppProvider = ({ children }) => {
       cartCount,
       setCartCount,
       user,
-      setUser
+      setUser,
+      products,
+      setProducts,
+      cart,
+      setCart
     }}>
       {children}
     </AppContext.Provider>
