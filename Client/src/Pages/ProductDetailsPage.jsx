@@ -1,53 +1,82 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { products as productData } from "../assets/assets";
-import { ArrowBigLeft } from "lucide-react";
 import { AppContext } from "../Context/AppContext.jsx";
+import { addToCart, removeCartItem, getCart } from "../api/cartApi";
+import { ShoppingCart, Trash2, Share2 } from "lucide-react";
 
 export default function ProductDetailsPage() {
-  const { productName } = useParams();
+  const { productId } = useParams();
   const navigate = useNavigate();
+  const { darkMode, products, user } = useContext(AppContext);
+
   const [product, setProduct] = useState(null);
   const [selectedQuantity, setSelectedQuantity] = useState("180");
-  const { darkMode, setCartCount } = useContext(AppContext);
-  const [inCart, setInCart] = useState(0);
+  const [inCart, setInCart] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [cartId, setCartId] = useState(null);
 
+  const userId = user?.uid;
+
+  // ✅ Load product
   useEffect(() => {
-    const decodedName = decodeURIComponent(productName);
-    const foundProduct = productData.find((p) => p.name === decodedName);
+    const foundProduct = products.find((p) => p._id === productId);
     setProduct(foundProduct || null);
 
-    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-    if (foundProduct) {
-      setInCart(storedCart.includes(foundProduct.name) ? 1 : 0);
+    if (user && foundProduct) {
+      (async () => {
+        try {
+          const cart = await getCart(userId);
+          setCartId(cart._id);
+          const exists = cart.items.find((item) => item.productId._id === productId);
+          setInCart(!!exists);
+        } catch (err) {
+          console.error(err);
+        }
+      })();
     }
-  }, [productName]);
+  }, [productId, products, user, userId]);
 
-  const handleAdd = () => {
-    setInCart(1);
-    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-    const newCart = [...storedCart, product.name];
-    const uniqueCart = [...new Set(newCart)];
-    localStorage.setItem("cart", JSON.stringify(uniqueCart));
-    setCartCount(uniqueCart.length);
+  // ✅ Handle Add
+  const handleAdd = async () => {
+    if (!userId) return alert("Please login to add items to cart");
+
+    try {
+      setLoading(true);
+      const cartData = {
+        userId,
+        productId: product._id,
+        quantity: 1,
+        tablet: selectedQuantity,
+      };
+      await addToCart(cartData);
+      setInCart(true);
+    } catch (error) {
+      console.error("Add to cart error:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleRemove = () => {
-    setInCart(0);
-    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-    const newCart = storedCart.filter((item) => item !== product.name);
-    localStorage.setItem("cart", JSON.stringify(newCart));
-    setCartCount(newCart.length);
+  // ✅ Handle Remove
+  const handleRemove = async () => {
+    if (!userId || !cartId) return;
+
+    try {
+      setLoading(true);
+      await removeCartItem(cartId, product._id);
+      setInCart(false);
+    } catch (error) {
+      console.error("Remove from cart error:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleBuyNow = () => {
-    if (inCart === 1) {
-      navigate("/checkout");
-    } else {
-      handleAdd();
-      navigate("/checkout");
-    }
-  }
+  // ✅ Buy Now
+  const handleBuyNow = async () => {
+    if (!inCart) await handleAdd();
+    navigate("/checkout");
+  };
 
   if (!product) {
     return (
@@ -67,6 +96,7 @@ export default function ProductDetailsPage() {
     );
   }
 
+  // ✅ Price Handling
   const hasMultiplePrices = product.price.includes("–");
   const [lowPrice, highPrice] = product.price
     .replace(/\$/g, "")
@@ -85,10 +115,9 @@ export default function ProductDetailsPage() {
         darkMode ? "bg-gray-900 text-white" : "bg-gray-50 text-gray-900"
       }`}
     >
-
-      {/* Main Grid */}
+      {/* Grid Layout */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
-        {/* Product Image */}
+        {/* Image */}
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6 flex justify-center items-center">
           <img
             src={product.image}
@@ -97,13 +126,13 @@ export default function ProductDetailsPage() {
           />
         </div>
 
-        {/* Product Info */}
+        {/* Info */}
         <div className="space-y-6">
           <h1 className="text-3xl font-bold text-green-600 dark:text-green-400">
             {product.name}
           </h1>
 
-          {/* Price Section */}
+          {/* Price */}
           <div className="flex items-center gap-4">
             {hasMultiplePrices ? (
               <>
@@ -121,16 +150,14 @@ export default function ProductDetailsPage() {
             )}
           </div>
 
-          {/* Quantity Selector */}
+          {/* Quantity */}
           <div className="flex items-center gap-4">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-              Quantity:
-            </label>
+            <label className="text-sm font-medium">Quantity:</label>
             {hasMultiplePrices ? (
               <select
                 value={selectedQuantity}
                 onChange={(e) => setSelectedQuantity(e.target.value)}
-                className="border rounded-md px-4 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                className="border rounded-md px-4 py-2 bg-white dark:bg-gray-800"
               >
                 <option value="90">90 Tablets</option>
                 <option value="180">180 Tablets</option>
@@ -140,44 +167,52 @@ export default function ProductDetailsPage() {
             )}
           </div>
 
-          {/* Action Buttons */}
-          <div className="p-4 pt-0 flex gap-4 flex-col sm:flex-row">
+          {/* Buttons */}
+          <div className="flex flex-col sm:flex-row gap-3">
             <button
               onClick={handleAdd}
-              disabled={inCart === 1}
-              className={`flex-1  text-white py-3 rounded-lg font-semibold transition-all" ${
-                inCart === 1
+              disabled={inCart || loading}
+              className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-lg font-semibold transition-all ${
+                inCart
                   ? "bg-gray-400 text-white cursor-not-allowed"
-                  : "bg-green-600 hover:bg-green-700"
+                  : "bg-green-600 hover:bg-green-700 text-white"
               }`}
             >
-              {inCart === 1 ? "In Cart" : "Add to Cart"}
+              <ShoppingCart className="w-5 h-5" />
+              {loading ? "Adding..." : inCart ? "In Cart" : "Add to Cart"}
             </button>
 
-            {inCart === 1 && (
+            {inCart && (
               <button
                 onClick={handleRemove}
-                className="flex-1 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl font-semibold text-sm transition-all duration-300"
+                disabled={loading}
+                className="flex-1 flex items-center justify-center gap-2 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold transition-all"
               >
-                Remove
+                <Trash2 className="w-5 h-5" />
+                {loading ? "Removing..." : "Remove"}
               </button>
             )}
 
-            <button onClick={handleBuyNow} className="flex-1 py-2.5 bg-black text-white rounded-xl font-semibold text-sm hover:bg-gray-800">
+            <button
+              onClick={handleBuyNow}
+              className="flex-1 py-3 bg-black text-white rounded-lg font-semibold hover:bg-gray-800"
+            >
               Buy Now
             </button>
           </div>
 
-          {/* Additional Info */}
+          {/* Info */}
           <div className="pt-4 text-sm text-gray-600 dark:text-gray-400 space-y-1">
-            {product.sku && <p><strong>SKU:</strong> {product.sku}</p>}
             {product.category && <p><strong>Category:</strong> {product.category}</p>}
-            <p><strong>Share:</strong> [Social Share Icons]</p>
+            <div className="flex items-center gap-2">
+              <Share2 className="w-4 h-4" />
+              <p>Share this product</p>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Product Description Section */}
+      {/* Description */}
       {product.description && (
         <div className="mt-16">
           <h2 className="text-2xl font-bold mb-4 border-b pb-2">
