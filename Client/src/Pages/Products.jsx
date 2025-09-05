@@ -1,51 +1,42 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useContext } from "react";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
-import { products as productData } from "../assets/assets";
 import { AppContext } from "../Context/AppContext";
 import ProductCard from "../components/ProductCard";
 
 const Products = ({ darkMode }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [products, setProducts] = useState([]);
-  const { setCartCount } = useContext(AppContext);
+  // const [updatedProducts, setUpdatedProducts] = useState([]);
+  const { products } = useContext(AppContext);
 
-  // 🔄 Load cart state from localStorage on mount
-  useEffect(() => {
-    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-    const updatedProducts = productData.map((product) => ({
-      ...product,
-      inCart: storedCart.includes(product.name) ? 1 : 0,
-    }));
-    setProducts(updatedProducts);
-    setCartCount(storedCart.length);
-  }, [setCartCount]);
+  // 🔄 Load cart from API or localStorage (if available)
+  // useEffect(() => {
+  //   const loadCart = async () => {
+  //     try {
+  //       // Example: fetch cart items for user (if API exists)
+  //       const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
+  //       const updatedProducts = products?.map((product) => ({
+  //         ...product,
+  //         inCart: storedCart.includes(product._id) ? true : false,
+  //       }));
+  //       setUpdatedProducts(updatedProducts);
+  //       setCartCount(storedCart.length);
+  //     } catch (error) {
+  //       console.error("Cart load error:", error);
+  //     }
+  //   };
+  //   loadCart();
+  // }, [products, setCartCount]);
 
-  // ✅ Handle Add to Cart
-  const handleAddToCart = (index) => {
-    const updatedProducts = products.map((product, i) =>
-      i === index ? { ...product, inCart: 1 } : product
-    );
-    setProducts(updatedProducts);
-
-    const newCart = updatedProducts
-      .filter((p) => p.inCart === 1)
-      .map((p) => p.name);
-    localStorage.setItem("cart", JSON.stringify(newCart));
-    setCartCount(newCart.length);
-  };
-  const handleRemoveFromCart = (index) => {
-    const updatedProducts = products.map((product, i) =>
-      i === index ? { ...product, inCart: 0 } : product
-    );
-    setProducts(updatedProducts);
-
-    const newCart = updatedProducts
-      .filter((p) => p.inCart === 1)
-      .map((p) => p.name);
-    localStorage.setItem("cart", JSON.stringify(newCart));
-    setCartCount(newCart.length);
-  }
+  // Refresh cart count globally
+  // const refreshCart = async () => {
+  //   try {
+  //     const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
+  //     setCartCount(storedCart.length);
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
 
   const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -79,17 +70,12 @@ const Products = ({ darkMode }) => {
 
         {/* Product Grid */}
         <section className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-          {paginatedProducts.map((product, index) => (
+          {paginatedProducts.map((product) => (
             <ProductCard
-              key={index}
+              key={product._id}
               product={product}
               darkMode={darkMode}
-              onAddToCart={() =>
-                handleAddToCart(products.findIndex((p) => p.name === product.name))
-              }
-              onRemoveFromCart={() =>
-                handleRemoveFromCart(products.findIndex((p) => p.name === product.name))
-              }
+              // refreshCart={refreshCart}
             />
           ))}
         </section>
