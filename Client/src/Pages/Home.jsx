@@ -10,47 +10,33 @@ import {
 } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
 import ProductCard from "../components/ProductCard.jsx";
-import { products as productData} from "../assets/assets.js";
 import { AppContext } from "../Context/AppContext.jsx";
+import { getProducts } from "../api/productApi.js"; // ✅ only added this import
 
 const Home = ({ darkMode }) => {
   const [searchQuery, setSearchQuery] = useState("");
- const [products, setProducts] = useState([]);
-    const { setCartCount } = useContext(AppContext);
-   useEffect(() => {
-      const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-      const updatedProducts = productData.map((product) => ({
-        ...product,
-        inCart: storedCart.includes(product.name) ? 1 : 0,
-      }));
-      setProducts(updatedProducts);
-      setCartCount(storedCart.length);
-    }, [setCartCount]);
- 
-   const handleAddToCart = (index) => {
-    const updatedProducts = products.map((product, i) =>
-      i === index ? { ...product, inCart: 1 } : product
-    );
-    setProducts(updatedProducts);
 
-    const newCart = updatedProducts
-      .filter((p) => p.inCart === 1)
-      .map((p) => p.name);
-    localStorage.setItem("cart", JSON.stringify(newCart));
-    setCartCount(newCart.length);
-  };
-  const handleRemoveFromCart = (index) => {
-    const updatedProducts = products.map((product, i) =>
-      i === index ? { ...product, inCart: 0 } : product
-    );
-    setProducts(updatedProducts);
+  // ✅ Fetch products from backend with fallback to local assets (only this effect modified)
+  const { products, setProducts } =useContext(AppContext);
+  // ✅ Fetch products from backend and save in AppContext
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await getProducts();
+        const fetched = Array.isArray(res?.data) ? res.data : [];
+        setProducts(fetched);
+      } catch (err) {
+        console.error("Error fetching products:", err);
+        setProducts([]); // fallback empty
+      }
+    };
+    fetchProducts();
+  }, [setProducts]);
 
-    const newCart = updatedProducts
-      .filter((p) => p.inCart === 1)
-      .map((p) => p.name);
-    localStorage.setItem("cart", JSON.stringify(newCart));
-    setCartCount(newCart.length);
-  }
+  useEffect(() => {
+    document.title = "MediStore - Your Trusted Online Pharmacy";
+  })
+
 
   return (
     <div
@@ -246,18 +232,12 @@ const Home = ({ darkMode }) => {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {products.slice(0,6).map((medicine, index) => (
+            {products?.slice(0,6).map((medicine, index) => (
               <ProductCard
-              key={index}
-              product={medicine}
-              darkMode={darkMode}
-              onAddToCart={() =>
-                handleAddToCart(products.findIndex((p) => p.name === medicine.name))
-              }
-              onRemoveFromCart={() =>
-                handleRemoveFromCart(products.findIndex((p) => p.name === medicine.name))
-              }
-            />
+                key={index}
+                product={medicine}
+                darkMode={darkMode}
+              />
             ))}
           </div>
         </div>
