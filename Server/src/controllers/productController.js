@@ -1,3 +1,4 @@
+import { uploadOnCloudinary } from "../config/cloudinary.js";
 import Product from "../models/productModel.js";
 
 // Create product
@@ -15,9 +16,19 @@ export const createProduct = async (req, res) => {
       expiryDate,
     } = req.body;
 
-    if (!req.file) {
-      return res.status(400).json({ message: "Image is required" });
-    }
+  // ✅ Extract image paths from `req.files`
+  const imagePaths = req.file?.path;
+
+  // ✅ Validate image presence
+  if (!imagePaths) {
+    throw new ApiError(400, 'image is required');
+  }
+
+  const uploadedImage = await uploadOnCloudinary(imagePaths);
+
+  if (!uploadedImage) {
+    throw new ApiError(500, `Failed to upload image`);
+  }
 
     const newProduct = new Product({
       name,
@@ -29,7 +40,7 @@ export const createProduct = async (req, res) => {
       stock,
       prescriptionRequired,
       expiryDate,
-      image: req.file.path, // multer stores path, replace with cloudinary if needed
+      image: uploadedImage.secure_url, // multer stores path, replace with cloudinary if needed
     });
 
     await newProduct.save();
