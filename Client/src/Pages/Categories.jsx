@@ -1,63 +1,50 @@
 import React, { useContext, useEffect, useState } from "react";
-import { FaSearch } from "react-icons/fa";
 import ProductCard from "../components/ProductCard.jsx";
 import { Menu, Search } from "lucide-react";
-import { products as productData } from "../assets/assets.js";
 import { AppContext } from "../Context/AppContext.jsx";
-const CategoryPage = ({ darkMode }) => {
+import { getCart } from "../api/cartApi";
+
+const CategoryPage = ({ darkMode, userId }) => {
   const getUniqueValues = (items, key) => [
     "All",
     ...Array.from(new Set(items.map((item) => item[key]))),
   ];
+
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedCompany, setSelectedCompany] = useState("All");
   const [priceRange, setPriceRange] = useState("All");
   const [availability, setAvailability] = useState("All");
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOption, setSortOption] = useState("default");
+  const [updatedProducts, setUpdatedProducts] = useState([]);
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
 
-  const [products, setProducts] = useState([]);
-  const { setCartCount } = useContext(AppContext);
+  const { setCartCount ,products} = useContext(AppContext);
 
-  // 🔄 Load cart state from localStorage on mount
+  // 🔄 Load cart state from API on mount
   useEffect(() => {
-    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-    const updatedProducts = productData.map((product) => ({
-      ...product,
-      inCart: storedCart.includes(product.name) ? 1 : 0,
-    }));
-    setProducts(updatedProducts);
-    setCartCount(storedCart.length);
-  }, [setCartCount]);
+    const initializeProducts = async () => {
+      try {
+        let cartItems = [];
+        if (userId) {
+          const cart = await getCart(userId);
+          cartItems = cart.items.map((item) => item.productId);
+          setCartCount(cartItems.length);
+        }
+        const updatedProducts = products.map((product) => ({
+          ...product,
+          inCart: cartItems.includes(product._id),
+        }));
+        setUpdatedProducts(updatedProducts);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    initializeProducts();
+  }, [userId, setCartCount, products]);
 
-  // ✅ Handle Add to Cart
-  const handleAddToCart = (index) => {
-    const updatedProducts = products.map((product, i) =>
-      i === index ? { ...product, inCart: 1 } : product
-    );
-    setProducts(updatedProducts);
-
-    const newCart = updatedProducts
-      .filter((p) => p.inCart === 1)
-      .map((p) => p.name);
-    localStorage.setItem("cart", JSON.stringify(newCart));
-    setCartCount(newCart.length);
-  };
-  const handleRemoveFromCart = (index) => {
-    const updatedProducts = products.map((product, i) =>
-      i === index ? { ...product, inCart: 0 } : product
-    );
-    setProducts(updatedProducts);
-
-    const newCart = updatedProducts
-      .filter((p) => p.inCart === 1)
-      .map((p) => p.name);
-    localStorage.setItem("cart", JSON.stringify(newCart));
-    setCartCount(newCart.length);
-  }
-
-  const categories = getUniqueValues(products, "category");
-  const companies = getUniqueValues(products, "company");
+  const categories = getUniqueValues(updatedProducts, "category");
+  const companies = getUniqueValues(updatedProducts, "company");
   const prices = ["All", "$0 - $5", "$5 - $10", "$10+"];
   const availabilityOptions = ["All", "In Stock", "Out of Stock"];
   const sortOptions = [
@@ -67,36 +54,19 @@ const CategoryPage = ({ darkMode }) => {
     "nameAsc",
     "nameDesc",
   ];
+
   const filterOptions = [
-    {
-      label: "Company",
-      value: selectedCompany,
-      onChange: setSelectedCompany,
-      options: companies,
-    },
-    {
-      label: "Price",
-      value: priceRange,
-      onChange: setPriceRange,
-      options: prices,
-    },
-    {
-      label: "Availability",
-      value: availability,
-      onChange: setAvailability,
-      options: availabilityOptions,
-    },
-    {
-      label: "Sort By",
-      value: sortOption,
-      onChange: setSortOption,
-      options: sortOptions.map((opt) => ({
-        value: opt,
-        label:
-          opt === "default" ? "Default" : opt.replace(/([A-Z])/g, " $1").trim(),
-      })),
+    { label: "Company", value: selectedCompany, onChange: setSelectedCompany, options: companies },
+    { label: "Price", value: priceRange, onChange: setPriceRange, options: prices },
+    { label: "Availability", value: availability, onChange: setAvailability, options: availabilityOptions },
+    { 
+      label: "Sort By", 
+      value: sortOption, 
+      onChange: setSortOption, 
+      options: sortOptions.map((opt) => ({ value: opt, label: opt === "default" ? "Default" : opt.replace(/([A-Z])/g, " $1").trim() })) 
     },
   ];
+
   const filterByPrice = (price, range) => {
     const val = parseFloat(price.replace("$", ""));
     if (range === "$0 - $5") return val <= 5;
@@ -105,29 +75,37 @@ const CategoryPage = ({ darkMode }) => {
     return true;
   };
 
-  const filteredProducts = products.filter((product) => {
-    const matchCategory =
-      selectedCategory === "All" || product.category === selectedCategory;
-    const matchCompany =
-      selectedCompany === "All" || product.company === selectedCompany;
+  const filteredProducts = updatedProducts.filter((product) => {
+    const matchCategory = selectedCategory === "All" || product.category === selectedCategory;
+    const matchCompany = selectedCompany === "All" || product.company === selectedCompany;
     const matchPrice = filterByPrice(product.price, priceRange);
-    const matchSearch = product.name
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
+    const matchSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
     return matchCategory && matchCompany && matchPrice && matchSearch;
   });
 
   const sortedProducts = [...filteredProducts].sort((a, b) => {
-    if (sortOption === "priceAsc")
-      return parseFloat(a.price) - parseFloat(b.price);
-    if (sortOption === "priceDesc")
-      return parseFloat(b.price) - parseFloat(a.price);
+    if (sortOption === "priceAsc") return parseFloat(a.price) - parseFloat(b.price);
+    if (sortOption === "priceDesc") return parseFloat(b.price) - parseFloat(a.price);
     if (sortOption === "nameAsc") return a.name.localeCompare(b.name);
     if (sortOption === "nameDesc") return b.name.localeCompare(a.name);
-    return 0; // default
+    return 0;
   });
 
-  const [showMobileFilters, setShowMobileFilters] = useState(false);
+  // Refresh cart count globally
+  const refreshCart = async () => {
+    if (!userId) return;
+    try {
+      const cart = await getCart(userId);
+      setCartCount(cart.items.length);
+      const updatedProducts = products.map((product) => ({
+        ...product,
+        inCart: cart.items.some((item) => item.productId === product._id),
+      }));
+      setUpdatedProducts(updatedProducts);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4 pt-20">
@@ -139,18 +117,11 @@ const CategoryPage = ({ darkMode }) => {
       </p>
 
       <div className="flex flex-col lg:flex-row gap-6">
-        {/* Header Row for Mobile */}
-        {/* Mobile Menu and Search Bar - Only for Small Screens */}
+        {/* Mobile header */}
         <div className="flex items-center justify-between lg:hidden mb-4">
-          <button
-            onClick={() => setShowMobileFilters((prev) => !prev)}
-            className="text-green-600"
-            aria-label="Toggle Filters"
-          >
+          <button onClick={() => setShowMobileFilters((prev) => !prev)} className="text-green-600" aria-label="Toggle Filters">
             <Menu size={24} />
           </button>
-
-          {/* Search bar */}
           <div className="flex-1 ml-4 relative">
             <input
               type="text"
@@ -159,18 +130,13 @@ const CategoryPage = ({ darkMode }) => {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-4 pr-10 py-2 rounded-md border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition text-sm"
             />
-            <Search
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-300"
-              size={18}
-            />
+            <Search className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-300" size={18} />
           </div>
         </div>
 
-        {/* Sidebar - Categories Only for Large Screens */}
+        {/* Sidebar for large screens */}
         <aside className="hidden lg:block lg:w-1/5 h-fit bg-white dark:bg-gray-800 p-4 rounded-xl shadow-md sticky top-24">
-          <h2 className="text-lg font-semibold text-gray-700 dark:text-white mb-4">
-            Categories
-          </h2>
+          <h2 className="text-lg font-semibold text-gray-700 dark:text-white mb-4">Categories</h2>
           <ul className="space-y-2">
             {categories.map((cat) => (
               <li
@@ -188,14 +154,12 @@ const CategoryPage = ({ darkMode }) => {
           </ul>
         </aside>
 
-        {/* Filter Section - Only for Mobile Screens (toggleable) */}
+        {/* Mobile filters */}
         {showMobileFilters && (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-4 lg:hidden">
             {filterOptions.map((filter, i) => (
               <div key={i} className="w-full">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
-                  {filter.label}
-                </label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">{filter.label}</label>
                 <select
                   value={filter.value}
                   onChange={(e) => filter.onChange(e.target.value)}
@@ -212,11 +176,10 @@ const CategoryPage = ({ darkMode }) => {
           </div>
         )}
 
-        {/* Main Content */}
+        {/* Main content */}
         <div className="flex-1 flex flex-col gap-4">
-          {/* Top Filters - Hidden on Small Screens */}
+          {/* Top filters */}
           <div className="hidden lg:grid sticky top-16 z-10 bg-white dark:bg-gray-800 p-4 rounded-b-xl shadow-md grid-cols-1 items-center sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {/* Search Bar */}
             <div className="col-span-full lg:col-span-2 relative">
               <input
                 type="text"
@@ -227,22 +190,16 @@ const CategoryPage = ({ darkMode }) => {
               />
               <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-300 pointer-events-none" />
             </div>
-
-            {/* Filters */}
             {filterOptions?.map((filter, i) => (
               <div key={i} className="w-full">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
-                  {filter?.label}
-                </label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">{filter?.label}</label>
                 <select
                   value={filter?.value}
                   onChange={(e) => filter?.onChange(e.target.value)}
                   className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition text-sm"
                 >
                   {(filter?.options || []).map((opt, index) => (
-                    <option key={index} value={opt?.value || opt}>
-                      {opt?.label || opt}
-                    </option>
+                    <option key={index} value={opt?.value || opt}>{opt?.label || opt}</option>
                   ))}
                 </select>
               </div>
@@ -252,21 +209,13 @@ const CategoryPage = ({ darkMode }) => {
           {/* Product Grid */}
           <div className="h-6/7 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {sortedProducts.length > 0 ? (
-              sortedProducts.map((product, index) => (
+              sortedProducts.map((product) => (
                 <ProductCard
-                  key={index}
+                  key={product._id}
                   product={product}
                   darkMode={darkMode}
-                  onAddToCart={() =>
-                    handleAddToCart(
-                      products.findIndex((p) => p.name === product.name)
-                    )
-                  }
-                  onRemoveFromCart={() =>
-                    handleRemoveFromCart(
-                      products.findIndex((p) => p.name === product.name)
-                    )
-                  }
+                  userId={userId}
+                  refreshCart={refreshCart} // pass API refresh function
                 />
               ))
             ) : (
