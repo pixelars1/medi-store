@@ -9,8 +9,7 @@ import {
 } from "../controllers/productController.js";
 
 const router = express.Router();
-const upload = multer({ dest: "uploads/" });
-
+import { upload } from "../middlewares/upload.js"; // Import Multer middleware
 // Matches frontend API pattern (`/products`)
 router.post("/", upload.single("image"), createProduct);
 router.get("/", getProducts);
