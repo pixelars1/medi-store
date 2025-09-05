@@ -29,6 +29,6 @@ app.use(cookieParser());
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
-app.use("/api/cart", cartRoutes);
+app.use("/api/carts", cartRoutes);
 
 export default app;
