@@ -1,42 +1,14 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { AppContext } from "../Context/AppContext";
 import ProductCard from "../components/ProductCard";
+import { useLocation } from "react-router-dom";
 
-const Products = ({ darkMode }) => {
+const Products = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   // const [updatedProducts, setUpdatedProducts] = useState([]);
-  const { products } = useContext(AppContext);
-
-  // 🔄 Load cart from API or localStorage (if available)
-  // useEffect(() => {
-  //   const loadCart = async () => {
-  //     try {
-  //       // Example: fetch cart items for user (if API exists)
-  //       const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-  //       const updatedProducts = products?.map((product) => ({
-  //         ...product,
-  //         inCart: storedCart.includes(product._id) ? true : false,
-  //       }));
-  //       setUpdatedProducts(updatedProducts);
-  //       setCartCount(storedCart.length);
-  //     } catch (error) {
-  //       console.error("Cart load error:", error);
-  //     }
-  //   };
-  //   loadCart();
-  // }, [products, setCartCount]);
-
-  // Refresh cart count globally
-  // const refreshCart = async () => {
-  //   try {
-  //     const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-  //     setCartCount(storedCart.length);
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
+  const { products, darkMode } = useContext(AppContext);
 
   const filteredProducts = products.filter((product) =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -46,9 +18,16 @@ const Products = ({ darkMode }) => {
     (currentPage - 1) * 8,
     currentPage * 8
   );
-
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
   return (
-    <div className="pt-20 pb-4 px-4 sm:px-8 lg:px-16 bg-amber-50 dark:bg-[#101828] min-h-screen">
+    <div
+      className={`pt-20 pb-4 px-4 sm:px-8 lg:px-16  min-h-screen ${
+        darkMode ? "text-white bg-gray-900" : "text-black bg-white"
+      }`}
+    >
       <div className="max-w-[1440px] mx-auto">
         <h1 className="text-4xl md:text-5xl font-extrabold text-center text-amber-700 dark:text-white mb-12">
           Explore Medicines
@@ -56,16 +35,80 @@ const Products = ({ darkMode }) => {
 
         {/* Search Bar */}
         <div className="w-full max-w-2xl mx-auto mb-10">
-          <div className="relative">
+          <div
+            className={`relative group transition-colors duration-300 ${
+              darkMode ? "text-white" : "text-gray-800"
+            }`}
+          >
+            {/* Input */}
             <input
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search for medications"
-              className="w-full pl-5 pr-12 py-4 text-lg bg-white dark:bg-gray-900 dark:text-white rounded-2xl shadow-md focus:outline-none focus:ring-4 focus:ring-blue-300"
+              placeholder="Search for medications..."
+              className={`w-full pl-12 pr-12 py-4 text-lg rounded-2xl shadow-md border focus:outline-none focus:ring-4 transition-all duration-300 group-hover:shadow-lg
+        ${
+          darkMode
+            ? "bg-gray-900 text-white border-gray-700 focus:ring-blue-500/40 placeholder-gray-400"
+            : "bg-white text-gray-900 border-gray-200 focus:ring-blue-400/50 placeholder-gray-500"
+        }`}
             />
-            <Search className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-300 h-5 w-5" />
+
+            {/* Search Icon Left */}
+            <Search
+              className={`absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 transition-colors
+        ${darkMode ? "text-gray-300" : "text-gray-400"}`}
+            />
+
+            {/* Clear Button */}
+            {searchTerm && (
+              <button
+                onClick={() => setSearchTerm("")}
+                className={`absolute right-4 top-1/2 transform -translate-y-1/2 transition-colors
+          ${
+            darkMode
+              ? "text-gray-400 hover:text-red-400"
+              : "text-gray-500 hover:text-red-500"
+          }`}
+              >
+                ✕
+              </button>
+            )}
           </div>
+
+          {/* Suggestions Dropdown */}
+          {searchTerm && (
+            <div
+              className={`mt-2 rounded-xl shadow-lg border overflow-hidden transition-colors duration-300
+        ${
+          darkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
+        }`}
+            >
+              <ul
+                className={`divide-y transition-colors duration-300
+          ${darkMode ? "divide-gray-700" : "divide-gray-200"}`}
+              >
+                <li
+                  className={`px-4 py-3 cursor-pointer transition-colors
+            ${darkMode ? "hover:bg-gray-700" : "hover:bg-gray-100"}`}
+                >
+                  Paracetamol
+                </li>
+                <li
+                  className={`px-4 py-3 cursor-pointer transition-colors
+            ${darkMode ? "hover:bg-gray-700" : "hover:bg-gray-100"}`}
+                >
+                  Ibuprofen
+                </li>
+                <li
+                  className={`px-4 py-3 cursor-pointer transition-colors
+            ${darkMode ? "hover:bg-gray-700" : "hover:bg-gray-100"}`}
+                >
+                  Amoxicillin
+                </li>
+              </ul>
+            </div>
+          )}
         </div>
 
         {/* Product Grid */}

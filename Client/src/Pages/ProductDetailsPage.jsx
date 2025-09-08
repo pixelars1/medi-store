@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { AppContext } from "../Context/AppContext.jsx";
 import { addToCart, removeCartItem, getCart } from "../api/cartApi";
 import { ShoppingCart, Trash2, Share2 } from "lucide-react";
@@ -77,6 +77,10 @@ export default function ProductDetailsPage() {
     if (!inCart) await handleAdd();
     navigate("/checkout");
   };
+  const {pathname}=useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  },[pathname]);
 
   if (!product) {
     return (

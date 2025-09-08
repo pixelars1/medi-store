@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Linkedin,
   Twitter,
@@ -10,6 +10,7 @@ import {
   MessageCircle,
 } from "lucide-react";
 import { AppContext } from "../Context/AppContext";
+import { useLocation } from "react-router-dom";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -45,7 +46,10 @@ const Contact = () => {
       console.log("Form submitted:", formData);
     }
   };
-
+const {pathname}=useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  },[pathname]);
   return (
     <section
       className={`px-4 py-16 transition-all duration-500 ${

@@ -11,32 +11,20 @@ import {
 import { useContext, useEffect, useState } from "react";
 import ProductCard from "../components/ProductCard.jsx";
 import { AppContext } from "../Context/AppContext.jsx";
-import { getProducts } from "../api/productApi.js"; // ✅ only added this import
+import { useLocation } from "react-router-dom";
 
-const Home = ({ darkMode }) => {
+const Home = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
   // ✅ Fetch products from backend with fallback to local assets (only this effect modified)
-  const { products, setProducts } =useContext(AppContext);
-  // ✅ Fetch products from backend and save in AppContext
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const res = await getProducts();
-        const fetched = Array.isArray(res?.data) ? res.data : [];
-        setProducts(fetched);
-      } catch (err) {
-        console.error("Error fetching products:", err);
-        setProducts([]); // fallback empty
-      }
-    };
-    fetchProducts();
-  }, [setProducts]);
-
+  const { products,darkMode } =useContext(AppContext);
   useEffect(() => {
     document.title = "MediStore - Your Trusted Online Pharmacy";
   })
-
+  const {pathname}=useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  },[pathname]);
 
   return (
     <div
