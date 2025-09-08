@@ -1,5 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { AppContext } from "@/Context/AppContext";
+import { useLocation } from "react-router-dom";
 
 const whyUsData = [
   {
@@ -71,6 +73,7 @@ const AboutPage = () => {
   ];
 
   const [activeIndex, setActiveIndex] = useState(null);
+  const { darkMode } = useContext(AppContext);
 
   const toggle = (index) => {
     setActiveIndex(activeIndex === index ? null : index);
@@ -101,160 +104,117 @@ const AboutPage = () => {
       cardsRef.current.forEach((ref) => ref && observer.unobserve(ref));
     };
   }, []);
+
+  const {pathname}=useLocation();
+    useEffect(() => {
+      window.scrollTo(0, 0);
+    },[pathname]);
+
   return (
-    <div className="font-sans">
-      {/* Section 1 - About Us Styled Like LegitMedications */}
-      <section className="relative py-20 px-6 md:px-12 bg-gradient-to-r from-blue-50 to-teal-100 dark:from-gray-900 dark:to-gray-800 transition-colors duration-500">
-        {/* Heading  */}
-        {/* <h1 className="text-[2rem] font-bold text-white py-4 text-center">About Us</h1> */}
+    <div className={`font-sans ${darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"}`}>
+      {/* Section 1 - About Us */}
+      <section
+        className={`relative py-20 px-6 md:px-12 transition-colors duration-500 ${
+          darkMode ? "bg-gray-900 text-gray-100" : "bg-gradient-to-r from-blue-50 to-teal-100 text-gray-800"
+        }`}
+      >
         <div className="max-w-7xl pt-10 mx-auto grid md:grid-cols-2 gap-16 items-center">
-          {/* Content */}
-          <div className="space-y-6 text-gray-800 dark:text-gray-100">
-            <h2 className="text-5xl font-extrabold leading-tight">
-              Empowering Better Health
-            </h2>
+          <div className="space-y-6">
+            <h2 className="text-5xl font-extrabold leading-tight">Empowering Better Health</h2>
             <p className="text-lg">
-              At <strong>MediCare</strong>, we’re driven by one mission — making
-              healthcare accessible, affordable, and authentic. Whether it's for
-              chronic pain, mental wellness, or vitality, we offer only
-              medically certified, lab-tested solutions.
+              At <strong>MediCare</strong>, we’re driven by one mission — making healthcare accessible, affordable, and
+              authentic.
             </p>
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
-                <span className="p-2 bg-blue-600 dark:bg-blue-500 text-white rounded-full">
-                  🧪
-                </span>
-                <span>
-                  Advanced research-backed formulations tailored to modern
-                  lifestyles.
-                </span>
+                <span className="p-2 bg-blue-600 text-white rounded-full">🧪</span>
+                <span>Advanced research-backed formulations tailored to modern lifestyles.</span>
               </li>
               <li className="flex items-start gap-3">
-                <span className="p-2 bg-green-600 dark:bg-green-500 text-white rounded-full">
-                  🚚
-                </span>
-                <span>
-                  Rapid and discreet delivery across all serviceable regions.
-                </span>
+                <span className="p-2 bg-green-600 text-white rounded-full">🚚</span>
+                <span>Rapid and discreet delivery across all serviceable regions.</span>
               </li>
               <li className="flex items-start gap-3">
-                <span className="p-2 bg-purple-600 dark:bg-purple-500 text-white rounded-full">
-                  🛡️
-                </span>
-                <span>
-                  Strict compliance with international pharmaceutical quality
-                  standards.
-                </span>
+                <span className="p-2 bg-purple-600 text-white rounded-full">🛡️</span>
+                <span>Strict compliance with international pharmaceutical quality standards.</span>
               </li>
             </ul>
             <a
               href="/shop"
-              className="inline-block mt-6 bg-blue-600 dark:bg-blue-500 text-white px-6 py-3 rounded-full shadow-lg hover:bg-blue-700 transition"
+              className="inline-block mt-6 bg-blue-600 text-white px-6 py-3 rounded-full shadow-lg hover:bg-blue-700 transition"
             >
               Explore Our Products
             </a>
           </div>
-
-          {/* Image */}
-          <div className="relative">
-            <div className="rounded-3xl overflow-hidden shadow-2xl">
-              <img
-                src="https://plus.unsplash.com/premium_photo-1672759455907-bdaef741cd88?q=80&w=2016&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                alt="Pharmacy Team"
-                className="w-full h-full object-cover"
-              />
-            </div>
+          <div className="rounded-3xl overflow-hidden shadow-2xl">
+            <img
+              src="https://plus.unsplash.com/premium_photo-1672759455907-bdaef741cd88?q=80&w=2016&auto=format&fit=crop"
+              alt="Pharmacy Team"
+              className="w-full h-full object-cover"
+            />
           </div>
         </div>
       </section>
 
-      {/* Section 3 - Why Us */}
-      <section className="py-20 px-6 md:px-12 bg-gradient-to-br from-blue-50 to-teal-100 dark:from-gray-900 dark:to-gray-800 transition-colors duration-500">
+      {/* Section 2 - Why Us */}
+      <section
+        className={`py-20 px-6 md:px-12 transition-colors duration-500 ${
+          darkMode ? "bg-gray-900 text-gray-100" : "bg-gradient-to-br from-blue-50 to-teal-100 text-gray-800"
+        }`}
+      >
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-extrabold text-gray-800 dark:text-white mb-4">
-            Why Choose Us?
-          </h2>
-          <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto text-base">
-            At MediCare, we understand the value of trust, quality, and care in
-            healthcare. That’s why we offer more than just medicines — we
-            deliver peace of mind. From verified products to expert support,
-            every part of your experience is built around your well-being.
-          </p>
+          <h2 className="text-4xl font-extrabold mb-4">Why Choose Us?</h2>
+          <p className="max-w-2xl mx-auto text-base">Trusted healthcare solutions built around your well-being.</p>
         </div>
-
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10 max-w-7xl mx-auto">
           {whyUsData.map((item, idx) => (
             <div
               key={idx}
               ref={(el) => (cardsRef.current[idx] = el)}
               data-index={idx}
-              className={`transform transition-all duration-700 ease-out
-              ${
-                visibleCards.includes(idx)
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-10"
-              }
-              bg-white/70 dark:bg-gray-800/60 backdrop-blur-md border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-md hover:shadow-xl group`}
+              className={`transform transition-all duration-700 ease-out ${
+                visibleCards.includes(idx) ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+              } ${darkMode ? "bg-gray-800 text-gray-100" : "bg-white text-gray-900"} 
+              rounded-2xl p-6 shadow-md hover:shadow-xl border border-gray-200 dark:border-gray-700`}
             >
               <div className="flex justify-center mb-5">
-                <div className="p-4 bg-blue-100 dark:bg-blue-600 text-blue-600 dark:text-white rounded-full text-3xl transition-transform group-hover:scale-110">
-                  <img
-                    src={item.img}
-                    alt={item.title}
-                    className="w-10 h-10 object-contain"
-                  />
-                </div>
+                <img src={item.img} alt={item.title} className="w-12 h-12 object-contain" />
               </div>
-              <h4 className="text-xl font-semibold text-gray-800 dark:text-white mb-3">
-                {item.title}
-              </h4>
-              <p className="text-gray-600 dark:text-gray-300 text-sm">
-                {item.desc}
-              </p>
+              <h4 className="text-xl font-semibold mb-3">{item.title}</h4>
+              <p className="text-sm">{item.desc}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Section 5 - FAQ */}
-      <section className="bg-gradient-to-b from-indigo-50 to-white dark:from-gray-900 dark:to-gray-800 py-16 px-4">
-        <div className="text-center md:text-left mb-8">
-          <h2 className="text-4xl font-bold text-indigo-800 dark:text-indigo-300 mb-3 text-center">
-            Frequently Asked Questions
-          </h2>
-          <p className="text-gray-600 dark:text-gray-300 text-center">
-            Clear answers to your most common queries
-          </p>
+      {/* Section 3 - FAQ */}
+      <section className={`py-16 px-4 ${darkMode ? "bg-gray-900 text-white" : "bg-indigo-50 text-gray-900"}`}>
+        <div className="text-center mb-8">
+          <h2 className="text-4xl font-bold mb-3">Frequently Asked Questions</h2>
+          <p>Clear answers to your most common queries</p>
         </div>
         <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-start">
-          {/* FAQ Section */}
-
           <div className="space-y-4">
             {faqs.map((faq, i) => (
               <div
                 key={i}
-                className="border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm overflow-hidden transition-all"
+                className={`rounded-lg shadow-sm border transition-all ${
+                  darkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
+                }`}
               >
                 <button
                   onClick={() => toggle(i)}
-                  className="w-full flex justify-between items-center px-6 py-5 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors text-left"
+                  className="w-full flex justify-between items-center px-6 py-5 text-left"
                 >
-                  <span className="text-lg font-medium text-gray-800 dark:text-white">
-                    {faq.question}
-                  </span>
-                  {activeIndex === i ? (
-                    <ChevronUp className="w-5 h-5 text-indigo-500" />
-                  ) : (
-                    <ChevronDown className="w-5 h-5 text-indigo-500" />
-                  )}
+                  <span className="text-lg font-medium">{faq.question}</span>
+                  {activeIndex === i ? <ChevronUp className="w-5 h-5 text-indigo-500" /> : <ChevronDown className="w-5 h-5 text-indigo-500" />}
                 </button>
-
                 <div
                   className={`px-6 overflow-hidden transition-all duration-500 ease-in-out ${
                     activeIndex === i ? "max-h-96 py-4" : "max-h-0"
                   }`}
                 >
-                  <ul className="list-disc pl-5 space-y-2 text-[15px] text-gray-600 dark:text-gray-300">
+                  <ul className="list-disc pl-5 space-y-2 text-sm">
                     {faq.answers.map((point, j) => (
                       <li key={j}>{point}</li>
                     ))}
@@ -263,8 +223,6 @@ const AboutPage = () => {
               </div>
             ))}
           </div>
-
-          {/* Illustration */}
           <div className="flex justify-center items-center">
             <img
               src="https://img.freepik.com/premium-vector/faq-icon-line-art-logo-set_1223784-17794.jpg"
