@@ -3,8 +3,9 @@ import ProductCard from "../components/ProductCard.jsx";
 import { Menu, Search } from "lucide-react";
 import { AppContext } from "../Context/AppContext.jsx";
 import { getCart } from "../api/cartApi";
+import { useLocation } from "react-router-dom";
 
-const CategoryPage = ({ darkMode, userId }) => {
+const CategoryPage = ({ userId }) => {
   const getUniqueValues = (items, key) => [
     "All",
     ...Array.from(new Set(items.map((item) => item[key]))),
@@ -19,7 +20,7 @@ const CategoryPage = ({ darkMode, userId }) => {
   const [updatedProducts, setUpdatedProducts] = useState([]);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
 
-  const { setCartCount ,products} = useContext(AppContext);
+  const { setCartCount ,products,darkMode} = useContext(AppContext);
 
   // 🔄 Load cart state from API on mount
   useEffect(() => {
@@ -106,9 +107,12 @@ const CategoryPage = ({ darkMode, userId }) => {
       console.error(err);
     }
   };
-
+const {pathname}=useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  },[pathname]);
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4 pt-20">
+    <div className={`min-h-screen bg-gray-50 dark:bg-gray-900 p-4 pt-20 ${darkMode ? "text-white bg-gray-900" : "text-black bg-white"}`}>
       <h1 className="text-2xl sm:text-3xl font-bold text-center text-green-600 mb-2">
         Browse Medicines by Category
       </h1>
@@ -135,8 +139,8 @@ const CategoryPage = ({ darkMode, userId }) => {
         </div>
 
         {/* Sidebar for large screens */}
-        <aside className="hidden lg:block lg:w-1/5 h-fit bg-white dark:bg-gray-800 p-4 rounded-xl shadow-md sticky top-24">
-          <h2 className="text-lg font-semibold text-gray-700 dark:text-white mb-4">Categories</h2>
+        <aside className={`"hidden lg:block lg:w-1/5 h-fit  p-4 rounded-xl shadow-md sticky top-24 ${darkMode ? "text-white bg-gray-800" : "text-black bg-white"}`}>
+          <h2 className="text-lg font-semibold mb-4">Categories</h2>
           <ul className="space-y-2">
             {categories.map((cat) => (
               <li
@@ -145,7 +149,7 @@ const CategoryPage = ({ darkMode, userId }) => {
                 className={`cursor-pointer px-4 py-2 rounded-md transition font-medium text-sm sm:text-base ${
                   selectedCategory === cat
                     ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white"
-                    : "hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300"
+                    : "hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-400 dark:text-gray-300"
                 }`}
               >
                 {cat}
@@ -154,77 +158,111 @@ const CategoryPage = ({ darkMode, userId }) => {
           </ul>
         </aside>
 
-        {/* Mobile filters */}
         {showMobileFilters && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-4 lg:hidden">
-            {filterOptions.map((filter, i) => (
-              <div key={i} className="w-full">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">{filter.label}</label>
-                <select
-                  value={filter.value}
-                  onChange={(e) => filter.onChange(e.target.value)}
-                  className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition text-sm"
-                >
-                  {(filter.options || []).map((opt) => (
-                    <option key={opt.value || opt} value={opt.value || opt}>
-                      {opt.label || opt}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            ))}
-          </div>
-        )}
+  <div
+    className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-4 lg:hidden p-4 rounded-xl shadow-md ${
+      darkMode ? "bg-gray-800 text-white" : "bg-white text-black"
+    }`}
+  >
+    {filterOptions.map((filter, i) => (
+      <div key={i} className="w-full">
+        <label className="block text-sm font-medium mb-1">
+          {filter.label}
+        </label>
+        <select
+          value={filter.value}
+          onChange={(e) => filter.onChange(e.target.value)}
+          className={`w-full px-3 py-2 rounded-md border outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition text-sm ${
+            darkMode
+              ? "border-gray-600 bg-gray-700 text-white"
+              : "border-gray-300 bg-white text-black"
+          }`}
+        >
+          {(filter.options || []).map((opt) => (
+            <option key={opt.value || opt} value={opt.value || opt}>
+              {opt.label || opt}
+            </option>
+          ))}
+        </select>
+      </div>
+    ))}
+  </div>
+)}
 
-        {/* Main content */}
-        <div className="flex-1 flex flex-col gap-4">
-          {/* Top filters */}
-          <div className="hidden lg:grid sticky top-16 z-10 bg-white dark:bg-gray-800 p-4 rounded-b-xl shadow-md grid-cols-1 items-center sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            <div className="col-span-full lg:col-span-2 relative">
-              <input
-                type="text"
-                placeholder="Search products..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-4 pr-10 py-2 rounded-md border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition text-sm"
-              />
-              <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-300 pointer-events-none" />
-            </div>
-            {filterOptions?.map((filter, i) => (
-              <div key={i} className="w-full">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">{filter?.label}</label>
-                <select
-                  value={filter?.value}
-                  onChange={(e) => filter?.onChange(e.target.value)}
-                  className="w-full px-3 py-2 rounded-md border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition text-sm"
-                >
-                  {(filter?.options || []).map((opt, index) => (
-                    <option key={index} value={opt?.value || opt}>{opt?.label || opt}</option>
-                  ))}
-                </select>
-              </div>
-            ))}
-          </div>
+{/* Main content */}
+<div className="flex-1 flex flex-col gap-4">
+  {/* Top filters */}
+  <div
+    className={`hidden lg:grid sticky top-16 z-10 p-4 rounded-b-xl shadow-md grid-cols-1 items-center sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 ${
+      darkMode ? "bg-gray-800 text-white" : "bg-white text-black"
+    }`}
+  >
+    <div className="col-span-full lg:col-span-2 relative">
+      <input
+        type="text"
+        placeholder="Search products..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className={`w-full pl-4 pr-10 py-2 rounded-md border outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition text-sm ${
+          darkMode
+            ? "border-gray-600 bg-gray-700 text-white"
+            : "border-gray-300 bg-white text-black"
+        }`}
+      />
+      <Search
+        className={`absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none ${
+          darkMode ? "text-gray-300" : "text-gray-500"
+        }`}
+      />
+    </div>
+    {filterOptions?.map((filter, i) => (
+      <div key={i} className="w-full">
+        <label className="block text-sm font-medium mb-1">
+          {filter?.label}
+        </label>
+        <select
+          value={filter?.value}
+          onChange={(e) => filter?.onChange(e.target.value)}
+          className={`w-full px-3 py-2 rounded-md border outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition text-sm ${
+            darkMode
+              ? "border-gray-600 bg-gray-700 text-white"
+              : "border-gray-300 bg-white text-black"
+          }`}
+        >
+          {(filter?.options || []).map((opt, index) => (
+            <option key={index} value={opt?.value || opt}>
+              {opt?.label || opt}
+            </option>
+          ))}
+        </select>
+      </div>
+    ))}
+  </div>
 
-          {/* Product Grid */}
-          <div className="h-6/7 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {sortedProducts.length > 0 ? (
-              sortedProducts.map((product) => (
-                <ProductCard
-                  key={product._id}
-                  product={product}
-                  darkMode={darkMode}
-                  userId={userId}
-                  refreshCart={refreshCart} // pass API refresh function
-                />
-              ))
-            ) : (
-              <p className="text-gray-500 dark:text-gray-300 col-span-full text-center">
-                No matching products found.
-              </p>
-            )}
-          </div>
-        </div>
+  {/* Product Grid */}
+  <div className="h-6/7 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+    {sortedProducts.length > 0 ? (
+      sortedProducts.map((product) => (
+        <ProductCard
+          key={product._id}
+          product={product}
+          darkMode={darkMode}
+          userId={userId}
+          refreshCart={refreshCart} // pass API refresh function
+        />
+      ))
+    ) : (
+      <p
+        className={`col-span-full text-center ${
+          darkMode ? "text-gray-300" : "text-gray-500"
+        }`}
+      >
+        No matching products found.
+      </p>
+    )}
+  </div>
+</div>
+
       </div>
     </div>
   );
