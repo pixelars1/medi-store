@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Trash2 } from "lucide-react";
 import { AppContext } from "../Context/AppContext";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { getCart, updateCartItem, removeCartItem } from "../api/cartApi";
 
 export default function CartPage() {
@@ -24,6 +24,10 @@ export default function CartPage() {
     };
     fetchCart();
   }, [user]);
+  const {pathname}=useLocation();
+    useEffect(() => {
+      window.scrollTo(0, 0);
+    },[pathname]);
 
   // 🔹 Update quantity
   const updateQuantity = async (productId, amount) => {
