@@ -1,17 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect, useContext, useRef } from "react";
-import {
-  Menu,
-  X,
-  Heart,
-  User,
-  LogOut,
-  Settings,
-} from "lucide-react";
+import { Menu, X, Heart, User, LogOut, Settings, ChevronDown } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AppContext } from "../Context/AppContext";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "@/firebase";
+import { userProfile } from "@/assets/assets";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -33,7 +27,14 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const dropdownRef = useRef(null);
-  const navItems = ["Home", "Products", "Categories", "About", "Contact", "Cart"];
+  const navItems = [
+    "Home",
+    "Products",
+    "Categories",
+    "About",
+    "Contact",
+    "Cart",
+  ];
 
   // ✅ Navigate to Auth page
   const handleAuthClick = (mode) => {
@@ -66,7 +67,15 @@ const Navbar = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
+  useEffect(() => {
+    window.addEventListener("scroll", () =>{ 
+      setDropdownOpen(false) 
+      setIsMenuOpen(false)});
+    return () => window.removeEventListener("scroll", () =>{
+       setDropdownOpen(false)
+       setIsMenuOpen(false);
+    })
+  })
   // ✅ Handle Logout
   const handleLogout = async () => {
     try {
@@ -80,7 +89,9 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`fixed ${isMenuOpen ? "pb-8" : "pb-0"} pb-2 pt-1 w-full z-50 transition-all duration-300 ${
+      className={`fixed ${
+        isMenuOpen ? "pb-8" : "pb-0"
+      } pb-2 pt-1 w-full z-50 transition-all duration-300 ${
         scrolled
           ? darkMode
             ? "bg-gray-900 text-white shadow-lg"
@@ -100,7 +111,13 @@ const Navbar = () => {
             <div>
               <span
                 className={`text-xl font-bold ${
-                  scrolled ? (darkMode ? "text-white" : "text-gray-900") : "text-gray-900"
+                  scrolled
+                    ? darkMode
+                      ? "text-white"
+                      : "text-gray-900"
+                    : darkMode
+                    ? "text-gray-300 "
+                    : "text-gray-900 "
                 }`}
               >
                 MediCare
@@ -118,7 +135,11 @@ const Navbar = () => {
                 key={item}
                 onClick={() => {
                   setActiveItem(item);
-                  navigate(item.toLowerCase() === "home" ? "/" : `/${item.toLowerCase()}`);
+                  navigate(
+                    item.toLowerCase() === "home"
+                      ? "/"
+                      : `/${item.toLowerCase()}`
+                  );
                 }}
                 className={`px-3 py-2 cursor-pointer rounded-md text-sm font-medium transition duration-200 ${
                   activeItem === item
@@ -126,8 +147,10 @@ const Navbar = () => {
                     : scrolled
                     ? darkMode
                       ? "text-gray-300 hover:text-green-400"
-                      : "text-gray-700 hover:text-green-600"
-                    : "text-gray-900 hover:text-green-400"
+                      : "text-gray-900 hover:text-green-600"
+                    : darkMode
+                    ? "text-gray-300 hover:text-green-400"
+                    : "text-gray-900 hover:text-green-600"
                 }`}
               >
                 {item}
@@ -139,43 +162,44 @@ const Navbar = () => {
           <div className="flex items-center gap-3 relative">
             {user ? (
               <div className="relative">
-                {/* Profile button */} 
-     <button
-  onClick={() => setDropdownOpen(!dropdownOpen)}
-  className={`flex items-center gap-2 px-3 py-1 rounded-lg transition-all duration-200
-    ${scrolled 
-      ? (darkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900")
-      : "bg-transparent text-gray-900"}
-  `}
->
-  {user.profile ? (
-    <img
-      src={user.profile}
-      alt="profile"
-      className="w-9 h-9 rounded-full object-cover border border-gray-300 dark:border-gray-600 shadow-sm"
-    />
-  ) : (
-    <User className="w-9 h-9 text-green-600 dark:text-green-400" />
-  )}
-
-  <span
-    className={`hidden sm:block font-semibold truncate max-w-[140px] ${
-      scrolled
-        ? (darkMode ? "text-white" : "text-gray-800")
-        : "text-gray-900"
-    }`}
-  >
-    {user.name || user.email}
-  </span>
-</button>
-
-
+                {/* Profile button */}
+                <button
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                  className={`flex max-sm:hidden items-center gap-2 px-3 py-1 cursor-pointer rounded-lg transition-all duration-200
+                  ${
+                    scrolled
+                      ? darkMode
+                        ? "bg-gray-900 text-white"
+                        : "bg-white text-gray-900"
+                      : "bg-transparent text-gray-900"
+                  }
+                `}
+                >
+                    <img
+                      src={user?.profile || userProfile}
+                      alt="profile"
+                      className="w-9 h-9 rounded-full object-cover border border-gray-300 dark:border-gray-600 shadow-sm"
+                    />
+                  <span
+                    className={`hidden sm:block font-semibold truncate max-w-[140px] ${
+                      scrolled
+                        ? darkMode
+                          ? "text-white"
+                          : "text-gray-800"
+                        : darkMode
+                        ? "text-gray-100"
+                        : "text-gray-900"
+                    }`}
+                  >
+                    {user.displayName || user.email}
+                  </span>
+                </button>
 
                 {/* Dropdown */}
                 {dropdownOpen && (
                   <div
                     ref={dropdownRef}
-                    className={`absolute right-0 mt-2 w-44 rounded-lg shadow-lg border ${
+                    className={`absolute max-sm:hidden right-0 mt-2 w-44 rounded-lg shadow-lg border ${
                       darkMode
                         ? "bg-gray-900 border-gray-700"
                         : "bg-white border-gray-200"
@@ -230,11 +254,17 @@ const Navbar = () => {
                   ? darkMode
                     ? "text-gray-300"
                     : "text-gray-600"
-                  : "text-white"
+                  : darkMode
+                  ? "text-gray-300"
+                  : "text-gray-600"
               } hover:bg-green-50 dark:hover:bg-gray-800`}
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
-              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {isMenuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
             </button>
           </div>
         </div>
@@ -242,119 +272,135 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       <div
-        className={`md:hidden transition-all duration-300 overflow-hidden ${
-          isMenuOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
-        }`}
-      >
-        <div
-          className={`mx-4 mt-2 rounded-lg shadow-lg border ${
-            darkMode
-              ? "bg-gray-900 border-gray-700"
-              : "bg-white border-green-100"
+  className={`md:hidden transition-all duration-300 overflow-hidden ${
+    isMenuOpen ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0"
+  }`}
+>
+  <div
+    className={`mx-4 mt-2 rounded-lg shadow-lg border ${
+      darkMode ? "bg-gray-900 border-gray-700" : "bg-white border-green-100"
+    }`}
+  >
+    <div className="p-4 space-y-4">
+      {/* Mobile Nav Items */}
+      {navItems.map((item) => (
+        <button
+          key={item}
+          onClick={() => {
+            setActiveItem(item);
+            setIsMenuOpen(false);
+            navigate(
+              item.toLowerCase() === "home" ? "/" : `/${item.toLowerCase()}`
+            );
+          }}
+          className={`w-full cursor-pointer text-left px-4 py-2 rounded-md text-base font-medium transition ${
+            activeItem === item
+              ? "bg-green-600 text-white shadow"
+              : darkMode
+              ? "text-gray-300 hover:text-green-400 hover:bg-gray-800"
+              : "text-gray-700 hover:text-green-600 hover:bg-green-50"
           }`}
         >
-          <div className="p-4 space-y-4">
-            {navItems.map((item) => (
-              <button
-                key={item}
-                onClick={() => {
-                  setActiveItem(item);
-                  setIsMenuOpen(false);
-                  navigate(item.toLowerCase() === "home" ? "/" : `/${item.toLowerCase()}`);
-                }}
-                className={`w-full cursor-pointer text-left px-4 py-2 rounded-md text-base font-medium transition ${
-                  activeItem === item
-                    ? "bg-green-600 text-white shadow"
-                    : darkMode
-                    ? "text-gray-300 hover:text-green-400 hover:bg-gray-800"
-                    : "text-gray-700 hover:text-green-600 hover:bg-green-50"
+          {item}
+        </button>
+      ))}
+
+      {/* Mobile Auth/Profile Section */}
+      <div className="pt-4 border-t border-green-100 dark:border-gray-700 space-y-2">
+        {user ? (
+          <div className="relative" >
+            <button
+              onClick={(e) =>{  
+                e.stopPropagation()
+                setDropdownOpen((prev) => !prev);
+              }}
+              className={`flex w-full items-center justify-between px-4 py-2 rounded-md text-base font-medium transition ${
+                darkMode
+                  ? "text-gray-300 hover:text-green-400 hover:bg-gray-800"
+                  : "text-gray-700 hover:text-green-600 hover:bg-green-50"
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                  <img
+                    src={user.photoURL || userProfile}
+                    alt="profile"
+                    className="w-8 h-8 rounded-full object-cover"
+                  />
+                <span className="font-medium truncate max-w-[120px]">
+                  {user.displayName || user.email}
+                </span>
+              </div>
+              <ChevronDown
+                className={`w-4 h-4 transform transition-transform ${
+                  dropdownOpen ? "rotate-180" : ""
+                }`}
+              />
+            </button>
+
+            {/* Dropdown */}
+            {dropdownOpen && (
+              <div
+                className={`mt-2 rounded-lg shadow-lg border ${
+                  darkMode
+                    ? "bg-gray-900 border-gray-700"
+                    : "bg-white border-gray-200"
                 }`}
               >
-                {item}
-              </button>
-            ))}
-
-            {/* Mobile Auth/Profile */}
-            <div className="pt-4 border-t border-green-100 dark:border-gray-700 space-y-2">
-              {user ? (
-                <div className="relative" ref={dropdownRef}>
-                  <button
-                    onClick={() => setDropdownOpen(!dropdownOpen)}
-                    className="flex items-center gap-2 px-3 py-1 rounded-lg hover:bg-green-50 dark:hover:bg-gray-800 transition"
-                  >
-                    {user.photoURL ? (
-                      <img
-                        src={user.photoURL}
-                        alt="profile"
-                        className="w-8 h-8 rounded-full object-cover"
-                      />
-                    ) : (
-                      <User className="w-8 h-8 text-green-600 dark:text-green-400" />
-                    )}
-
-                    <span
-                      className={`hidden sm:block font-medium truncate max-w-[120px] ${
-                        scrolled ? (darkMode ? "text-white" : "text-gray-800") : "text-white"
-                      }`}
-                    >
-                      {user.displayName || user.email}
-                    </span>
-                  </button>
-
-                  {dropdownOpen && (
-                    <div
-                      className={`absolute right-0 mt-2 w-48 rounded-lg shadow-lg border ${
-                        darkMode
-                          ? "bg-gray-900 border-gray-700"
-                          : "bg-white border-gray-200"
-                      }`}
-                    >
-                      <button
-                        onClick={() => {
-                          navigate("/profile");
-                          setDropdownOpen(false);
-                        }}
-                        className="flex w-full items-center gap-2 px-4 py-2 text-sm hover:bg-green-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300"
-                      >
-                        <User size={16} /> Your Profile
-                      </button>
-                      <button
-                        onClick={() => {
-                          navigate("/settings");
-                          setDropdownOpen(false);
-                        }}
-                        className="flex w-full items-center gap-2 px-4 py-2 text-sm hover:bg-green-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300"
-                      >
-                        <Settings size={16} /> Settings
-                      </button>
-                      <button
-                        onClick={handleLogout}
-                        className="flex w-full items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-gray-800"
-                      >
-                        <LogOut size={16} /> Logout
-                      </button>
-                    </div>
-                  )}
-                </div>
-              ) : (
                 <button
                   onClick={() => {
-                    handleAuthClick("signin");
-                    setIsMenuOpen(false);
+                    navigate("/profile");
+                    setDropdownOpen(false);
                   }}
-                  className={`w-full px-4 py-2 text-base font-semibold border rounded-md transition ${
+                  className={`flex w-full items-center gap-2 px-4 py-2 text-sm rounded-md transition ${
                     darkMode
-                      ? "border-green-400 text-green-400 bg-gray-800 hover:bg-gray-700"
-                      : "border-green-600 text-green-600 bg-white hover:bg-green-50"
+                      ? "text-gray-300 hover:text-green-400 hover:bg-gray-800"
+                      : "text-gray-700 hover:text-green-600 hover:bg-green-50"
                   }`}
                 >
-                  Login / Register
+                  <User size={16} /> Your Profile
                 </button>
-              )}
-            </div>
+                <button
+                  onClick={() => {
+                    navigate("/settings");
+                    setDropdownOpen(false);
+                  }}
+                  className={`flex w-full items-center gap-2 px-4 py-2 text-sm rounded-md transition ${
+                    darkMode
+                      ? "text-gray-300 hover:text-green-400 hover:bg-gray-800"
+                      : "text-gray-700 hover:text-green-600 hover:bg-green-50"
+                  }`}
+                >
+                  <Settings size={16} /> Settings
+                </button>
+                <button
+                  onClick={handleLogout}
+                  className="flex w-full items-center gap-2 px-4 py-2 text-sm rounded-md text-red-600 hover:bg-red-50 dark:hover:bg-gray-800"
+                >
+                  <LogOut size={16} /> Logout
+                </button>
+              </div>
+            )}
           </div>
-        </div>
+        ) : (
+          <button
+            onClick={() => {
+              handleAuthClick("signin");
+              setIsMenuOpen(false);
+            }}
+            className={`w-full px-4 py-2 text-base font-semibold border rounded-md transition ${
+              darkMode
+                ? "border-green-400 text-green-400 bg-gray-800 hover:bg-gray-700"
+                : "border-green-600 text-green-600 bg-white hover:bg-green-50"
+            }`}
+          >
+            Login / Register
+          </button>
+        )}
       </div>
+    </div>
+  </div>
+</div>
+
     </nav>
   );
 };
