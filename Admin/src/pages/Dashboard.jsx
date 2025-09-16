@@ -1,7 +1,7 @@
 import { useState } from "react";
 // eslint-disable-next-line no-unused-vars
 import {motion} from "framer-motion";
-import { brand, initialProducts, mockNotifications, mockOrders, mockSearches, mockUsers, mockVisitors } from "../utils/constant";
+import { brand, initialProducts, mockNotifications, mockOrders, mockSearches, mockUsers, mockVisitors } from "../utils/constant.js";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { Separator } from "@radix-ui/react-select";
