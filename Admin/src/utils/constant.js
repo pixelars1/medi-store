@@ -55,4 +55,4 @@ const initialProducts = [
     active: true,
   },
 ];
-export { mockVisitors, mockSearches, mockUsers, mockOrders, mockNotifications, initialProducts };
+export default { mockVisitors, mockSearches, mockUsers, mockOrders, mockNotifications, initialProducts };
