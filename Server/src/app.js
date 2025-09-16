@@ -13,7 +13,7 @@ const app = express();
 // ✅ Middlewares
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://medi-store-ebon.vercel.app"],
+    origin: ["http://localhost:5173","https://medi-store-zrc6.vercel.app", "https://medi-store-ebon.vercel.app"],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
