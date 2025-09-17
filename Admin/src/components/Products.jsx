@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { brand } from "../utils/constant";
 import { Badge } from "./ui/badge";
 import {
@@ -263,6 +263,10 @@ console.log(products);
       p.category.toLowerCase().includes(filter.toLowerCase())
   );
 
+  // Set page title
+  useEffect(() => {
+    document.title = "Products - MediCare Admin";
+  }, [])
   return (
     <div className="space-y-4">
       {/* Search + Add */}

@@ -1,7 +1,7 @@
 // -------------------------------------------------------
 // OVERVIEW
 
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { Bar, BarChart, CartesianGrid, Cell, Line, LineChart, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
@@ -29,6 +29,10 @@ const Overview = ({ visitors, searches, orders, topProducts }) => {
     return topProducts.map((p) => ({ name: p.name, value: p.sales ?? 1 }));
   }, [topProducts]);
 
+  // Set page title
+ useEffect(() => {
+    document.title = "Overview - MediCare Admin";
+  }, []);
   return (
     <div className="grid gap-4 md:gap-6">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">

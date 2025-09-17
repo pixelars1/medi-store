@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Switch } from "@radix-ui/react-switch";
 
@@ -7,6 +7,9 @@ const SettingsPanel = () => {
   const [age, setAge] = useState(true);
   const [audit, setAudit] = useState(false);
 
+  useEffect(() => {
+    document.title = "Settings - MediCare Admin";
+  }, []);
   return (
     <Card className="rounded-2xl shadow-sm">
       <CardHeader>

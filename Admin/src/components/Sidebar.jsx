@@ -1,4 +1,13 @@
-import { Bell, LayoutDashboard, Package, Search, Settings, ShieldCheck, ShoppingCart, Users } from "lucide-react";
+import {
+  Bell,
+  LayoutDashboard,
+  Package,
+  Search,
+  Settings,
+  ShieldCheck,
+  ShoppingCart,
+  Users,
+} from "lucide-react";
 import { brand } from "../utils/constant";
 
 const Sidebar = ({ active, onChange }) => {
@@ -11,12 +20,23 @@ const Sidebar = ({ active, onChange }) => {
     { key: "notifications", label: "Notifications", icon: <Bell className="h-4 w-4" /> },
     { key: "settings", label: "Settings", icon: <Settings className="h-4 w-4" /> },
   ];
+
   return (
-    <aside className="h-full w-64 shrink-0 border-r bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60 p-4">
+    <aside
+      className="
+        h-full w-64 shrink-0 border-r bg-white/90 backdrop-blur 
+        supports-[backdrop-filter]:bg-white/70 p-4
+        fixed inset-y-0 left-0 z-30 transform transition-transform duration-300
+        md:static md:translate-x-0
+      "
+    >
+      {/* Brand */}
       <div className="flex items-center gap-2 mb-6">
-        <div className={`h-9 w-9 rounded-2xl bg-gradient-to-r ${brand.primary}`}></div>
-        <div className="font-semibold text-lg">MediCare Admin</div>
+        <div className={`h-8 w-8 md:h-9 md:w-9 rounded-2xl bg-gradient-to-r ${brand.primary}`} />
+        <div className="font-semibold text-base md:text-lg">MediCare Admin</div>
       </div>
+
+      {/* Navigation */}
       <nav className="space-y-1">
         {items.map((it) => (
           <button
@@ -33,11 +53,20 @@ const Sidebar = ({ active, onChange }) => {
           </button>
         ))}
       </nav>
+
+      {/* Compliance Box */}
       <div className="mt-6 p-3 rounded-xl bg-emerald-50 border border-emerald-100 text-emerald-800">
-        <div className="flex items-center gap-2 mb-1"><ShieldCheck className="h-4 w-4" /><span className="text-sm font-semibold">Compliance</span></div>
-        <p className="text-xs leading-relaxed">Prescription-only medicines must be verified before dispatch. Enable checks in Settings → Compliance.</p>
+        <div className="flex items-center gap-2 mb-1">
+          <ShieldCheck className="h-4 w-4" />
+          <span className="text-sm font-semibold">Compliance</span>
+        </div>
+        <p className="text-xs leading-relaxed">
+          Prescription-only medicines must be verified before dispatch.
+          Enable checks in Settings → Compliance.
+        </p>
       </div>
     </aside>
   );
 };
+
 export default Sidebar;

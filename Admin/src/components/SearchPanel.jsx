@@ -1,8 +1,13 @@
+import { useEffect } from "react";
 import { mockSearches } from "../utils/constant";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
 
-const SearchesPanel = ({ searches }) => (
+const SearchesPanel = ({ searches }) =>{
+  useEffect(() => {
+    document.title = "Searches - MediCare Admin";
+  },[])
+  return (
   <div className="grid gap-4">
     <Card className="rounded-2xl shadow-sm">
       <CardHeader>
@@ -28,5 +33,5 @@ const SearchesPanel = ({ searches }) => (
       </CardContent>
     </Card>
   </div>
-);
+)};
 export default SearchesPanel;

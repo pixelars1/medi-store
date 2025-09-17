@@ -1,7 +1,12 @@
+import { useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
 
-const UsersPanel = ({ users }) => (
+const UsersPanel = ({ users }) =>{ 
+  useEffect(() => {
+    document.title = "Users - MediCare Admin";
+  })
+  return (
   <Card className="rounded-2xl shadow-sm">
     <CardHeader>
       <CardTitle>Recent Visitors</CardTitle>
@@ -29,5 +34,5 @@ const UsersPanel = ({ users }) => (
       </Table>
     </CardContent>
   </Card>
-);
+)};
 export default UsersPanel;
