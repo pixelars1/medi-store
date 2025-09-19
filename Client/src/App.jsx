@@ -16,6 +16,9 @@ import CheckoutPage from "./Pages/CheckoutPage.jsx";
 import ProductDetailsPage from "./Pages/ProductDetailsPage.jsx";
 import { startProgress, stopProgress } from "./progressBar.js";
 import TitleUpdater from "./components/TitleUpdater.jsx";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "./firebase.js";
+import { getIds, logVisitorAction } from "./utils/visitorsActivity.js";
 // import AdminDashboard from "./Pages/AdminDashboard.jsx";
 // import AdminDashboardPart2 from "./Pages/AdminDashboardPart2.jsx";
 // import { AuthProvider } from "./components/admin/AuthProvider.jsx";
@@ -46,6 +49,53 @@ function App() {
     const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
     setCartCount(storedCart.length);
   }, [setCartCount]);
+
+  //visitors analytics
+useEffect(() => {
+  const unsubscribe = onAuthStateChanged(auth, async (user) => {
+    try {
+      if (sessionStorage.getItem("sessionStarted")) return; // avoid multiple counts
+
+      let visitorId = localStorage.getItem("visitorId");
+      const uid = user ? user.uid : null;
+
+      const res = await fetch("http://localhost:8080/api/visitors/visit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          visitorId: visitorId || null,
+          firebaseUid: uid,
+          userAgent: navigator.userAgent,
+        }),
+      });
+
+      if (!res.ok) {
+        console.error("Visit log failed");
+        return;
+      }
+
+      const data = await res.json();   // <-- Your controller sends the visitor object itself
+      // Store permanent visitorId if it's a new visitor
+      if (!visitorId && data._id) {
+        localStorage.setItem("visitorId", data._id);
+      }
+
+      // Flag to prevent recount in same session
+      sessionStorage.setItem("sessionStarted", "true");
+    } catch (err) {
+      console.error("Error logging visit:", err);
+    }
+  });
+
+  return () => unsubscribe();
+}, []);
+
+const location = useLocation();
+
+useEffect(() => {
+  const ids = getIds(auth.currentUser);
+  logVisitorAction("page", { ...ids, page: location.pathname });
+}, [location.pathname]);
   return (
     // ✅ Wrap the whole app inside AuthProvider
     // <AuthProvider>
