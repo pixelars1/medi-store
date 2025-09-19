@@ -3,6 +3,9 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { AppContext } from "../Context/AppContext.jsx";
 import { addToCart, removeCartItem, getCart } from "../api/cartApi";
 import { ShoppingCart, Trash2, Share2 } from "lucide-react";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/firebase.js";
+import { getIds, logVisitorAction } from "@/utils/visitorsActivity.js";
 
 export default function ProductDetailsPage() {
   const { productId } = useParams();
@@ -16,6 +19,15 @@ export default function ProductDetailsPage() {
   const [cartId, setCartId] = useState(null);
 
   const userId = user?.uid;
+  
+  // ✅ Log visitor activity
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (user) => {
+      const ids = getIds(user);
+      logVisitorAction("product", { ...ids, productId: product._id });
+    });
+    return () => unsub();
+  }, [product._id]);
 
   // ✅ Load product
   useEffect(() => {
@@ -27,7 +39,9 @@ export default function ProductDetailsPage() {
         try {
           const cart = await getCart(userId);
           setCartId(cart._id);
-          const exists = cart.items.find((item) => item.productId._id === productId);
+          const exists = cart.items.find(
+            (item) => item.productId._id === productId
+          );
           setInCart(!!exists);
         } catch (err) {
           console.error(err);
@@ -77,10 +91,10 @@ export default function ProductDetailsPage() {
     if (!inCart) await handleAdd();
     navigate("/checkout");
   };
-  const {pathname}=useLocation();
+  const { pathname } = useLocation();
   useEffect(() => {
     window.scrollTo(0, 0);
-  },[pathname]);
+  }, [pathname]);
 
   if (!product) {
     return (
@@ -207,7 +221,11 @@ export default function ProductDetailsPage() {
 
           {/* Info */}
           <div className="pt-4 text-sm text-gray-600 dark:text-gray-400 space-y-1">
-            {product.category && <p><strong>Category:</strong> {product.category}</p>}
+            {product.category && (
+              <p>
+                <strong>Category:</strong> {product.category}
+              </p>
+            )}
             <div className="flex items-center gap-2">
               <Share2 className="w-4 h-4" />
               <p>Share this product</p>
@@ -223,9 +241,11 @@ export default function ProductDetailsPage() {
             Product Description
           </h2>
           <div className="text-base leading-relaxed text-gray-700 dark:text-gray-300 space-y-2">
-            {product.description.split(".").map((line, i) =>
-              line.trim() ? <p key={i}>{line.trim()}.</p> : null
-            )}
+            {product.description
+              .split(".")
+              .map((line, i) =>
+                line.trim() ? <p key={i}>{line.trim()}.</p> : null
+              )}
           </div>
         </div>
       )}
