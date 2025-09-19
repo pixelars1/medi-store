@@ -24,7 +24,7 @@ export default function ProductDetailsPage() {
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (user) => {
       const ids = getIds(user);
-      logVisitorAction("product", { ...ids, productId: product._id });
+      logVisitorAction("product-view", { ...ids, productId: product._id });
     });
     return () => unsub();
   }, [product._id]);
