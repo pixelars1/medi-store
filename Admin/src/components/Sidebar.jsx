@@ -9,6 +9,7 @@ import {
   Users,
 } from "lucide-react";
 import { brand } from "../utils/constant";
+import logo from "../assets/favicon.png"
 
 const Sidebar = ({ active, onChange }) => {
   const items = [
@@ -32,7 +33,7 @@ const Sidebar = ({ active, onChange }) => {
     >
       {/* Brand */}
       <div className="flex items-center gap-2 mb-6">
-        <div className={`h-8 w-8 md:h-9 md:w-9 rounded-2xl bg-gradient-to-r ${brand.primary}`} />
+        <div className={`h-8 w-8 md:h-9 md:w-9 rounded-2xl `} ><img className="rounded-lg" src={logo} alt="" /></div>
         <div className="font-semibold text-base md:text-lg">MediCare Admin</div>
       </div>
 
